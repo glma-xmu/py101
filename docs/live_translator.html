@@ -1,0 +1,224 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Live Lecture Translator · 课堂实时翻译</title>
+<style>
+  :root{
+    --bg:#0e1116; --fg:#e8edf3; --muted:#8b97a7; --accent:#4f9dff;
+    --en:#9fb2c8; --zh:#ffffff; --card:#161b22; --line:#222a35;
+  }
+  html,body{margin:0;height:100%;background:var(--bg);color:var(--fg);
+    font-family:-apple-system,"Segoe UI",Roboto,"PingFang SC","Microsoft YaHei",sans-serif;}
+  body{display:flex;flex-direction:column;height:100vh;overflow:hidden;}
+  /* top bar */
+  #bar{display:flex;flex-wrap:wrap;gap:.5rem;align-items:center;padding:.55rem .8rem;
+    background:var(--card);border-bottom:1px solid var(--line);font-size:.85rem;}
+  #bar .grow{flex:1;}
+  button,select{font:inherit;color:var(--fg);background:#222b37;border:1px solid var(--line);
+    border-radius:.4rem;padding:.35rem .7rem;cursor:pointer;}
+  button:hover{background:#2b3744;}
+  button.primary{background:var(--accent);border-color:var(--accent);color:#fff;font-weight:600;}
+  button:disabled{opacity:.5;cursor:default;}
+  #status{color:var(--muted);font-size:.8rem;min-width:9rem;}
+  .dot{display:inline-block;width:.6rem;height:.6rem;border-radius:50%;background:#555;margin-right:.4rem;vertical-align:middle;}
+  .dot.live{background:#2ecc71;box-shadow:0 0 0 0 rgba(46,204,113,.6);animation:pulse 1.4s infinite;}
+  @keyframes pulse{0%{box-shadow:0 0 0 0 rgba(46,204,113,.5)}70%{box-shadow:0 0 0 .5rem rgba(46,204,113,0)}100%{box-shadow:0 0 0 0 rgba(46,204,113,0)}}
+  /* captions */
+  #captions{flex:1;overflow-y:auto;padding:4vh 6vw;display:flex;flex-direction:column;justify-content:flex-end;gap:1.6rem;}
+  .utt{opacity:.45;transition:opacity .3s;}
+  .utt.latest{opacity:1;}
+  .en{color:var(--en);font-size:clamp(1rem,2.2vw,1.7rem);line-height:1.35;margin-bottom:.35rem;}
+  .zh{color:var(--zh);font-weight:700;font-size:var(--zh-size,clamp(1.8rem,4.6vw,3.4rem));line-height:1.3;}
+  #hint{color:var(--muted);text-align:center;margin:auto;max-width:48rem;line-height:1.7;font-size:1rem;padding:2rem;}
+  #hint b{color:var(--fg);}
+  #hint code{background:#1d2530;padding:.1rem .35rem;border-radius:.25rem;}
+  /* light theme */
+  body.light{--bg:#f6f8fa;--fg:#1c2330;--muted:#5a6675;--card:#fff;--line:#dde3ea;--en:#475569;--zh:#0b1320;}
+  .progress{height:3px;background:var(--accent);width:0;transition:width .2s;}
+</style>
+</head>
+<body>
+  <div id="bar">
+    <span id="statusWrap"><span class="dot" id="dot"></span><span id="status">Idle</span></span>
+    <button id="start" class="primary">▶ Start</button>
+    <button id="stop" disabled>■ Stop</button>
+    <span class="grow"></span>
+    <label>ASR
+      <select id="model">
+        <option value="Xenova/whisper-base.en">base.en (better)</option>
+        <option value="Xenova/whisper-tiny.en">tiny.en (faster)</option>
+        <option value="Xenova/whisper-small.en">small.en (best, heavy)</option>
+      </select>
+    </label>
+    <label>Source
+      <select id="host">
+        <option value="https://hf-mirror.com">hf-mirror (China)</option>
+        <option value="https://huggingface.co">huggingface.co</option>
+      </select>
+    </label>
+    <button id="smaller">A−</button>
+    <button id="bigger">A+</button>
+    <button id="theme">☀/🌙</button>
+    <button id="full">⛶ Full screen</button>
+  </div>
+  <div class="progress" id="prog"></div>
+
+  <div id="captions">
+    <div id="hint">
+      <p><b>Live lecture translator — English → 中文.</b> Everything runs locally in this browser; no audio leaves your machine.</p>
+      <p>1) Pick an ASR model and source above. 2) Click <b>Start</b> and allow the microphone. 3) Speak English — Chinese captions appear below. Use <b>Full screen</b> to project.</p>
+      <p style="font-size:.9rem">First run downloads the models once (≈150&nbsp;MB for <code>base.en</code>), then they are cached. Use <b>Chrome</b> or <b>Edge</b> for WebGPU speed. Speak into a good microphone for best accuracy.</p>
+    </div>
+  </div>
+
+<script type="module">
+import { pipeline, env } from "https://cdn.jsdelivr.net/npm/@huggingface/transformers";
+
+// ---- configuration ------------------------------------------------------
+env.allowLocalModels = false;          // load from the chosen remote host
+// (To go fully offline / vendored: host the model files yourself, set
+//  env.allowLocalModels = true and env.localModelPath = "<your path>".)
+
+const TRANSLATION_MODEL = "Xenova/opus-mt-en-zh";   // English -> Chinese
+const SAMPLE_RATE = 16000;             // Whisper expects 16 kHz mono
+const SIL_RMS = 0.010;                 // below this counts as silence
+const SIL_HANG = 0.65;                 // seconds of silence ends an utterance
+const MIN_SPEECH = 0.6;                // ignore segments shorter than this
+const MAX_SEG = 12;                    // force-flush a segment this long
+const KEEP_LINES = 9;                  // captions kept on screen
+// Whisper tends to "hallucinate" these on near-silence; drop them:
+const JUNK = new Set(["you","thank you.","thanks for watching!","bye.",".","",
+  "thank you","please subscribe","♪","[ Silence ]"]);
+
+// ---- elements -----------------------------------------------------------
+const $ = id => document.getElementById(id);
+const captions = $("captions"), statusEl = $("status"), dot = $("dot"), prog = $("prog");
+let asr = null, translate = null, modelName = $("model").value;
+let audioCtx = null, stream = null, node = null, source = null;
+let seg = [], segLen = 0, silent = 0, hadSpeech = false, running = false;
+let queue = Promise.resolve(), zhSize = null;
+
+function setStatus(t, live=false){ statusEl.textContent = t; dot.classList.toggle("live", live); }
+function pickDevice(){ return ("gpu" in navigator) ? "webgpu" : "wasm"; }
+
+// ---- model loading ------------------------------------------------------
+async function ensureModels(){
+  if (asr && translate && modelName === $("model").value) return;
+  env.remoteHost = $("host").value;
+  modelName = $("model").value;
+  asr = translate = null;
+  const device = pickDevice();
+  const opts = { device, dtype: device === "webgpu" ? "fp32" : "q8",
+    progress_callback: p => {
+      if (p.status === "progress" && p.total)
+        prog.style.width = (100 * p.loaded / p.total).toFixed(0) + "%";
+      if (p.status === "ready") prog.style.width = "0%";
+      setStatus(`Loading ${p.file ? p.file.split('/').pop() : 'model'}…`);
+    }};
+  setStatus("Loading speech model…");
+  asr = await pipeline("automatic-speech-recognition", modelName, opts);
+  setStatus("Loading translation model…");
+  translate = await pipeline("translation", TRANSLATION_MODEL,
+    { device, progress_callback: opts.progress_callback });
+  prog.style.width = "0%";
+}
+
+// ---- audio capture ------------------------------------------------------
+async function start(){
+  $("start").disabled = true; $("model").disabled = true; $("host").disabled = true;
+  try { await ensureModels(); }
+  catch(e){ setStatus("Model load failed — try the other Source"); console.error(e);
+    $("start").disabled = false; $("model").disabled = false; $("host").disabled = false; return; }
+
+  try { stream = await navigator.mediaDevices.getUserMedia({ audio:{
+      channelCount:1, echoCancellation:true, noiseSuppression:true } }); }
+  catch(e){ setStatus("Microphone blocked"); console.error(e);
+    $("start").disabled = false; return; }
+
+  audioCtx = new (window.AudioContext || window.webkitAudioContext)({ sampleRate: SAMPLE_RATE });
+  source = audioCtx.createMediaStreamSource(stream);
+  node = audioCtx.createScriptProcessor(4096, 1, 1);
+  const frameDur = 4096 / audioCtx.sampleRate;
+  node.onaudioprocess = e => {
+    if (!running) return;
+    const buf = e.inputBuffer.getChannelData(0);
+    let sum = 0; for (let i=0;i<buf.length;i++) sum += buf[i]*buf[i];
+    const rms = Math.sqrt(sum / buf.length);
+    seg.push(new Float32Array(buf)); segLen += frameDur;
+    if (rms < SIL_RMS){ silent += frameDur; } else { silent = 0; hadSpeech = true; }
+    if ((hadSpeech && silent >= SIL_HANG && segLen >= MIN_SPEECH) || segLen >= MAX_SEG)
+      flush();
+  };
+  source.connect(node); node.connect(audioCtx.destination);
+  running = true; $("stop").disabled = false;
+  $("hint")?.remove();
+  setStatus("Listening…", true);
+}
+
+function stop(){
+  running = false;
+  try { node && node.disconnect(); source && source.disconnect(); } catch(e){}
+  stream && stream.getTracks().forEach(t => t.stop());
+  audioCtx && audioCtx.close();
+  seg = []; segLen = silent = 0; hadSpeech = false;
+  $("start").disabled = false; $("stop").disabled = true;
+  $("model").disabled = false; $("host").disabled = false;
+  setStatus("Stopped");
+}
+
+// ---- transcribe + translate (sequential queue) --------------------------
+function flush(){
+  if (!segLen) return;
+  // concatenate the segment's frames into one Float32Array
+  const total = seg.reduce((n,a) => n + a.length, 0);
+  const audio = new Float32Array(total);
+  let o = 0; for (const a of seg){ audio.set(a, o); o += a.length; }
+  seg = []; segLen = silent = 0; hadSpeech = false;
+  queue = queue.then(() => process(audio)).catch(e => console.error(e));
+}
+
+async function process(audio){
+  setStatus("Transcribing…", true);
+  let out;
+  try { out = await asr(audio, { language:"en", task:"transcribe" }); }
+  catch(e){ console.error(e); setStatus("Listening…", true); return; }
+  const en = (out.text || "").trim();
+  if (!en || JUNK.has(en.toLowerCase())) { setStatus("Listening…", true); return; }
+  let zh = "";
+  try { const t = await translate(en); zh = (t[0]?.translation_text || "").trim(); }
+  catch(e){ console.error(e); zh = "（翻译失败）"; }
+  render(en, zh);
+  setStatus("Listening…", true);
+}
+
+// ---- render -------------------------------------------------------------
+function render(en, zh){
+  document.querySelectorAll(".utt.latest").forEach(n => n.classList.remove("latest"));
+  const d = document.createElement("div"); d.className = "utt latest";
+  const e = document.createElement("div"); e.className = "en"; e.textContent = en;
+  const z = document.createElement("div"); z.className = "zh"; z.textContent = zh;
+  d.appendChild(e); d.appendChild(z); captions.appendChild(d);
+  while (captions.querySelectorAll(".utt").length > KEEP_LINES)
+    captions.querySelector(".utt").remove();
+  captions.scrollTop = captions.scrollHeight;
+}
+
+// ---- controls -----------------------------------------------------------
+$("start").onclick = start;
+$("stop").onclick = stop;
+$("full").onclick = () => document.fullscreenElement
+  ? document.exitFullscreen() : document.documentElement.requestFullscreen();
+$("theme").onclick = () => document.body.classList.toggle("light");
+function bumpZh(mult){
+  const cur = zhSize || parseFloat(getComputedStyle(document.querySelector(".zh")||document.body).fontSize) || 48;
+  zhSize = Math.max(20, Math.min(140, cur * mult));
+  document.documentElement.style.setProperty("--zh-size", zhSize + "px");
+}
+$("bigger").onclick = () => bumpZh(1.12);
+$("smaller").onclick = () => bumpZh(0.9);
+setStatus("Idle");
+</script>
+</body>
+</html>

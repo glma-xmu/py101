@@ -1,0 +1,125 @@
+# ============================================================
+#  AI Programming in Python — clean MkDocs Material config
+#  Static site only. Deploys to GitHub Pages.
+#  No Flask / Node / nginx backends required.
+# ============================================================
+
+site_name: AI Programming in Python
+site_description: A comprehensive introduction to programming in Python with a focus on AI.
+copyright: Atheris hispida
+
+# IMPORTANT for GitHub Pages project sites:
+# If this repo is published at  https://<user>.github.io/<repo>/
+# set site_url accordingly so assets resolve under the subpath.
+# Example for a repo named "py101":
+site_url: https://glma-xmu.github.io/py101/
+
+theme:
+  name: material
+  favicon: assets/favicon.png
+  logo: assets/logo.png
+  features:
+    - navigation.tracking
+    - navigation.footer
+    - navigation.expand
+    - navigation.top
+    - search.highlight
+    - search.suggest
+    - content.code.copy
+  palette:
+    - scheme: default
+      toggle:
+        icon: material/brightness-7
+        name: Switch to dark mode
+    - scheme: slate
+      toggle:
+        icon: material/brightness-4
+        name: Switch to light mode
+
+markdown_extensions:
+  - pymdownx.highlight:
+      anchor_linenums: true
+      line_spans: __span
+      pygments_lang_class: true
+  - pymdownx.inlinehilite
+  - pymdownx.snippets
+  - pymdownx.superfences:
+      custom_fences:
+        - name: memory
+          class: memory-diagram
+          format: !!python/name:pymdownx.superfences.fence_div_format
+        - name: motto
+          class: epigraph
+          format: !!python/name:pymdownx.superfences.fence_div_format
+        - name: recall
+          class: callback
+          format: !!python/name:pymdownx.superfences.fence_div_format
+  - admonition
+  - pymdownx.details
+  - pymdownx.arithmatex:
+      generic: true
+
+plugins:
+  - search
+  - i18n:
+      docs_structure: suffix
+      languages:
+        - locale: en
+          default: true
+          name: English
+          build: true
+        - locale: zh
+          name: 中文
+          build: true
+          site_name: 人工智能程序设计
+          nav_translations:
+            "Home": 首页
+            "Chapter 1: Python Basics": 第1章：Python 基础
+            "1.1 Objects and Types": 1.1 对象与类型
+            "1.2 Collections": 1.2 容器集合
+            "1.3 Control Flow": 1.3 控制流程
+            "1.4 Iterables and Iterators": 1.4 可迭代对象
+            "Chapter 2: Functions": 第2章：函数
+            "2.1 Defining Functions": 2.1 定义函数
+            "2.2 Namespaces and Scope": 2.2 命名空间与作用域
+            "2.3 First-Class Objects": 2.3 函数是一等对象
+            "2.4 Use Cases": 2.4 实践用例
+            "2.5 Loose Ends and Style": 2.5 补遗与风格
+            "Exercises": 习题
+            "Chapter 1 — Python Basics": 第 1 章 — Python 基础
+            "Chapter 2 — Functions": 第 2 章 — 函数
+
+extra_css:
+  - stylesheets/extra.css
+  - vendor/katex/katex.min.css
+
+extra_javascript:
+  - javascripts/runnable.js
+  - javascripts/memory-diagram.js
+  - javascripts/reading-mode.js
+  - javascripts/katex.js
+  - vendor/katex/katex.min.js
+  - vendor/katex/auto-render.min.js
+  # NOTE: The old AI-chat (chat.js), auto-grading (grading.js) and
+  # live-translation (translation-button.js) scripts were intentionally
+  # left out — they require backend servers that don't run on GitHub Pages.
+  # Re-add them once a serverless backend is wired up.
+
+nav:
+  - Home: index.md
+  - "Chapter 1: Python Basics":
+      - 1.1 Objects and Types: py101_md/ch1_1_objects.md
+      - 1.2 Collections: py101_md/ch1_2_collections.md
+      - 1.3 Control Flow: py101_md/ch1_3_control_flow.md
+      - 1.4 Iterables and Iterators: py101_md/ch1_4_iterators.md
+  - "Chapter 2: Functions":
+      - 2.1 Defining Functions: py101_md/ch2_1_defining_functions.md
+      - 2.2 Namespaces and Scope: py101_md/ch2_2_namespaces_scope.md
+      - 2.3 First-Class Objects: py101_md/ch2_3_first_class.md
+      - 2.4 Use Cases: py101_md/ch2_4_use_cases.md
+      - 2.5 Loose Ends and Style: py101_md/ch2_5_loose_ends.md
+  - "Exercises":
+      - "Chapter 1 — Python Basics": py101_md/exercises_ch1.md
+      - "Chapter 2 — Functions": py101_md/exercises_ch2.md
+  # More chapters and exercise sets are added here as each is rewritten.
+  # Backups of the original files remain in docs/py101_md (slide_*, Lecture_*).
