@@ -98,6 +98,7 @@ extra_javascript:
   - javascripts/runnable.js
   - javascripts/memory-diagram.js
   - javascripts/reading-mode.js
+  - javascripts/ask-button.js
   - javascripts/katex.js
   - vendor/katex/katex.min.js
   - vendor/katex/auto-render.min.js
