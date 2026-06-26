@@ -6,7 +6,7 @@
 
 site_name: AI Programming in Python
 site_description: A comprehensive introduction to programming in Python with a focus on AI.
-copyright: Atheris hispida
+copyright: "© 2025–2026 Guoliang Ma (马国良). All rights reserved · 保留所有权利"
 
 # IMPORTANT for GitHub Pages project sites:
 # If this repo is published at  https://<user>.github.io/<repo>/
@@ -88,6 +88,7 @@ plugins:
             "Exercises": 习题
             "Chapter 1 — Python Basics": 第 1 章 — Python 基础
             "Chapter 2 — Functions": 第 2 章 — 函数
+            "Copyright": 版权声明
 
 extra_css:
   - stylesheets/extra.css
@@ -121,5 +122,6 @@ nav:
   - "Exercises":
       - "Chapter 1 — Python Basics": py101_md/exercises_ch1.md
       - "Chapter 2 — Functions": py101_md/exercises_ch2.md
+  - Copyright: copyright.md
   # More chapters and exercise sets are added here as each is rewritten.
   # Backups of the original files remain in docs/py101_md (slide_*, Lecture_*).

@@ -36,3 +36,7 @@ This course is a comprehensive introduction to programming with Python, with a f
 ## Tools
 
 - [🎙️ Live Lecture Translator (English → 中文)](live_translator.html) — real-time captions for English lectures, running entirely in your browser. Open it on the teaching computer, click *Start*, and project the Chinese captions.
+
+---
+
+© 2025–2026 **Guoliang Ma (马国良)** · All rights reserved. See the [Copyright](copyright.md) page for terms of use.

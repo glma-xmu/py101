@@ -1,0 +1,39 @@
+Copyright (c) 2025-2026 Guoliang Ma (马国良). All rights reserved.
+
+AI Programming in Python — course website and content.
+
+This repository contains the course "AI Programming in Python" by Guoliang Ma,
+including its text, explanations, exercises, sample outputs, illustrations,
+memory diagrams, and the original source code written for the site.
+
+ALL RIGHTS RESERVED.
+
+No part of this work may be copied, reproduced, republished, mirrored,
+redistributed, modified, adapted, translated, used to create derivative works,
+or used for any commercial or non-commercial purpose — in any form or medium —
+without the prior written permission of the copyright holder, except that:
+
+  - individuals may view and read the material online for personal study, and
+  - enrolled students of the course may download it for their own individual study.
+
+To request permission for any other use, contact Guoliang Ma at
+glma@xmu.edu.cn.
+
+----------------------------------------------------------------------
+THIRD-PARTY COMPONENTS
+
+This project is built with, and bundles, third-party open-source software that
+remains licensed under its own terms. The "All rights reserved" statement above
+applies to the original course content and code, NOT to these components, which
+keep their respective licenses. They include (among others):
+
+  - MkDocs and Material for MkDocs
+  - Pyodide
+  - CodeMirror
+  - KaTeX
+  - Transformers.js
+
+Refer to each project for its full license text.
+----------------------------------------------------------------------
+
+THE WORK IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED.
