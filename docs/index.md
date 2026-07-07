@@ -1,6 +1,6 @@
-# AI Programming in Python
+# Python and Big Data in Economics
 
-This course is a comprehensive introduction to programming with Python, with a focus on applications in **Artificial Intelligence**. The site is bilingual — use the **language switcher** in the top bar to read in English or 中文.
+This course is a hands-on introduction to **Python** and **big data**, with a focus on applications in **economics**. The site is bilingual — use the **language switcher** in the top bar to read in English or 中文.
 
 !!! tip "How to use this site"
     Use the navigation menu on the left to move through the chapters. Most code on the pages is **live** — press *Run* to execute it in your browser, edit it, and run again. Use the search box (top right) to jump to any topic.
@@ -23,6 +23,10 @@ This course is a comprehensive introduction to programming with Python, with a f
 - [2.3 First-Class Objects](py101_md/ch2_3_first_class.md)
 - [2.4 Use Cases](py101_md/ch2_4_use_cases.md)
 - [2.5 Loose Ends and Style](py101_md/ch2_5_loose_ends.md)
+
+### Chapter 3 — NumPy & pandas
+
+- [3.1 NumPy](py101_md/ch3_1_numpy.md)
 
 ### Exercises
 

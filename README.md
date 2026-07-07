@@ -1,4 +1,4 @@
-# AI Programming in Python — Course Site
+# Python and Big Data in Economics — Course Site
 
 Clean, static, bilingual (English / 中文) course website built with
 [MkDocs Material](https://squidfunk.github.io/mkdocs-material/). It deploys to

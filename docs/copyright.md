@@ -2,7 +2,7 @@
 
 © 2025–2026 **Guoliang Ma (马国良)**. **All rights reserved.**
 
-This website — *AI Programming in Python* — and all of its contents, including the
+This website — *Python and Big Data in Economics* — and all of its contents, including the
 text, explanations, exercises, sample outputs, illustrations, memory diagrams, and
 the original source code written for this site, are the copyrighted work of Guoliang
 Ma and are protected by copyright law.
