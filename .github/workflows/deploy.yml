@@ -26,6 +26,31 @@ jobs:
         run: pip install -r requirements.txt
       - name: Build site
         run: mkdocs build --site-dir ./site
+
+      # Mirror the built site to the Aliyun server over SSH (rsync).
+      # Best-effort: a server hiccup must NOT block the GitHub Pages deploy.
+      # Skips itself until the SERVER_* secrets are set (see CI_MIRROR_SETUP.md).
+      - name: Mirror to the Aliyun server
+        continue-on-error: true
+        env:
+          SERVER_HOST: ${{ secrets.SERVER_HOST }}
+          SERVER_USER: ${{ secrets.SERVER_USER }}
+          SERVER_PORT: ${{ secrets.SERVER_PORT }}
+          SSH_KEY: ${{ secrets.SERVER_SSH_KEY }}
+        run: |
+          if [ -z "$SERVER_HOST" ]; then
+            echo "No SERVER_HOST secret set — skipping the mirror step."
+            exit 0
+          fi
+          mkdir -p ~/.ssh
+          printf '%s\n' "$SSH_KEY" > ~/.ssh/deploy_key
+          chmod 600 ~/.ssh/deploy_key
+          PORT="${SERVER_PORT:-22}"
+          ssh-keyscan -p "$PORT" -H "$SERVER_HOST" >> ~/.ssh/known_hosts 2>/dev/null || true
+          rsync -az --delete \
+            -e "ssh -i ~/.ssh/deploy_key -p $PORT -o StrictHostKeyChecking=no" \
+            ./site/ "$SERVER_USER@$SERVER_HOST:/opt/py101/site/"
+
       - name: Upload artifact
         uses: actions/upload-pages-artifact@v3
         with:
