@@ -47,6 +47,11 @@
   color: var(--md-accent-fg-color);
 }
 
+.main-site-link--checking {
+  opacity: 0.5;
+  pointer-events: none;
+}
+
 /* Main-site notice */
 .main-site-dialog {
   width: min(32rem, calc(100% - 2rem));

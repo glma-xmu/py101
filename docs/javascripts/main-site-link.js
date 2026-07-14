@@ -6,8 +6,10 @@ document.addEventListener("DOMContentLoaded", () => {
   }
 
   const destination = "https://www.maguoliang.com/";
+  const reachabilityURL = "https://www.maguoliang.com/favicon.ico";
+  const timeoutMilliseconds = 5000;
 
-  // Header icon
+  // Create the header icon.
   const link = document.createElement("a");
   link.className = "md-header__button md-icon main-site-link";
   link.href = destination;
@@ -22,13 +24,13 @@ document.addEventListener("DOMContentLoaded", () => {
 
   firstHeaderControl.before(link);
 
-  // Confirmation dialog
+  // Create the message shown only after a failed connection check.
   const dialog = document.createElement("dialog");
   dialog.className = "main-site-dialog";
 
   dialog.innerHTML = `
     <div class="main-site-dialog__content">
-      <h2>前往主站 / Visit main site</h2>
+      <h2>主站似乎暂时无法访问</h2>
 
       <p>
         页面若未能抵达，请稍后重试或换个网络；无需反复刷新到怀疑人生。
@@ -40,11 +42,14 @@ document.addEventListener("DOMContentLoaded", () => {
 
       <div class="main-site-dialog__actions">
         <button type="button" class="md-button main-site-cancel">
-          取消 / Cancel
+          关闭 / Close
         </button>
 
-        <a class="md-button md-button--primary" href="${destination}">
-          继续访问 / Continue
+        <a
+          class="md-button md-button--primary"
+          href="${destination}"
+        >
+          仍然尝试 / Try anyway
         </a>
       </div>
     </div>
@@ -52,16 +57,61 @@ document.addEventListener("DOMContentLoaded", () => {
 
   document.body.appendChild(dialog);
 
-  link.addEventListener("click", (event) => {
+  // Quietly check whether the main site can be reached.
+  async function canReachMainSite() {
+    const controller = new AbortController();
+
+    const timeout = window.setTimeout(() => {
+      controller.abort();
+    }, timeoutMilliseconds);
+
+    try {
+      await fetch(`${reachabilityURL}?check=${Date.now()}`, {
+        mode: "no-cors",
+        cache: "no-store",
+        signal: controller.signal
+      });
+
+      return true;
+    } catch {
+      return false;
+    } finally {
+      window.clearTimeout(timeout);
+    }
+  }
+
+  link.addEventListener("click", async (event) => {
     event.preventDefault();
-    dialog.showModal();
+
+    // Prevent repeated clicks while checking.
+    if (link.classList.contains("main-site-link--checking")) {
+      return;
+    }
+
+    link.classList.add("main-site-link--checking");
+    link.setAttribute("aria-busy", "true");
+
+    const reachable = await canReachMainSite();
+
+    link.classList.remove("main-site-link--checking");
+    link.removeAttribute("aria-busy");
+
+    if (reachable) {
+      // Reachable: navigate without showing any message.
+      window.location.assign(destination);
+    } else {
+      // Unreachable or timed out: show the explanation.
+      dialog.showModal();
+    }
   });
 
   dialog
     .querySelector(".main-site-cancel")
-    .addEventListener("click", () => dialog.close());
+    .addEventListener("click", () => {
+      dialog.close();
+    });
 
-  // Clicking the dark backdrop closes the dialog.
+  // Close when the user clicks the dark backdrop.
   dialog.addEventListener("click", (event) => {
     if (event.target === dialog) {
       dialog.close();
