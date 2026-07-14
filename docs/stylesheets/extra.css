@@ -38,6 +38,27 @@
   text-align: center;
 }
 
+/* Link to the main website in the header */
+.main-site-link {
+  margin: 0 0.6rem;
+  color: var(--md-primary-bg-color);
+  font-size: 0.75rem;
+  font-weight: 600;
+  white-space: nowrap;
+}
+
+.main-site-link:hover {
+  color: var(--md-accent-fg-color);
+  text-decoration: underline;
+}
+
+/* Preserve header space on narrow phones */
+@media (max-width: 480px) {
+  .main-site-link {
+    display: none;
+  }
+}
+
 /* ---- Runnable code cells (Pyodide + CodeMirror) ---- */
 .runnable { margin: 0.5rem 0 1.2rem; }
 .runnable .CodeMirror {
