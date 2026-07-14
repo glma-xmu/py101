@@ -38,12 +38,50 @@
   text-align: center;
 }
 
+/* Main-site header icon */
 .main-site-link {
   color: var(--md-primary-bg-color);
 }
 
 .main-site-link:hover {
   color: var(--md-accent-fg-color);
+}
+
+/* Main-site notice */
+.main-site-dialog {
+  width: min(32rem, calc(100% - 2rem));
+  padding: 0;
+  color: var(--md-default-fg-color);
+  background: var(--md-default-bg-color);
+  border: none;
+  border-radius: 0.4rem;
+  box-shadow: 0 0.5rem 2rem rgba(0, 0, 0, 0.35);
+}
+
+.main-site-dialog::backdrop {
+  background: rgba(0, 0, 0, 0.55);
+}
+
+.main-site-dialog__content {
+  padding: 1.4rem;
+}
+
+.main-site-dialog__content h2 {
+  margin-top: 0;
+  font-size: 1.1rem;
+}
+
+.main-site-dialog__content p {
+  font-size: 0.85rem;
+  line-height: 1.6;
+}
+
+.main-site-dialog__actions {
+  display: flex;
+  justify-content: flex-end;
+  flex-wrap: wrap;
+  gap: 0.6rem;
+  margin-top: 1.2rem;
 }
 
 /* ---- Runnable code cells (Pyodide + CodeMirror) ---- */
