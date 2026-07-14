@@ -6,7 +6,7 @@
 
 site_name: Python and Big Data in Economics
 site_description: A hands-on introduction to Python and big data for economics.
-copyright: "© 2025–2026 Guoliang Ma (马国良). All rights reserved · 保留所有权利"
+copyright: "© 2025–2026 Guoliang Ma (马国良). All rights reserved · 保留所有权利<a href='http://beian.miit.gov.cn/' target='_blank' rel='noopener'>鲁ICP备2026038759号</a>"
 
 # IMPORTANT for GitHub Pages project sites:
 # If this repo is published at  https://<user>.github.io/<repo>/
