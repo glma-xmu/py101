@@ -28,6 +28,16 @@
   pointer-events: none; /* 可选，让它不阻止鼠标事件穿透 */
 }
 
+.md-footer-meta__inner {
+  justify-content: center;
+}
+
+.md-copyright {
+  width: 100%;
+  margin: auto;
+  text-align: center;
+}
+
 /* ---- Runnable code cells (Pyodide + CodeMirror) ---- */
 .runnable { margin: 0.5rem 0 1.2rem; }
 .runnable .CodeMirror {
