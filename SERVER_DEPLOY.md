@@ -45,11 +45,47 @@ server {
     gzip on;
     gzip_types text/plain text/css application/javascript application/json image/svg+xml;
 
+    # Also answer under /py101/ — see "Why the /py101/ alias" below.
+    location = /py101 { return 301 /py101/; }
+    location /py101/ { rewrite ^/py101/(.*)$ /$1 last; }
+
     location / {
         try_files $uri $uri/ =404;
     }
 }
 ```
+
+### Why the `/py101/` alias
+
+The site is built once, with `site_url: https://glma-xmu.github.io/py101/`. Almost
+every link MkDocs emits is *relative*, which is why one build can serve correctly
+both from GitHub Pages (under `/py101/`) and from this server (at the domain root).
+
+The exception is the **language switcher on the homepage**, which the i18n plugin
+writes as absolute paths derived from `site_url` — `/py101/` and `/py101/zh/`.
+Served at the domain root those 404, so a student clicking **中文** on the front
+page lands on an error. (Inner pages are unaffected: their switcher links are
+relative and work fine.)
+
+The two `location` blocks above fix that by making the same tree answer under
+`/py101/` as well. The `rewrite … last` strips the prefix and re-runs location
+matching, so the file is served from `root` — this avoids the `alias` + `try_files`
+interaction, which is easy to get subtly wrong. Query strings are preserved
+automatically, so cache-busted assets like `extra.css?v=2` still resolve.
+
+Verify after reloading nginx — all three must return `200`:
+
+```bash
+curl -I http://127.0.0.1/            # the normal root
+curl -I http://127.0.0.1/py101/      # English, via the alias
+curl -I http://127.0.0.1/py101/zh/   # 中文, via the alias
+```
+
+> **Note:** this makes the alias resolve; it does **not** change the
+> `<link rel="canonical">` tags, which still point at `glma-xmu.github.io`. If you
+> later want `maguoliang.cn` to be the address search engines index, build the
+> mirror with its own `site_url` (a two-line `mkdocs.mirror.yml` using `INHERIT:`)
+> rather than extending this nginx config.
 
 Enable it:
 

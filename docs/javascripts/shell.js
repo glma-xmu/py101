@@ -42,7 +42,10 @@
       shellPromise = loadPyodide_(onStatus)
         .then(function (py) {
           if (onStatus) { onStatus("Starting the shell..."); }
-          return fetch(ASSET_BASE + "javascripts/shell_backend.py")
+          // ?v= is a cache buster: this URL is fetched at runtime, so without it
+          // a returning student can keep an old backend. Bump on every edit to
+          // shell_backend.py.
+          return fetch(ASSET_BASE + "javascripts/shell_backend.py?v=1")
             .then(function (r) {
               if (!r.ok) { throw new Error("Could not load shell_backend.py"); }
               return r.text();

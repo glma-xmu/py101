@@ -4,3 +4,11 @@ __pycache__/
 site/
 venv/
 .venv/
+
+# SSH deploy keys. Generate these into ~/.ssh, never into the repo. The private
+# half belongs only in the GitHub Actions secret SERVER_SSH_KEY, and the public
+# half only in the server's authorized_keys. See CI_MIRROR_SETUP.md.
+py101_deploy*
+*.pem
+id_ed25519*
+id_rsa*

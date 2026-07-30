@@ -101,14 +101,19 @@ plugins:
             "A2 Command Line and Paths": A2 命令行与路径
             "Copyright": 版权声明
 
+# NOTE: the ?v= suffixes are cache busters. Material does not fingerprint
+# extra_css/extra_javascript, so these URLs never change on their own and a
+# returning student keeps whatever their browser cached — which shows up as a
+# page whose HTML and JS are new but whose styling is old. Bump the number
+# whenever you edit one of these files.
 extra_css:
-  - stylesheets/extra.css
+  - stylesheets/extra.css?v=2
   - vendor/katex/katex.min.css
 
 extra_javascript:
   - javascripts/main-site-link.js
-  - javascripts/runnable.js
-  - javascripts/shell.js
+  - javascripts/runnable.js?v=2
+  - javascripts/shell.js?v=1
   - javascripts/memory-diagram.js
   - javascripts/reading-mode.js
   - javascripts/ask-button.js
