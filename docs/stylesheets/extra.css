@@ -195,3 +195,24 @@
 .runnable-memnote{font-size:0.8rem;color:var(--md-default-fg-color--light);font-style:italic;}
 .reading-toggle{display:flex;justify-content:flex-end;margin:0 0 1rem;}
 .reading-toggle-btn{font-size:0.72rem;padding:0.1rem 0.6rem;}
+
+/* ---- Appendix A2: interactive teaching terminals (shell.js) ---- */
+.terminal-widget:not(.term-ready){display:none;}
+.term-ready{border:1px solid var(--md-default-fg-color--lighter);border-radius:0.35rem;margin:1rem 0 1.3rem;overflow:hidden;}
+.term-bar{display:flex;align-items:center;gap:0.6rem;padding:0.3rem 0.6rem;background:var(--md-default-fg-color--lightest);border-bottom:1px solid var(--md-default-fg-color--lighter);}
+.term-title{font-size:0.72rem;letter-spacing:0.05em;text-transform:uppercase;font-weight:700;color:var(--md-default-fg-color--light);flex:1;}
+.term-ready .md-button.term-reset{font-size:0.7rem;padding:0.05rem 0.55rem;margin:0;}
+.term-status{font-size:0.72rem;color:var(--md-default-fg-color--light);font-style:italic;}
+.term-log{margin:0;padding:0.6rem 0.7rem 0.2rem;max-height:22rem;overflow:auto;background:var(--md-code-bg-color,#f5f5f5);font-family:var(--md-code-font-family,monospace);font-size:0.78rem;line-height:1.55;white-space:pre-wrap;word-break:break-word;cursor:text;}
+.term-log:empty{display:none;}
+.term-echo{color:var(--md-primary-fg-color);font-weight:600;}
+.term-err{color:#b71c1c;}
+.term-note{color:var(--md-default-fg-color--light);font-style:italic;}
+.term-inputrow{display:flex;align-items:baseline;gap:0.45rem;padding:0.35rem 0.7rem 0.5rem;background:var(--md-code-bg-color,#f5f5f5);font-family:var(--md-code-font-family,monospace);font-size:0.78rem;}
+.term-prompt{color:var(--md-primary-fg-color);font-weight:700;white-space:nowrap;}
+.term-input{flex:1;min-width:0;border:none;outline:none;background:transparent;color:var(--md-default-fg-color);font-family:inherit;font-size:inherit;padding:0;}
+.term-chips{display:flex;flex-wrap:wrap;align-items:center;gap:0.3rem;padding:0.4rem 0.7rem 0.5rem;border-top:1px dashed var(--md-default-fg-color--lighter);}
+.term-chiplabel{font-size:0.7rem;color:var(--md-default-fg-color--light);font-style:italic;margin-right:0.1rem;}
+.term-chip{font-family:var(--md-code-font-family,monospace);font-size:0.72rem;padding:0.1rem 0.45rem;border:1px solid var(--md-default-fg-color--lighter);border-radius:0.9rem;background:transparent;color:var(--md-default-fg-color);cursor:pointer;}
+.term-chip:hover{border-color:var(--md-primary-fg-color);color:var(--md-primary-fg-color);}
+@media (max-width:480px){.term-log{font-size:0.72rem;max-height:16rem;}}

@@ -33,6 +33,13 @@ This course is a hands-on introduction to **Python** and **big data**, with a fo
 - [Chapter 1 — Python Basics](py101_md/exercises_ch1.md)
 - [Chapter 2 — Functions](py101_md/exercises_ch2.md)
 
+### Appendix — Your Own Machine
+
+Everything above runs in your browser. The appendix is where you set up a Python of your own, ready for when you need it.
+
+- [A1 Setting Up Your Python Environment](py101_md/appendix_a1_environment.md)
+- [A2 The Command Line and Paths](py101_md/appendix_a2_shell.md)
+
 *More chapters are being rewritten and will appear here as they are ready.*
 
 ---

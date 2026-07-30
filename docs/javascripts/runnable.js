@@ -239,6 +239,10 @@
     var b = document.createElement("button"); b.type = "button"; b.className = cls; b.textContent = text; return b;
   }
 
+  // Shared with shell.js (Appendix A2 terminals), so a page carrying both
+  // runnable cells and terminals loads the Pyodide runtime only once.
+  window.py101Pyodide = getPyodide;
+
   function init() {
     var examples = document.querySelectorAll(".admonition.example, details.example");
     if (!examples.length) { return; }
