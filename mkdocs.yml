@@ -104,6 +104,8 @@ plugins:
             "Chapter 3: NumPy & pandas": 第3章：NumPy 与 pandas
             "3.1 NumPy": 3.1 NumPy
             "3.2 pandas: One Table": 3.2 pandas：单表操作
+            "3.3 pandas: Reshape and Group": 3.3 pandas：重塑与分组
+            "3.4 pandas: Combining Tables": 3.4 pandas：多表合并
             "Exercises": 习题
             "Chapter 1 — Python Basics": 第 1 章 — Python 基础
             "Chapter 2 — Functions": 第 2 章 — 函数
@@ -162,6 +164,8 @@ nav:
   - "Chapter 3: NumPy & pandas":
       - 3.1 NumPy: py101_md/ch3_1_numpy.md
       - "3.2 pandas: One Table": py101_md/ch3_2_pandas.md
+      - "3.3 pandas: Reshape and Group": py101_md/ch3_3_reshape_group.md
+      - "3.4 pandas: Combining Tables": py101_md/ch3_4_merge.md
   - "Exercises":
       - "Chapter 1 — Python Basics": py101_md/exercises_ch1.md
       - "Chapter 2 — Functions": py101_md/exercises_ch2.md

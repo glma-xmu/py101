@@ -28,6 +28,8 @@
 
 - [3.1 NumPy](py101_md/ch3_1_numpy.md)
 - [3.2 pandas：单表操作](py101_md/ch3_2_pandas.md)
+- [3.3 pandas：重塑与分组](py101_md/ch3_3_reshape_group.md)
+- [3.4 pandas：多表合并](py101_md/ch3_4_merge.md)
 
 ### 习题
 

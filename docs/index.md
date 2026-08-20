@@ -28,6 +28,8 @@ This course is a hands-on introduction to **Python** and **big data**, with a fo
 
 - [3.1 NumPy](py101_md/ch3_1_numpy.md)
 - [3.2 pandas: One Table](py101_md/ch3_2_pandas.md)
+- [3.3 pandas: Reshape and Group](py101_md/ch3_3_reshape_group.md)
+- [3.4 pandas: Combining Tables](py101_md/ch3_4_merge.md)
 
 ### Exercises
 
