@@ -11,11 +11,20 @@ copyright: |
   <br>
   <a href="http://beian.miit.gov.cn/" target="_blank" rel="noopener">鲁ICP备2026038759号</a>
 
-# IMPORTANT for GitHub Pages project sites:
-# If this repo is published at  https://<user>.github.io/<repo>/
-# set site_url accordingly so assets resolve under the subpath.
-# Example for a repo named "py101":
-site_url: https://glma-xmu.github.io/py101/
+# The canonical address of the course. This is the ONLY place the public URL is
+# written down, and it decides two things in the build:
+#   1. the <link rel="canonical"> on every page — what search engines index;
+#   2. the language switcher on the two HOMEPAGES, which the i18n plugin emits as
+#      absolute paths (/teaching/py101/ and /teaching/py101/zh/). Everything else
+#      MkDocs writes is relative.
+#
+# The same build is served from three places, and only the first matches this URL:
+#   - https://www.maguoliang.com/teaching/py101/   <- canonical (personal site)
+#   - https://glma-xmu.github.io/py101/            <- GitHub Pages, source of truth
+#   - https://maguoliang.cn/                       <- Aliyun mirror, at the root
+# javascripts/lang-switch-fix.js repairs (2) at load time on the other two, so one
+# build works everywhere. See SERVER_DEPLOY.md.
+site_url: https://www.maguoliang.com/teaching/py101/
 
 theme:
   name: material
@@ -122,6 +131,7 @@ extra_css:
   - vendor/katex/katex.min.css
 
 extra_javascript:
+  - javascripts/lang-switch-fix.js?v=1
   - javascripts/main-site-link.js
   - javascripts/runnable.js?v=3
   - javascripts/shell.js?v=1

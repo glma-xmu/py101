@@ -1,0 +1,101 @@
+# ============================================================================
+#  THIS FILE DOES NOT RUN HERE.
+#
+#  It belongs in the OTHER repository, as:
+#      glma-xmu/personal-website  ->  .github/workflows/static.yml
+#
+#  It replaces the existing static.yml there. The only changes from the current
+#  one are the two new triggers and the three "course site" steps in the middle;
+#  everything else is untouched.
+#
+#  What it does: before publishing the personal site, it checks out the course
+#  repo, builds it, and drops the result at my-new-website/teaching/py101/ — so
+#  the combined site publishes as one Pages artifact and the course lives at
+#      https://www.maguoliang.com/teaching/py101/
+#
+#  Nothing built is ever committed. A course build is ~58 MB (the Pyodide
+#  runtime plus the vendored numpy/pandas wheels); committing that on every push
+#  would grow this repo's history without limit. Composing at deploy time keeps
+#  both repositories exactly as small as their sources.
+#
+#  Jekyll note: `upload-pages-artifact` publishes the folder verbatim, so no
+#  .nojekyll file is needed.
+# ============================================================================
+
+name: Deploy static content to Pages
+
+on:
+  # Runs on pushes targeting the default branch
+  push:
+    branches: ["main"]
+
+  # Fired by the course repo's workflow after it builds, so a course update
+  # republishes this site within a minute or two. This is the nice-to-have that
+  # needs the PERSONAL_SITE_TOKEN secret over in the course repo; without it this
+  # trigger simply never fires and the schedule below covers you instead.
+  # See py101/.github/workflows/deploy.yml.
+  repository_dispatch:
+    types: [py101-updated]
+
+  # Safety net: rebuild once a day regardless, so a course update always reaches
+  # www.maguoliang.com even if the token above is missing or has expired.
+  # 05:00 UTC = 13:00 in China, 00:00 US Eastern.
+  schedule:
+    - cron: "0 5 * * *"
+
+  # Allows you to run this workflow manually from the Actions tab.
+  # This is the "publish the course update right now" button if you have not set
+  # up the token: Actions -> Deploy static content to Pages -> Run workflow.
+  workflow_dispatch:
+
+# Sets permissions of the GITHUB_TOKEN to allow deployment to GitHub Pages
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+# Allow only one concurrent deployment, skipping runs queued between the run in-progress and latest queued.
+# However, do NOT cancel in-progress runs as we want to allow these production deployments to complete.
+concurrency:
+  group: "pages"
+  cancel-in-progress: false
+
+jobs:
+  # Single deploy job since we're just deploying
+  deploy:
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      # ---- course site: build it and nest it under /teaching/py101/ ----------
+      - name: Check out the course repo
+        uses: actions/checkout@v4
+        with:
+          repository: glma-xmu/py101
+          path: course-src
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Build the course site into teaching/py101
+        run: |
+          pip install -r course-src/requirements.txt
+          mkdocs build -f course-src/mkdocs.yml --site-dir "$GITHUB_WORKSPACE/my-new-website/teaching/py101"
+      # -----------------------------------------------------------------------
+
+      - name: Setup Pages
+        uses: actions/configure-pages@v5
+      - name: Upload artifact
+        uses: actions/upload-pages-artifact@v3
+        with:
+          # Upload entire repository
+          path: './my-new-website'
+      - name: Deploy to GitHub Pages
+        id: deployment
+        uses: actions/deploy-pages@v4

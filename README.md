@@ -25,14 +25,19 @@ mkdocs serve
 
 Then open http://127.0.0.1:8000 — the EN site is at `/`, the Chinese site at `/zh/`.
 
-## Deploy to GitHub Pages
+## Deploy
+
+The live site: **<https://www.maguoliang.com/teaching/py101/>**
 
 1. Create a new GitHub repo (e.g. `py101`) and push this folder to the `main` branch.
 2. In the repo: **Settings → Pages → Build and deployment → Source: GitHub Actions**.
-3. Open `mkdocs.yml` and set `site_url` to your real URL, e.g.
-   `https://YOURNAME.github.io/py101/`.
+3. Open `mkdocs.yml` and set `site_url` to the address students will use.
 4. Push. The included workflow (`.github/workflows/deploy.yml`) builds and
    publishes the site on every push. You only ever edit Markdown.
+
+The same build is served from three places — the personal site (canonical),
+GitHub Pages (fallback and where it is built), and an Aliyun mirror. Full
+instructions are in `DEPLOY.md`; the server side is in `SERVER_DEPLOY.md`.
 
 ## What was intentionally left out
 
