@@ -70,6 +70,12 @@ Notes:
   Run button — no per-block marking needed. So any snippet a student should run
   and tinker with belongs in an Example block; illustrative code that should
   *not* be run (deliberate errors, fragments) stays in a plain fenced block.
+- **Only Python is made runnable.** A fenced block inside an Example that
+  declares another language (```` ```powershell ````, ```` ```text ````,
+  ```` ```c ````, ```` ```cython ````, ```` ```toml ````) is left as a plain
+  listing, so a numbered Example can still show a shell session or a directory
+  tree. An *undeclared* fence is treated as Python. Tag the language whenever a
+  numbered Example is not meant to be run.
 
 ## Section numbering
 

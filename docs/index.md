@@ -40,6 +40,19 @@ Everything above runs in your browser. The appendix is where you set up a Python
 - [A1 Setting Up Your Python Environment](py101_md/appendix_a1_environment.md)
 - [A2 The Command Line and Paths](py101_md/appendix_a2_shell.md)
 
+### [Two-Day Crash Course](py101_md/camp_index.md)
+
+A self-contained short course for incoming graduate students who already write some Python and want to know what it was doing all along. It goes faster and deeper than the chapters above, and it can be read on its own.
+
+- [Overview and Schedule](py101_md/camp_index.md)
+- [1. Style and Error Messages](py101_md/camp_ch1_style.md)
+- [2. Environments and Tooling](py101_md/camp_ch2_environments.md)
+- [3. Names, Expressions, Statements](py101_md/camp_ch3_names.md)
+- [4. Functions](py101_md/camp_ch4_functions.md)
+- [5. Object-Oriented Python](py101_md/camp_ch5_oop.md)
+- [6. Data Manipulation with pandas](py101_md/camp_ch6_pandas.md)
+- [7. Making Python Fast](py101_md/camp_ch7_performance.md)
+
 *More chapters are being rewritten and will appear here as they are ready.*
 
 ---

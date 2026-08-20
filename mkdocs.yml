@@ -61,6 +61,7 @@ markdown_extensions:
           class: terminal-widget
           format: !!python/name:pymdownx.superfences.fence_div_format
   - admonition
+  - footnotes
   - pymdownx.details
   - pymdownx.arithmatex:
       generic: true
@@ -99,6 +100,15 @@ plugins:
             "Appendix": 附录
             "A1 Python Environment Setup": A1 Python 环境搭建
             "A2 Command Line and Paths": A2 命令行与路径
+            "Two-Day Crash Course": 两日强化班
+            "Overview and Schedule": 概览与日程
+            "1. Style and Error Messages": 1. 代码风格与报错信息
+            "2. Environments and Tooling": 2. 虚拟环境与工具链
+            "3. Names, Expressions, Statements": 3. 名字、表达式与语句
+            "4. Functions": 4. 函数
+            "5. Object-Oriented Python": 5. 面向对象的 Python
+            "6. Data Manipulation with pandas": 6. 用 pandas 处理数据
+            "7. Making Python Fast": 7. 让 Python 跑得更快
             "Copyright": 版权声明
 
 # NOTE: the ?v= suffixes are cache busters. Material does not fingerprint
@@ -112,7 +122,7 @@ extra_css:
 
 extra_javascript:
   - javascripts/main-site-link.js
-  - javascripts/runnable.js?v=2
+  - javascripts/runnable.js?v=3
   - javascripts/shell.js?v=1
   - javascripts/memory-diagram.js
   - javascripts/reading-mode.js
@@ -146,6 +156,19 @@ nav:
   - "Appendix":
       - "A1 Python Environment Setup": py101_md/appendix_a1_environment.md
       - "A2 Command Line and Paths": py101_md/appendix_a2_shell.md
+  # The two-day graduate crash course. Self-contained, and numbered as it was
+  # taught (1.1, 3.2.1, "Example 5.7", ...) so the existing lecture recordings
+  # still line up. That is why its numbering restarts here and does not follow
+  # the per-page scheme used by the chapters above.
+  - "Two-Day Crash Course":
+      - "Overview and Schedule": py101_md/camp_index.md
+      - "1. Style and Error Messages": py101_md/camp_ch1_style.md
+      - "2. Environments and Tooling": py101_md/camp_ch2_environments.md
+      - "3. Names, Expressions, Statements": py101_md/camp_ch3_names.md
+      - "4. Functions": py101_md/camp_ch4_functions.md
+      - "5. Object-Oriented Python": py101_md/camp_ch5_oop.md
+      - "6. Data Manipulation with pandas": py101_md/camp_ch6_pandas.md
+      - "7. Making Python Fast": py101_md/camp_ch7_performance.md
   - Copyright: copyright.md
   # More chapters and exercise sets are added here as each is rewritten.
   # Backups of the original files remain in docs/py101_md (slide_*, Lecture_*).

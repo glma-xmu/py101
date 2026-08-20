@@ -33,6 +33,26 @@
 - [第 1 章 — Python 基础](py101_md/exercises_ch1.md)
 - [第 2 章 — 函数](py101_md/exercises_ch2.md)
 
+### 附录 —— 在你自己的电脑上
+
+以上内容都在浏览器中运行。附录讲的是如何搭建属于你自己的 Python 环境。（英文）
+
+- [A1 Python 环境搭建](py101_md/appendix_a1_environment.md)
+- [A2 命令行与路径](py101_md/appendix_a2_shell.md)
+
+### [两日强化班](py101_md/camp_index.md)
+
+面向已经会写一些 Python、想弄清楚它底层到底在做什么的新入学研究生的独立短训班。节奏更快、挖得更深，也可以单独阅读。（英文）
+
+- [概览与日程](py101_md/camp_index.md)
+- [1. 代码风格与报错信息](py101_md/camp_ch1_style.md)
+- [2. 虚拟环境与工具链](py101_md/camp_ch2_environments.md)
+- [3. 名字、表达式与语句](py101_md/camp_ch3_names.md)
+- [4. 函数](py101_md/camp_ch4_functions.md)
+- [5. 面向对象的 Python](py101_md/camp_ch5_oop.md)
+- [6. 用 pandas 处理数据](py101_md/camp_ch6_pandas.md)
+- [7. 让 Python 跑得更快](py101_md/camp_ch7_performance.md)
+
 *更多章节正在重写，将陆续在此呈现。*
 
 ---

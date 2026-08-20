@@ -154,11 +154,25 @@
     };
   }
 
+  // Only Python is runnable. An Example may legitimately show a shell session, a
+  // directory tree, C, or Cython (the two-day crash course does all four); those
+  // must stay plain listings rather than becoming editable "Run" cells. Fenced
+  // blocks with no language are treated as Python, which is what every Example
+  // written before this guard existed relies on.
+  var PY_LANG = /(^|\s)(language-)?(python|python3|py|pycon)(\s|$)/;
+  function isPython(codeEl, highlight) {
+    var cls = (codeEl.className || "") + " " + ((highlight && highlight.className) || "");
+    if (PY_LANG.test(cls)) { return true; }
+    // A language was declared, and it was not Python.
+    return !/(^|\s)language-\S+/.test(cls);
+  }
+
   function enhance(admonition) {
     var codeEl = admonition.querySelector("div.highlight pre > code, pre > code");
     if (!codeEl) { return; }
     var source = codeEl.textContent.replace(/\n+$/, "");
     var highlight = admonition.querySelector("div.highlight") || codeEl;
+    if (!isPython(codeEl, highlight)) { return; }
     var lang = (document.documentElement.lang || "en").slice(0, 2);
 
     var wrap = document.createElement("div"); wrap.className = "runnable";
