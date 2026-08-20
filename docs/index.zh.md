@@ -27,6 +27,7 @@
 ### 第 3 章 — NumPy 与 pandas
 
 - [3.1 NumPy](py101_md/ch3_1_numpy.md)
+- [3.2 pandas：单表操作](py101_md/ch3_2_pandas.md)
 
 ### 习题
 

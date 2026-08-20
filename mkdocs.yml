@@ -94,6 +94,7 @@ plugins:
             "2.5 Loose Ends and Style": 2.5 补遗与风格
             "Chapter 3: NumPy & pandas": 第3章：NumPy 与 pandas
             "3.1 NumPy": 3.1 NumPy
+            "3.2 pandas: One Table": 3.2 pandas：单表操作
             "Exercises": 习题
             "Chapter 1 — Python Basics": 第 1 章 — Python 基础
             "Chapter 2 — Functions": 第 2 章 — 函数
@@ -150,6 +151,7 @@ nav:
       - 2.5 Loose Ends and Style: py101_md/ch2_5_loose_ends.md
   - "Chapter 3: NumPy & pandas":
       - 3.1 NumPy: py101_md/ch3_1_numpy.md
+      - "3.2 pandas: One Table": py101_md/ch3_2_pandas.md
   - "Exercises":
       - "Chapter 1 — Python Basics": py101_md/exercises_ch1.md
       - "Chapter 2 — Functions": py101_md/exercises_ch2.md

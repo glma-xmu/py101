@@ -27,6 +27,7 @@ This course is a hands-on introduction to **Python** and **big data**, with a fo
 ### Chapter 3 — NumPy & pandas
 
 - [3.1 NumPy](py101_md/ch3_1_numpy.md)
+- [3.2 pandas: One Table](py101_md/ch3_2_pandas.md)
 
 ### Exercises
 
