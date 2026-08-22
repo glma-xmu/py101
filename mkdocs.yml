@@ -112,6 +112,7 @@ plugins:
             "Appendix": 附录
             "A1 Python Environment Setup": A1 Python 环境搭建
             "A2 Command Line and Paths": A2 命令行与路径
+            "A3 Version Control with Git": A3 Git 版本控制
             "Two-Day Crash Course": 两日强化班
             "Overview and Schedule": 概览与日程
             "1. Style and Error Messages": 1. 代码风格与报错信息
@@ -172,6 +173,7 @@ nav:
   - "Appendix":
       - "A1 Python Environment Setup": py101_md/appendix_a1_environment.md
       - "A2 Command Line and Paths": py101_md/appendix_a2_shell.md
+      - "A3 Version Control with Git": py101_md/appendix_a3_git.md
   # The two-day graduate crash course. Self-contained, and numbered as it was
   # taught (1.1, 3.2.1, "Example 5.7", ...) so the existing lecture recordings
   # still line up. That is why its numbering restarts here and does not follow

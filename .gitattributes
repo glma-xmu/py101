@@ -1,2 +1,9 @@
 # Auto detect text files and perform LF normalization
 * text=auto
+
+# Vendored Pyodide runtime and wheels are binary. `text=auto` above would
+# otherwise rely on content sniffing to spot that, and a single normalised
+# line ending corrupts a wheel silently — numpy simply fails to import.
+*.whl binary
+*.wasm binary
+*.zip binary

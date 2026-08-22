@@ -42,6 +42,7 @@ Everything above runs in your browser. The appendix is where you set up a Python
 
 - [A1 Setting Up Your Python Environment](py101_md/appendix_a1_environment.md)
 - [A2 The Command Line and Paths](py101_md/appendix_a2_shell.md)
+- [A3 Version Control with Git](py101_md/appendix_a3_git.md)
 
 ### [Two-Day Crash Course](py101_md/camp_index.md)
 

@@ -24,7 +24,7 @@ HERE = os.path.dirname(os.path.abspath(__file__))
 PYODIDE_DIR = os.path.join(HERE, "docs", "vendor", "pyodide")
 LOCK = os.path.join(PYODIDE_DIR, "pyodide-lock.json")
 
-WANT = ["numpy", "pandas"]  # add packages here if a later chapter needs them
+WANT = ["numpy", "pandas", "matplotlib"]  # add packages here if a later chapter needs them
 PYODIDE_CDN = "https://cdn.jsdelivr.net/pyodide/v{version}/full/{file}"
 
 
