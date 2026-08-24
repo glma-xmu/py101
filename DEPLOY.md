@@ -52,7 +52,7 @@ handles the login for you.
 2. Sign in: **File → Options → Accounts → Sign in** (use your glma-xmu account).
 3. **File → Add local repository…**
 4. Browse to this folder and choose it:
-   `D:\Dropbox\other\AI赋能\py101-main\py101-clean`
+   `D:\Dropbox\other\py101-dev\py101-main\py101-clean`
 5. It will say *"This directory does not appear to be a Git repository — would you
    like to create one here?"* → click **create a repository** (keep branch = `main`).
 6. GitHub Desktop now lists hundreds of files as changes. At the bottom-left, type a
@@ -72,7 +72,7 @@ github.com, or skip Step 1 entirely and let "Publish" create it.)
 2. Open **Git Bash** (or PowerShell) and run, line by line:
 
    ```bash
-   cd "D:/Dropbox/other/AI赋能/py101-main/py101-clean"
+   cd "D:/Dropbox/other/py101-dev/py101-main/py101-clean"
    git init
    git add .
    git commit -m "Initial course site"

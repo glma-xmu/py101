@@ -35,6 +35,7 @@ This course is a hands-on introduction to **Python** and **big data**, with a fo
 
 - [Chapter 1 — Python Basics](py101_md/exercises_ch1.md)
 - [Chapter 2 — Functions](py101_md/exercises_ch2.md)
+- [Chapter 3 — NumPy and pandas](py101_md/exercises_ch3.md)
 
 ### Appendix — Your Own Machine
 

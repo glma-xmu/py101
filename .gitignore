@@ -5,6 +5,10 @@ site/
 venv/
 .venv/
 
+# Collected data. Never published on the site — distributed to students over the
+# college network instead. Regenerate with scripts/fetch_edgar.py.
+edgar_out/
+
 # SSH deploy keys. Generate these into ~/.ssh, never into the repo. The private
 # half belongs only in the GitHub Actions secret SERVER_SSH_KEY, and the public
 # half only in the server's authorized_keys. See CI_MIRROR_SETUP.md.
