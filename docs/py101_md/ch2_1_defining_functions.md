@@ -247,9 +247,66 @@ And what if a function never says `return`? It still returns something: the obje
     2. Write `divmod2(a, b)` that returns both `a // b` and `a % b` as a tuple, and unpack the result at the call site.
     3. After a call returns, its frame is discarded. Explain in one sentence how the returned object nonetheless survives.
 
-## 5. Default parameter values
+## 5. A worked function: Newton's method
+
+We now have everything a real function needs — parameters, a body, and `return` — so let us write one that actually earns its keep. The problem is mathematical, and it is one of the most useful procedures in all of computing: **given a function, where does it cross zero?**
+
+Suppose you want $\sqrt{2}$ but have no square-root button. That is the same as asking for the root of
+
+$$f(x) = x^2 - 2,$$
+
+because $f(x) = 0$ exactly when $x = \sqrt{2}$. **Newton's method** finds such a root by repeated improvement. Start with any guess $x$, and notice that the tangent line at that point crosses zero at
+
+$$x_{\text{new}} = x - \frac{f(x)}{f'(x)}.$$
+
+That crossing is a better guess than the one you started with. Repeat, and the guesses close in on the true root remarkably fast. For $f(x) = x^2 - a$ we have $f'(x) = 2x$, so each step is just $x - (x^2 - a) / (2x)$.
+
+The only remaining question is when to stop. We stop once the guess is good enough — when $|x^2 - a|$ falls below a **tolerance** we choose. That tolerance is a parameter like any other, so the caller supplies it:
+
+???+ example "Example: Newton's method for a square root"
+    ```python
+    def sqrt_newton(a, tolerance):
+        x = a / 2                              # any starting guess will do
+        while abs(x * x - a) > tolerance:
+            x = x - (x * x - a) / (2 * x)      # step to the tangent's root
+        return x
+
+    print(sqrt_newton(2, 1e-10))    # 1.4142135623746899
+    print(sqrt_newton(9, 1e-10))    # 3.0
+    ```
+
+Read that against §3 and §4. Each call gets its own frame holding `a`, `tolerance` and `x`; the loop rebinds the local `x` again and again inside that frame; and `return x` hands the final object back to the caller just before the frame is discarded. Nothing new is happening — this is the same machinery, doing something worth doing.
+
+```recall
+Names point to objects: `x` is not a box that gets edited. Each `x = x - ...` builds a *new* float in the heap and re-points the local name `x` at it. The old value is simply left behind.
+```
+
+???+ question "In-class exercise: Newton's method"
+    1. Add a `print(x)` inside the loop and run `sqrt_newton(2, 1e-10)`. How many steps does it take? Roughly how many correct digits does each step buy you?
+    2. What happens if you call `sqrt_newton(2, 0)`? Explain, in terms of floating-point values, why the loop may never end.
+    3. Write `cbrt_newton(a, tolerance)` for the cube root, where $f(x) = x^3 - a$ and $f'(x) = 3x^2$.
+
+We will meet this function twice more. In 2.2 it will show how a name inside a function is resolved, and in 2.4 we will rewrite it **recursively** — because "improve the guess, then do the same thing again" is exactly what recursion expresses.
+
+## 6. Default parameter values
+
+Newton's method leaves us with a small annoyance. The `tolerance` argument has to be typed on *every* call, even though we almost always want the same value — and for comparable results across runs we usually *should* keep it the same. Only occasionally do we want to change it. What we want is to preallocate a sensible value, and override it when we need to.
 
 A parameter can carry a **default**: a value used when the caller omits that argument. This is perfect for a setting you usually want fixed but occasionally want to change — an error tolerance, a separator, a base.
+
+???+ example "Example: Newton's method with a default tolerance"
+    ```python
+    def sqrt_newton(a, tolerance=1e-10):       # the usual value, preallocated
+        x = a / 2
+        while abs(x * x - a) > tolerance:
+            x = x - (x * x - a) / (2 * x)
+        return x
+
+    print(sqrt_newton(2))            # 1.4142135623746899 — the default is used
+    print(sqrt_newton(2, 1e-2))      # 1.4166666666666667 — cruder, and faster
+    ```
+
+The same idea reads just as naturally away from mathematics — a greeting that is usually `"Hello"`, but need not be:
 
 ???+ example "Example: a default parameter"
     ```python
@@ -259,6 +316,8 @@ A parameter can carry a **default**: a value used when the caller omits that arg
     print(greet("Ada"))                 # Hello, Ada!
     print(greet("Bob", "Welcome"))      # Welcome, Bob!
     ```
+
+One rule follows from the syntax: **parameters with defaults must come after parameters without them.** `def f(a, b=2)` is fine; `def f(a=1, b)` is a `SyntaxError`, because Python would have no way to tell which argument you meant to omit.
 
 But defaults hold a famous surprise, and it follows directly from our memory picture. **A default value is evaluated once, when the `def` runs — not on each call** — and the resulting object is stored *with the function object* in the heap. Every call that uses the default therefore shares that **one** object. If the default is *immutable* (like the string `"Hello"`), you never notice. If it is *mutable* (like a list), every call mutates the same shared object, and the changes pile up.
 
@@ -315,8 +374,64 @@ You probably expected a fresh `[]` each call. But there is only one list object 
     Hints are *not* enforced at runtime — `square(2.5)` still works and returns
     `6.25`. Treat them as precise documentation, not as guarantees.
 
+## 7. A function factory, and a name that surprises you
+
+Here is a second special case, and it is a genuine puzzle. Because a function is an object, we can build several of them in a loop and keep them in a dictionary — a small **function factory**. Each one is supposed to remember its own number.
+
+Read the code, predict what `ff[3]()` prints, and only then run it.
+
+???+ example "Example: five functions from a loop"
+    ```python
+    ff = {}
+
+    for i in range(5):
+        def f():
+            return i          # which i is this?
+        ff[i] = f
+
+    print(ff[3]())            # not 3
+    print(ff[0]())            # not 0 either
+    ```
+
+Every one of the five functions returns `4`. The factory did build five distinct function objects — `ff[0]` and `ff[3]` really are different objects — but they all agree on the answer, and the answer is wrong.
+
+The reason is the single most important thing to understand about names inside functions. **`f` has no `i` of its own.** Nothing in `f`'s body assigns to `i`, so `i` is not one of `f`'s local names. When `f` *runs*, Python has to go looking for `i` elsewhere — and it finds the `i` left over from the loop, out in the global namespace. By the time you call `ff[3]()`, that loop has long finished and `i` is sitting at `4`.
+
+So the lookup does not happen when the function is **defined**; it happens when the function is **called**. The name `i` inside `f` and the name `i` in the loop are the *same* name, resolved late — not a private copy taken at definition time.
+
+???+ warning "Pitfall: a name inside a function is looked up when the function runs"
+    This bites whenever a function is defined in one place and called in another —
+    in a loop, in a list of callbacks, in a dictionary of handlers. The function
+    does not photograph the values around it at `def` time. It keeps only the
+    *name*, and resolves it later, against whatever the world looks like then.
+
+    A first fix, using what §6 just taught you, is to give `f` a local `i` by
+    making it a parameter with a default — and defaults *are* evaluated at `def`
+    time, once per loop iteration:
+
+    ```python
+    ff = {}
+    for i in range(5):
+        def f(i=i):           # the local i captures this iteration's value now
+            return i
+        ff[i] = f
+
+    print(ff[3]())            # 3
+    ```
+
+    Note what changed: `f` now has a parameter named `i`, so `i` *is* local, and
+    there is nothing to look up outside.
+
+That fix works, but it is a trick — it abuses the parameter list to smuggle in a value. The honest repair needs a piece of vocabulary we do not have yet: a way to say *which* namespace a name belongs to, and a way for an inner function to keep hold of an outer function's variable. That is precisely the subject of the next page.
+
+```recall
+Names refer to objects — and a name is only meaningful inside a namespace. `i` inside `f` and `i` in the loop look identical, and that is the whole problem: they *are* identical, because `f` never made one of its own.
+```
+
 ## Summary
 
-A **function** packages a named, reusable piece of behavior, created with `def` and run by **calling** it. Each call gets a private **frame** on the **call stack**: Python pushes the frame, binds the **arguments** to the **parameters** as local names, and runs the body — then discards the frame. Names live in frames; the **objects** they point to live in the shared **heap**. That split is exactly what **`return`** bridges: it carries an *object* back across the frame boundary so a name in the caller refers to it, after which the callee's frame vanishes but the object lives on. A parameter may carry a **default** — but a *mutable* default is created once and shared, so default to **`None`** and build fresh inside. A function is itself an ordinary **object**, a fact we exploit fully in 2.3 — which is also where we look closely at the different ways arguments reach parameters (positional, keyword, and variable-length `*args`/`**kwargs`).
+A **function** packages a named, reusable piece of behavior, created with `def` and run by **calling** it. Each call gets a private **frame** on the **call stack**: Python pushes the frame, binds the **arguments** to the **parameters** as local names, and runs the body — then discards the frame. Names live in frames; the **objects** they point to live in the shared **heap**. That split is exactly what **`return`** bridges: it carries an *object* back across the frame boundary so a name in the caller refers to it, after which the callee's frame vanishes but the object lives on.
 
-Next, **2.2 Namespaces and Scope** zooms in on those frames: how Python organizes names into namespaces (local, enclosing, global, built-in), and the rule it uses to decide which `x` you mean when several are in play.
+**Newton's method** (§5) put all of that to work on a real problem, and its tolerance argument motivated **default parameters** (§6) — with the warning that a *mutable* default is created once and shared, so default to **`None`** and build fresh inside. The **function factory** of §7 then left us with an unfinished puzzle: five functions built in a loop that all return the same number, because a name inside a function is resolved when the function *runs*, not when it is defined.
+
+Two threads therefore run out of this page. **2.2 Namespaces and Scope** picks up the puzzle directly: how Python organizes names into namespaces (local, enclosing, global, built-in), the rule it uses to decide which `i` you mean, and the proper repair for the factory. And a function is itself an ordinary **object** — a fact 2.3 exploits fully, where we also look closely at how arguments reach parameters (positional, keyword, and the unpacking operators `*` and `**`). Newton's method returns in **2.4**, rewritten as recursion.

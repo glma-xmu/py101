@@ -10,7 +10,7 @@ As always, every cell is runnable.
 
 Imagine you have written a dozen functions and now want every one of them to announce when it starts and finishes — for logging, timing, or debugging. You could paste the same two `print`s into all twelve bodies, but that is exactly the repetition functions were meant to kill. And if someone *else* wrote the functions, you may not be able to edit them at all.
 
-The way out is a **decorator**: a higher-order function that takes a function, wraps it in some extra behavior, and returns the wrapped version. It is the pass-through wrapper from 2.3 §3.2, given a name and a purpose.
+The way out is a **decorator**: a higher-order function that takes a function, wraps it in some extra behavior, and returns the wrapped version. It is the pass-through wrapper from 2.3 §3.3, given a name and a purpose.
 
 ???+ example "Example: a logging decorator"
     ```python
@@ -84,6 +84,24 @@ A close cousin of decoration is the **`assert`** statement, which a wrapper ofte
 A **recursive** function is one that calls itself. It is the natural shape for any problem that is defined in terms of a smaller copy of itself — and it leans directly on the **call stack** from 2.1, because each call gets its own frame.
 
 Every recursion needs two parts: a **base case** that stops the descent, and a **recursive case** that moves one step toward it.
+
+You have already written something with exactly that shape. Newton's method in 2.1 §5 said: *improve the guess; if it is good enough, stop; otherwise do the same thing again.* That is a base case and a recursive case, and we expressed it with a `while` loop only because we had no other tool. Written recursively, the description and the code become the same sentence:
+
+???+ example "Example: Newton's method, recursively"
+    ```python
+    def sqrt_newton(a, tolerance=1e-10, x=None):
+        if x is None:                       # first call: pick a starting guess
+            x = a / 2
+        if abs(x * x - a) <= tolerance:     # base case: good enough, stop
+            return x
+        better = x - (x * x - a) / (2 * x)  # one improvement
+        return sqrt_newton(a, tolerance, better)   # do the same thing again
+
+    print(sqrt_newton(2))       # 1.414213562373095
+    print(sqrt_newton(9))       # 3.0
+    ```
+
+Compare it with the loop version in 2.1 §6: the arithmetic is identical, and what changed is who remembers the current guess. The loop kept it in one frame, rebinding `x` over and over. The recursion gives each improvement **its own frame**, and the guess travels forward as an argument. Note also the `None` sentinel from 2.1 §6 doing real work — the starting guess depends on `a`, so it cannot be written as a fixed default.
 
 ???+ example "Example: factorial"
     ```python

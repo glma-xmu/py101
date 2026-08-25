@@ -59,7 +59,42 @@ The example below writes a tiny higher-order function of our own, and also passe
     returns a function as its result. Ordinary functions work on data; higher-order
     functions work on *behavior*.
 
-So far so good — but `apply_twice` only works because `increment` takes exactly one argument. What if the function we want to hand off needs a different number of arguments? To pass arguments through cleanly, we first need to look more carefully at how arguments reach parameters at all.
+Here is a more useful one, and it will stay with us for the rest of the page. Suppose we want to **count how many times a function is called** — a crude profiler. The counter has to survive between calls, and 2.2 gave us two ways to arrange that. There is also a third, which you can now recognise for what it is:
+
+???+ example "Example: `call_count`, counting with a shared default"
+    ```python
+    def call_count(func, x=[0]):
+        print(f"calling {x[0] + 1} times")
+        x[0] += 1
+        func()
+
+    call_count(print)          # calling 1 times
+    call_count(print)          # calling 2 times
+    call_count(print)          # calling 3 times
+    ```
+
+That `x=[0]` is the *shared mutable default* from 2.1 §6 — the thing we called a bug — used here deliberately. Because the list is created once at `def` time and reused by every call, mutating `x[0]` is a way of remembering something between calls. It works, and you will meet it in real code, but it is a trick: the state is hidden in the signature, and any caller who passes their own `x` silently resets the tally.
+
+The counter from [2.2 §6](ch2_2_namespaces_scope.md) does the same job honestly, with the tally bound to an enclosing frame instead of smuggled into a parameter. We return to that in §4, once closures have a name.
+
+The more pressing limitation is different. Look at the last line of the body: `func()` — with empty parentheses. **`call_count` can only count functions that take no arguments.** `call_count(print)` prints a blank line, which is not much of a demonstration, and `call_count(max)` would fail outright. What we want is to hand `print` something to print.
+
+The obvious repair is to accept one more parameter and pass it along:
+
+???+ example "Example: passing one argument through"
+    ```python
+    def call_count(func, arg_to_call, x=[0]):
+        print(f"calling {x[0] + 1} times")
+        x[0] += 1
+        func(arg_to_call)
+
+    call_count(print, "hello")     # calling 1 times / hello
+    call_count(print, "python")    # calling 2 times / python
+    ```
+
+Better — but only for functions taking *exactly one* argument. Two arguments and we are stuck again. We could add `arg2`, `arg3`, and give them defaults, but that is obviously the wrong road: we do not know in advance how many arguments the wrapped function needs, nor what they are called.
+
+To solve this properly we need to look more carefully at how arguments reach parameters at all — and, first, at a piece of Python syntax that has nothing to do with functions.
 
 ## 3. How arguments reach parameters
 
@@ -82,9 +117,90 @@ When a function has several parameters, you can supply the arguments two ways. *
     a keyword. `power(base=2, 10)` is a `SyntaxError`. Keep positionals first, then
     keywords.
 
-### 3.2 Variable-length arguments: `*args` and `**kwargs`
+### 3.2 The star: packing and unpacking
 
-Sometimes you do not know in advance how many arguments there will be. Two special markers handle that. In a **definition**, `*args` **collects** any extra positional arguments into a *tuple*, and `**kwargs` collects any extra keyword arguments into a *dict*. The names `args` and `kwargs` are just convention — the `*` and `**` do the work.
+Before we can solve the `call_count` problem, meet the `*` operator on its own ground. It has nothing to do with functions to begin with — it is about **packing** several values into one object and **unpacking** one object back into several names. You have already done both without noticing.
+
+Start with the plainest case. Writing several values on the right of `=` **packs** them into a tuple; writing several names on the left **unpacks** them again:
+
+???+ example "Example: packing and unpacking, without any star"
+    ```python
+    a = 1, 2, 3           # packing: a is the tuple (1, 2, 3)
+    print(a, type(a))
+
+    a, b, c = 1, 2, 3     # unpacking: one name per value
+    print(a, b, c)        # 1 2 3
+    ```
+
+The rule so far is strict — **as many names as values**. Give it the wrong count and Python refuses, because it has no way to guess which name you meant to leave out:
+
+```python
+a, b = 1, 2, 3            # ValueError: too many values to unpack (expected 2)
+```
+
+The star relaxes exactly that restriction. A name marked with `*` says *"however many are left over"*, and collects them into a **list**:
+
+???+ example "Example: one star absorbs the remainder"
+    ```python
+    a, *b, c = 1, 2, 3, 4, 5
+    print(a, b, c)        # 1 [2, 3, 4] 5   — b took the middle
+
+    *a, b = 1, 2, 3, 4, 5
+    print(a, b)           # [1, 2, 3, 4] 5
+
+    a, *b = 1, 2, 3, 4, 5
+    print(a, b)           # 1 [2, 3, 4, 5]
+
+    *a, b = [1]
+    print(a, b)           # [] 1           — 'however many' may be none
+    ```
+
+Two things follow from "however many are left." The starred name always ends up a **list**, even when it catches a single item or nothing at all. And there can be **at most one** star, since two would be ambiguous — `*a, *b = 1, 2, 3` is a `SyntaxError`, because nothing decides where the first run stops and the second begins.
+
+One more boundary is worth probing. Unpacking needs something to iterate over, so `*a, b = [1]` works while `*a, b = 1` does not — a bare `1` is not a sequence, and Python says so: `TypeError: cannot unpack non-iterable int object`.
+
+???+ question "In-class exercise: predict the unpacking"
+    Work these out on paper *before* running them. For each, give the value and type of every name, or say why it fails.
+
+    1. `a = 1, 2, 3`
+    2. `a, b, c = 1, 2, 3`
+    3. `a, b = 1, 2, 3`
+    4. `a, *b, c = 1, 2, 3, 4, 5`
+    5. `*a, b, c = 1, 2, 3, 4, 5`
+    6. `*a, *b = 1, 2, 3, 4, 5`
+    7. `*a, b = 1`
+
+Now the direction that matters for calls. Used in front of an existing sequence, `*` does the **reverse**: it spreads that one object back out into separate values.
+
+???+ example "Example: a star spreads a sequence"
+    ```python
+    nums = [3, 1, 4, 1, 5]
+    print(nums)            # [3, 1, 4, 1, 5] — one argument, a list
+    print(*nums)           # 3 1 4 1 5       — five separate arguments
+    print(max(*nums))      # 5 — same as max(3, 1, 4, 1, 5)
+    ```
+
+Note how `print(nums)` and `print(*nums)` differ: the first hands `print` a single list object, the second hands it five separate arguments. So `*` on a *name* packs, and `*` on a *value* unpacks — one symbol, two opposite directions, and which one you get depends on which side of the `=` (or of the call) it sits.
+
+The double star does the same for **dictionaries**. Where `*` spreads a sequence into positional values, `**` spreads a mapping into `key=value` pairs — most visibly when merging two dicts:
+
+???+ example "Example: `**` unpacks a mapping"
+    ```python
+    dict1 = {"a": 1, "b": 2, "c": 3}
+    dict2 = {"d": 4, "e": 5, "f": 6}
+
+    combined = {**dict1, **dict2}       # both spread into one new dict
+    print(combined)                     # {'a': 1, 'b': 2, ..., 'f': 6}
+    ```
+
+### 3.3 Variable-length parameters: `*args` and `**kwargs`
+
+Everything in §3.2 was about ordinary values. Now point the same two operators at a **parameter list**, and the `call_count` problem dissolves.
+
+Passing an unknown number of arguments to a function takes two steps, and they are precisely the two directions you just saw:
+
+1. **Packing** — in the *definition*, `*args` collects however many positional arguments arrive into a tuple.
+2. **Unpacking** — in the *call* inside the body, `*args` spreads that tuple back out into separate arguments for the function being wrapped.
 
 ???+ example "Example: collecting arguments with `*` and `**`"
     ```python
@@ -101,18 +217,36 @@ Sometimes you do not know in advance how many arguments there will be. Two speci
     show(a=1, b=2)                  # a = 1 / b = 2  (kwargs is a dict)
     ```
 
-The same stars also work in the *other* direction. In a **call**, `*` **spreads** a sequence into positional arguments and `**` spreads a dict into keyword arguments. One symbol, two opposite jobs: *collect* when defining, *spread* when calling.
+The names `args` and `kwargs` are pure convention — the `*` and `**` do the work. And note what each *is*: `args` is a tuple, `kwargs` is a dict, so everything you know about tuples and dicts from Chapter 1 applies inside the body.
 
-???+ example "Example: spreading arguments into a call"
+Now `call_count` can count anything at all. It packs whatever arrives into `args`, and unpacks it again on the way through:
+
+???+ example "Example: `call_count`, finished"
     ```python
-    nums = [3, 1, 4, 1, 5]
-    print(max(*nums))               # same as max(3, 1, 4, 1, 5) -> 5
+    def call_count(func, *args, x=[0]):
+        print(f"calling {x[0] + 1} times")
+        x[0] += 1
+        func(*args, sep=", ")           # spread the tuple back out
 
-    settings = {"sep": "-", "end": "!\n"}
-    print("a", "b", "c", **settings)   # a-b-c!
+    call_count(print, "hello", "python", "world")
+    # calling 1 times
+    # hello, python, world
     ```
 
-Now the higher-order puzzle from §2 solves itself. A wrapper can accept *any* arguments with `*args, **kwargs` and pass them straight through to the function it calls — this exact pattern is the heart of decorators in 2.4.
+The `sep=", "` is there to prove the point. If `args` were passed along as a single tuple, `print` would show it with parentheses and commas of its own; because the star *unpacked* it, `print` received three separate strings and joined them with the separator we asked for. Try deleting the star and compare.
+
+???+ note "Key concept: `*args` and `**kwargs`"
+    In a *definition*, `*args` gathers extra positional arguments into a tuple and
+    `**kwargs` gathers extra keyword arguments into a dict. In a *call*, `*` and
+    `**` spread a sequence or dict back into separate arguments. It is the same
+    packing/unpacking from §3.2, applied to a parameter list.
+
+    Two ordering rules apply, and both come from Python needing to tell arguments
+    apart: **positional arguments must precede keyword arguments** in a call, and
+    in a definition the order is ordinary parameters, then `*args`, then
+    `**kwargs`, with defaulted parameters after non-defaulted ones.
+
+A wrapper that accepts `*args, **kwargs` and forwards both can stand in front of *any* function whatsoever — which is exactly the shape of a decorator in 2.4.
 
 ???+ example "Example: a pass-through higher-order function"
     ```python
@@ -124,30 +258,11 @@ Now the higher-order puzzle from §2 solves itself. A wrapper can accept *any* a
     call_it(print, "a", "b", "c", sep=", ") # calling print -> a, b, c
     ```
 
-???+ note "Key concept: `*args` and `**kwargs`"
-    In a *definition*, `*args` gathers extra positional arguments into a tuple and
-    `**kwargs` gathers extra keyword arguments into a dict. In a *call*, `*` and
-    `**` spread a sequence or dict back into separate arguments. The order in a
-    definition is fixed: ordinary parameters, then `*args`, then `**kwargs`; and
-    parameters with defaults must follow those without.
-
-??? info "Deep dive: the same star unpacks assignments"
-    That gathering `*` is not unique to functions — it also works when unpacking a
-    sequence into names, which is handy on its own:
-
-    ```python
-    first, *rest = [10, 20, 30, 40]
-    print(first)   # 10
-    print(rest)    # [20, 30, 40] — '*rest' collects whatever is left
-    ```
-
-    One `*` may appear on the left-hand side, collecting the leftover items into a
-    list. It is the same idea as `*args`: a star means "however many are left."
-
 ???+ question "In-class exercise: variable-length arguments"
     1. Write `my_sum(*args)` that returns the sum of however many numbers it is given, and test it with two, then five numbers.
-    2. Write `greet_all(**people)` taking keyword arguments like `greet_all(Alice=9, Bob=7)` and printing `"Alice is 9"` for each. (Recall `kwargs` is a dict.)
+    2. `**kwargs` is a dict, so it has `.keys()`, `.values()` and `.items()`. Write `sum_of_kwargs` so that `sum_of_kwargs(Alice=5, Bob=3, Charlie=4)` returns `12`, and a version that also reports who contributed the most.
     3. Given `pair = (3, 4)`, call `power` from §3.1 as `power(*pair)` and confirm it returns `81`.
+    4. Rewrite `call_count` so it no longer needs the `x=[0]` default, using the counter from 2.2 §6 instead. Which version would you rather hand to someone else, and why?
 
 ## 4. Functions as return values: closures
 
@@ -190,16 +305,18 @@ Now look at what survives. The instant `make_linear` returns, the frame above is
 The motto at work: `make_linear`'s frame vanished, but `a` and `b` are objects in the heap, kept alive by the closure that points at them. Each call to `make_linear` makes a *new* closure with its own captured values.
 ```
 
-To let the inner function *change* a captured name (not just read it), use `nonlocal` — exactly the keyword from 2.2. A classic use is a counter that remembers its tally between calls.
+The same idea repairs the function factory from 2.1 §7. `make_f(i)` in [2.2 §6.1](ch2_2_namespaces_scope.md) was a closure all along — each returned `f` kept its own captured `i` alive in exactly the way `double_plus_one` keeps `a` and `b`. Now the name for it is available.
+
+To let the inner function *change* a captured name rather than only read it, use `nonlocal` — exactly the keyword from 2.2. That gives us the counter we built there, which we can finally call by its proper name:
 
 ???+ example "Example: a closure that counts"
     ```python
     def make_counter():
-        count = 0
+        calls = 0
         def step():
-            nonlocal count        # rebind the enclosing 'count', not a new local
-            count += 1
-            return count
+            nonlocal calls        # rebind the enclosing 'calls', not a new local
+            calls += 1
+            return calls
         return step
 
     c = make_counter()
@@ -207,6 +324,8 @@ To let the inner function *change* a captured name (not just read it), use `nonl
     d = make_counter()
     print(d())                    # 1 — a fresh, independent counter
     ```
+
+Set that beside the `x=[0]` version of `call_count` from §2. Both remember a tally between calls; the difference is *where the memory lives*. The closure keeps it in a captured enclosing name, private and per-counter. The default-argument trick keeps it in the function's signature, visible to every caller and resettable by any of them. Same behavior, and one of them is honest about it.
 
 ???+ note "Key concept: closure"
     A **closure** is an inner function together with the enclosing-scope names it
@@ -254,12 +373,22 @@ All three inner functions close over the *same* `hp` and `damage` from one `make
     one and the others see the change at once. Sibling closures are tied together
     by the heap cells they hold in common.
 
-??? info "Deep dive: the `x=[0]` counter trick"
-    Before closures click, people sometimes fake a persistent counter with a
-    *mutable default* — `def step(_cache=[0]): _cache[0] += 1`. It works only by
-    exploiting the very trap we warned about in 2.1: the default list is created
-    once and shared across calls. It is clever but fragile and surprising. A
-    closure with `nonlocal` says what you mean and is the right tool.
+??? info "Deep dive: three ways to remember, and how to choose"
+    Chapter 2 has now shown three ways to make a value survive between calls, and
+    they are worth laying side by side because the choice is a real one.
+
+    A **global** (2.2 §6) is the bluntest: the tally is a module-level name that
+    anything can read or overwrite, and the function only makes sense next to it.
+    A **mutable default** — `call_count`'s `x=[0]` — hides the tally in the
+    signature by exploiting the shared-default trap from 2.1 §6; it is compact,
+    it appears in real code, and it leaks, because any caller may pass their own
+    `x` and silently reset the count. A **closure** with `nonlocal` puts the tally
+    in a captured enclosing frame: private, one per counter, and it says what it
+    means.
+
+    Reach for the closure. Recognise the other two so you can read other people's
+    code — and so you can see that all three are the same idea about *where a name
+    lives*, which is the thread running through 2.1, 2.2 and this page.
 
 ## 5. `lambda`: a function with no name
 

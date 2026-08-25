@@ -225,26 +225,79 @@ But *assigning* to that same name makes it local throughout the function — whi
     yet. Python does not fall back to the global here. The fix is to be explicit
     about your intent, with `global` or `nonlocal`.
 
-To rebind a **global** from inside a function, declare it with `global`. To rebind a name from an **enclosing** function, declare it with `nonlocal`.
+To rebind a **global** from inside a function, declare it with `global`. To rebind a name from an **enclosing** function, declare it with `nonlocal`. Those two keywords are the fix for `UnboundLocalError`, and they are the two ways to build the same small thing: a **counter that survives between calls**.
 
-???+ example "Example: global and nonlocal"
+Start with the global version. `count_calls` needs to remember, across separate calls, how many times it has run — and a local would be rebuilt and discarded on every call, so the tally has to live outside.
+
+???+ example "Example: a counter in the global namespace"
     ```python
-    total = 0
-    def add(n):
-        global total            # 'total' refers to the module-level name
-        total += n
-    add(3); add(4)
-    print(total)                # 7
+    calls = 0
 
-    def outer():
-        message = "before"
-        def inner():
-            nonlocal message    # 'message' refers to outer's local
-            message = "after"
-        inner()
-        print(message)          # after
-    outer()
+    def count_calls():
+        global calls            # 'calls' refers to the module-level name
+        calls += 1
+        print(f"calling {calls} times")
+
+    count_calls()               # calling 1 times
+    count_calls()               # calling 2 times
+    print(calls)                # 2
     ```
+
+It works, but look at what it costs: the tally is a module-level variable that *anything* can read or overwrite, and the function only makes sense alongside it. The counter is not really part of the world; it belongs to the function.
+
+**`nonlocal`** lets us say exactly that. Put the tally in an enclosing function, and the inner function can rebind it — so the count lives in the outer call's frame, reachable by `counter` and by nobody else.
+
+???+ example "Example: the same counter, bound to an inner function"
+    ```python
+    def make_counter():
+        calls = 0                   # lives in make_counter's frame
+
+        def counter():
+            nonlocal calls          # 'calls' refers to make_counter's local
+            calls += 1
+            print(f"calling {calls} times")
+
+        return counter
+
+    c = make_counter()
+    c()                             # calling 1 times
+    c()                             # calling 2 times
+
+    d = make_counter()              # a second, independent counter
+    d()                             # calling 1 times
+    print("calls" in globals())     # False — nothing leaked into the global namespace
+    ```
+
+Two things are worth noticing. The name `calls` never appears in the global namespace, so the counter is genuinely private. And `c` and `d` count independently, because each call to `make_counter` created its own frame with its own `calls`. That is the difference between one shared global and a value bound to a particular function — and it is the whole reason `nonlocal` exists.
+
+This pattern has a name, **closure**, and 2.3 develops it properly. There we also extend this very counter so that it can wrap *another* function and pass along however many arguments that function needs.
+
+### 6.1 Back to the function factory
+
+We can now repair the puzzle left open in [2.1 §7](ch2_1_defining_functions.md). Recall the factory: five functions built in a loop, every one of them returning `4`, because `f` had no `i` of its own and looked the name up — out in the global namespace — only when it was called.
+
+Everything in this page explains that. `i` was not local to `f` (nothing in `f` assigned to it), and it was not enclosing either (the loop is not a function), so LEGB walked all the way out to the **global** `i`, whose value at call time was `4`.
+
+The honest fix is to give each function an enclosing frame of its own, by building it inside a function instead of inside a bare loop:
+
+???+ example "Example: the factory, repaired"
+    ```python
+    def make_f(i):            # each call gets its own frame, with its own i
+        def f():
+            return i          # now enclosing, not global — captured per call
+        return f
+
+    ff = {i: make_f(i) for i in range(5)}
+
+    print(ff[3]())            # 3
+    print(ff[0]())            # 0
+    ```
+
+Nothing here is a trick. Each call to `make_f` creates a frame holding that iteration's `i`, and the `f` it returns keeps hold of *that* frame's name. Five calls, five frames, five independent values — exactly as with `c` and `d` above.
+
+```recall
+Names refer to objects, and a name is only meaningful inside a namespace. In 2.1 the loop's `i` and the `i` inside `f` were one global name, so all five functions shared it. Wrapping the definition in `make_f` gave each function a private enclosing `i` instead.
+```
 
 ???+ warning "Pitfall: reach for `return`, not `global`"
     `global` works, but a function that quietly rewrites module-level variables is

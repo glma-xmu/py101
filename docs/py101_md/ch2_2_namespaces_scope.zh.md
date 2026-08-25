@@ -223,26 +223,79 @@ frame: inner()
     `counter + 1` 读到的是一个还没有值的局部。Python 在这里*不会*回退到那个全局。
     修法是把你的意图说明白：用 `global` 或 `nonlocal`。
 
-要从函数内部重新绑定一个**全局**，用 `global` 声明它。要重新绑定一个**外层**函数里的名称，用 `nonlocal` 声明它。
+要从函数内部重新绑定一个**全局**，用 `global` 声明它。要重新绑定一个**外层**函数里的名称，用 `nonlocal` 声明它。这两个关键字既是 `UnboundLocalError` 的修法，也是造出同一件小东西的两条路：一个**在多次调用之间存活下来的计数器**。
 
-???+ example "示例：global 与 nonlocal"
+先看全局版本。`count_calls` 需要跨越彼此独立的调用记住自己被运行了多少次——而一个局部名称每次调用都会被重建又丢弃，所以这个计数只能住在函数外面。
+
+???+ example "示例：住在全局命名空间里的计数器"
     ```python
-    total = 0
-    def add(n):
-        global total            # 'total' 指模块层那个名称
-        total += n
-    add(3); add(4)
-    print(total)                # 7
+    calls = 0
 
-    def outer():
-        message = "before"
-        def inner():
-            nonlocal message    # 'message' 指 outer 的那个局部
-            message = "after"
-        inner()
-        print(message)          # after
-    outer()
+    def count_calls():
+        global calls            # 'calls' 指模块层那个名称
+        calls += 1
+        print(f"calling {calls} times")
+
+    count_calls()               # calling 1 times
+    count_calls()               # calling 2 times
+    print(calls)                # 2
     ```
+
+它能用，但看看代价：这个计数是一个模块层变量，*任何东西*都能读它、覆盖它，而这个函数也只有挨着它才说得通。计数器并不真的属于这个世界；它属于这个函数。
+
+**`nonlocal`** 让我们把这句话原样说出来。把计数放进一个外层函数，内层函数就能重新绑定它——于是计数住在外层那次调用的帧里，只有 `counter` 够得着，别人都够不着。
+
+???+ example "示例：同一个计数器，绑定在内层函数上"
+    ```python
+    def make_counter():
+        calls = 0                   # 住在 make_counter 的帧里
+
+        def counter():
+            nonlocal calls          # 'calls' 指 make_counter 的那个局部
+            calls += 1
+            print(f"calling {calls} times")
+
+        return counter
+
+    c = make_counter()
+    c()                             # calling 1 times
+    c()                             # calling 2 times
+
+    d = make_counter()              # 第二个、互不相干的计数器
+    d()                             # calling 1 times
+    print("calls" in globals())     # False —— 什么都没漏进全局命名空间
+    ```
+
+有两点值得注意。名称 `calls` 从未出现在全局命名空间里，所以这个计数器是真正私有的。而 `c` 和 `d` 各数各的，因为每一次调用 `make_counter` 都造了自己的帧、自己的 `calls`。这就是“一个共享的全局”与“绑定在某个特定函数上的值”之间的差别——也正是 `nonlocal` 存在的全部理由。
+
+这个写法有个名字，叫**闭包（closure）**，2.3 会把它讲透。在那里我们还会把这同一个计数器扩展成能包住*另一个*函数，并把那个函数所需要的、不论多少个实参一路传过去。
+
+### 6.1 回到那个函数工厂
+
+现在我们可以修好 [2.1 §7](ch2_1_defining_functions.md) 留下的谜题了。回想那个工厂：循环里造出的五个函数，每一个都返回 `4`，因为 `f` 没有属于自己的 `i`，只在被调用时才去查这个名称——查到了全局命名空间里。
+
+这一页讲的每样东西都解释了它。`i` 不是 `f` 的局部（`f` 里没有任何地方给它赋值），也不是外层的（循环并不是一个函数），于是 LEGB 一路向外走到了**全局**的 `i`，而它在调用时刻的值是 `4`。
+
+诚实的修法，是让每个函数都拥有自己的外层帧——把它造在一个函数里面，而不是造在一个光秃秃的循环里：
+
+???+ example "示例：修好的工厂"
+    ```python
+    def make_f(i):            # 每次调用都拿到自己的帧，和自己的 i
+        def f():
+            return i          # 现在是外层的，不是全局的——每次调用各自捕获
+        return f
+
+    ff = {i: make_f(i) for i in range(5)}
+
+    print(ff[3]())            # 3
+    print(ff[0]())            # 0
+    ```
+
+这里没有任何花招。每一次调用 `make_f` 都造出一个帧，装着那一轮的 `i`，而它返回的 `f` 抓住的正是*那个*帧里的名称。五次调用，五个帧，五个互不相干的值——和上面的 `c` 与 `d` 一模一样。
+
+```recall
+名称指代对象，而一个名称只有在某个命名空间里才有意义。2.1 里循环的 `i` 和 `f` 内部的 `i` 是同一个全局名称，所以五个函数共用了它。把定义包进 `make_f`，才让每个函数各有一个私有的、外层的 `i`。
+```
 
 ???+ warning "易错点：优先用 `return`，而不是 `global`"
     `global` 能用，但一个悄悄改写模块层变量的函数难以跟踪、也容易出错。更清楚的习惯

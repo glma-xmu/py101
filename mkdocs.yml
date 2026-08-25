@@ -87,7 +87,7 @@ plugins:
         - locale: zh
           name: 中文
           build: true
-          site_name: 经济学中的 Python 与大数据
+          site_name: Python与经济大数据
           nav_translations:
             "Home": 首页
             "Chapter 1: Python Basics": 第1章：Python 基础
