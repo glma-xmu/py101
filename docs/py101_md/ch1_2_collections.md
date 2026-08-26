@@ -53,7 +53,51 @@ Sequences share a common toolkit — indexing, membership tests with `in`, lengt
     methods change the list *in place*; tuples, being immutable, have no such
     methods.
 
-The most common list methods are `append()` (add one item to the end), `extend()` (add all items from another iterable), and `pop()` (remove and return the item at an index, last by default). The `+` operator concatenates two sequences into a new one.
+Most list methods change the list **in place** — they modify the caller and usually return `None` rather than a new list. That is worth saying twice, because it catches everyone once: `l.append(4)` gives you `None`, not the list.
+
+The four you will use constantly are `append()` (add one item to the end), `extend()` (add *all* items from another iterable), `reverse()` (flip the order), and `pop()` (remove and return the item at an index, last by default).
+
+???+ example "Example: the four list methods"
+    ```python
+    l = [1, 2, 3]
+
+    l.append(4)         # one item added
+    print(l)            # [1, 2, 3, 4]
+
+    l.extend([5, 6])    # every item of the argument added
+    print(l)            # [1, 2, 3, 4, 5, 6]
+
+    l.reverse()         # in place; returns None
+    print(l)            # [6, 5, 4, 3, 2, 1]
+
+    last = l.pop()      # removes and RETURNS the last item
+    first = l.pop(0)    # ...or the item at an index
+    print(last, first, l)   # 1 6 [5, 4, 3, 2]
+
+    print(l.append(9))  # None — the method changed l and returned nothing
+    ```
+
+The difference between `append` and `extend` is the one to be careful about: `append` adds its argument as a *single* item, so `l.append([5, 6])` puts a **list** inside your list, while `extend` unpacks it. Try both and compare.
+
+???+ warning "Pitfall: `(5)` is not a tuple"
+    `l.extend((5))` fails with `TypeError: 'int' object is not iterable`. The
+    parentheses in `(5)` are just grouping — they do not make a tuple. What makes a
+    tuple is the **comma**: `(5,)` is a one-item tuple, and `l.extend((5,))` works.
+    This is why `type((5))` is `int` while `type((5,))` is `tuple`.
+
+Now put a list and a tuple side by side. Everything that only *reads* works on both; everything that *changes* works on the list alone. That single rule generates the whole table.
+
+| Operation | `l = [1, 2, 3]` | `t = (4, 5, 6)` | Why |
+|---|---|---|---|
+| `l[1]` — read by index | ✅ | ✅ | reading never mutates |
+| `1 in l` — membership | ✅ | ✅ | reading |
+| `len(l)` | ✅ | ✅ | reading |
+| `l[1] = 99` — assign | ✅ | ❌ `TypeError` | changes the object |
+| `del l[1]` | ✅ | ❌ `TypeError` | changes the object |
+| `.append()` `.extend()` `.reverse()` `.pop()` | ✅ | ❌ `AttributeError` | tuples have no such methods |
+| `l += [6, 7]` | ✅ *same* `id` | ✅ *new* `id` | see §4 |
+
+Note the last row carefully: `+=` is legal on both, but it means something different for each. On a list it edits the object in place, so the identity is unchanged; on a tuple it must build a whole new object. Section 4 returns to this, because it is the clearest demonstration of what mutability actually costs.
 
 ## 2. Sets
 
@@ -139,6 +183,54 @@ To walk a dictionary you iterate its `keys()`, `values()`, or `items()` — the 
     1. Build a dict mapping three names to ages, then print one person's age.
     2. Use `get()` to look up a name that is absent, returning `"unknown"` instead of crashing.
     3. Add a new person, then update an existing person's age.
+
+### 3.1 Dictionaries come from files: JSON
+
+Dictionaries matter beyond your own code, because the most common way for programs to exchange structured data is a format that looks almost exactly like one. **JSON** (JavaScript Object Notation) is plain text built from names and values, and the standard library reads it straight into a `dict`.
+
+Two new pieces of syntax appear here, and both are worth meeting now. `open()` gives you a **file object**, and the `with` statement guarantees it is closed again — even if an error interrupts the block. Writing `with open(...) as f:` is simply how files are opened in Python; opening one without `with` and forgetting to close it is a real, if slow-acting, bug.
+
+Suppose `settings.json` contains:
+
+```json
+{"course": "Python", "year": 2026, "topics": ["objects", "collections"]}
+```
+
+Then:
+
+```python
+import json
+
+with open("settings.json", "r") as f:      # 'with' closes the file for you
+    setting_dict = json.load(f)            # JSON text -> a real dict
+
+print(setting_dict)
+print(setting_dict["year"])                # 2026
+print(setting_dict.items())                # dict_items([...]) — key/value pairs
+```
+
+The result is an ordinary dictionary; `json.load` has no special type of its own. Note also that the nested `["objects", "collections"]` became a plain Python **list**, so the whole structure is made of the containers you already know.
+
+That last line is quietly interesting. `setting_dict.items()` does not print like a list — it shows as `dict_items([...])`. It is a **view**: a live window onto the dictionary rather than a copy of it. Change the dict and the view changes with it. This is your first sighting of a theme that runs through 1.4 — Python often hands you something that *describes* data rather than a second copy of it.
+
+???+ example "Example: `json` without a file"
+    The runnable cells on this page have no filesystem to read from, so use
+    `json.loads` (with an `s`, for *string*) to parse text you already have. The
+    result is identical to what `json.load(f)` would give you:
+
+    ```python
+    import json
+
+    text = '{"course": "Python", "year": 2026, "topics": ["objects", "collections"]}'
+    setting_dict = json.loads(text)
+
+    print(type(setting_dict))        # <class 'dict'>
+    print(setting_dict["topics"])    # ['objects', 'collections']
+    print(setting_dict.items())
+
+    setting_dict["year"] = 2027      # the view reflects the change
+    print(setting_dict.items())
+    ```
 
 ## 4. Mutability and identity
 
@@ -228,9 +320,23 @@ The example below slices a list a few different ways — change the numbers and 
     print(xs[::-1])       # [9, 8, ..., 0] — reversed
     ```
 
-???+ question "Exercise: slice syntax"
-    Decide whether each is a valid slice used as `seq[…]`, and say what it does:
-    `1:2:1`, `9:1:-1`, `1.5:2.3:3.14`, `:-5:-1`, `::-1`.
+???+ question "Exercise: are these slices?"
+    For each of the following, decide whether it is a valid slice when written as
+    `seq[…]`. If it is, say which items it selects; if it is not, say what goes
+    wrong. Reason it out first, then check with a real list such as
+    `seq = list(range(10))`.
+
+    1. `1:2:1`
+    2. `2:4:7`
+    3. `9:1:-1`
+    4. `a:b:c`
+    5. `1.5:2.3:3.14`
+    6. `a:2:3`
+    7. `6:7`
+    8. `:-5:-1`
+    9. `::-1`
+
+    Two of these depend on something other than the syntax itself — say what.
 
 ??? info "Deep dive: a slice is itself an object"
     The notation `start:stop:step` builds a `slice` object, and you can make one

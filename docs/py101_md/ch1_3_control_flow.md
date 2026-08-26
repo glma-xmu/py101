@@ -29,6 +29,83 @@ The example below walks a list, then a string, then a dictionary — every conta
 Names refer to objects: on each pass the loop variable is just a name being re-bound to the next object in the container — nothing is copied.
 ```
 
+???+ question "Exercise: looping over every container"
+    1. Make a list and use a `for` loop to print its elements.
+    2. Do the same with a tuple.
+    3. Make a dictionary and use a `for` loop to print its **values**.
+    4. Use a `for` loop to print its **keys**.
+    5. Print the key–value pairs in a formatted way using an f-string, so the output reads `apple costs 3`.
+
+    For 3 and 4, look up `.values()` and `.items()` — and note that looping a dict
+    directly, as in the example above, gives you the keys.
+
+???+ warning "Pitfall: never change a container while looping over it"
+    A `for` loop keeps an internal position in the container. Add or remove items
+    mid-loop and that position no longer means what the loop thinks it does. The
+    two cases below fail in *different* ways, which is what makes this worth
+    studying rather than just memorising.
+
+    A dictionary refuses outright:
+
+    ```python
+    d = {'a': [1], 'b': [1, 2], 'c': [], 'd': []}
+    for i in d:
+        if not d[i]:          # empty list is falsy
+            d.pop(i)          # RuntimeError: dictionary changed size during iteration
+    ```
+
+    A list does something worse — it stays silent:
+
+    ```python
+    d = [1, 2, 3, 0, 5]
+    for i in range(4):
+        if not d[i]:
+            d.pop(i)
+    print(d)                  # [1, 2, 3, 5] — correct!
+    ```
+
+    That looks like a success, and it is the reason this bug survives in real code.
+    But it is luck, not correctness. The `0` happened to be the last index the loop
+    visited, so nothing shifted underneath it. Change the data and the same code
+    misbehaves in two different ways:
+
+    ```python
+    d = [1, 0, 0, 4, 5]
+    for i in range(4):
+        if not d[i]:
+            d.pop(i)
+    print(d)                  # [1, 0, 4, 5] — a zero SURVIVED
+
+    d = [0, 0, 0, 0, 5]
+    for i in range(4):
+        if not d[i]:
+            d.pop(i)          # IndexError: list index out of range
+    ```
+
+    Trace the middle case. Removing the `0` at index 1 shifts everything after it
+    down a position, so the second `0` slides into index 1 — which the loop has
+    already passed. It is stepped over and never tested. In the third case the list
+    shrinks faster than the loop advances, until `d[3]` refers to an index that no
+    longer exists.
+
+    So the dictionary's `RuntimeError` is the *kind* behaviour: it tells you
+    immediately. The list quietly returns a plausible answer that is sometimes
+    wrong, which is far harder to catch.
+
+    The fix for both is the same: **iterate over one thing and modify another.**
+    Build the result you want instead of editing in place — a comprehension (§6) is
+    usually the clearest way — or loop over a copy, `for i in list(d):`, so the
+    thing being iterated and the thing being changed are two different objects.
+
+    ```python
+    d = {'a': [1], 'b': [1, 2], 'c': [], 'd': []}
+    d = {k: v for k, v in d.items() if v}     # build a new dict; nothing mutated
+    print(d)                                   # {'a': [1], 'b': [1, 2]}
+    ```
+
+    This is the same lesson as the aliasing pitfall in 1.2 §4, seen from another
+    angle: mutating an object that something else is currently relying on.
+
 ### 1.1 Counting with `range`
 
 Sometimes you do not have a container to walk — you simply want to do something a fixed number of times, or generate a run of integers. That is what `range` is for, and it is most at home right here, as the thing a `for` loop counts over. Recall from 1.2 that `range` is a *lazy* sequence: `range(5)` stands for 0, 1, 2, 3, 4 without building a list.
@@ -58,7 +135,31 @@ When you think you need the index *and* the item, reach for `enumerate` rather t
         print(name, "scored", score)
     ```
 
-`zip` is also the natural way to build a dictionary from two parallel lists: `dict(zip(names, scores))`. (`zip` stops at the shorter input.)
+The name is the picture: a zipper, pairing up two rows of teeth. `zip` is also the natural way to build a dictionary from two parallel lists — `dict(zip(names, scores))` — and it stops at the shorter input.
+
+But `zip` does not hand you a list of pairs. Print it and you get something odd:
+
+???+ example "Example: a `zip` is used up once"
+    ```python
+    account = ["622848", "600314", "500297"]
+    balance = (1_000_000, 1_300_500, 500)
+
+    z1 = zip(account, balance)
+    print(z1)                 # <zip object at 0x...> — not a list!
+
+    for k, v in z1:
+        print(k, "has a balance of", v)
+
+    print("second pass:")
+    for k, v in z1:           # nothing at all happens
+        print(k, "has a balance of", v)
+
+    print(list(zip(account, balance)))   # a fresh zip, materialised
+    ```
+
+The second loop prints nothing, and no error is raised. A `zip` object does not *hold* the pairs; it **produces** them, one at a time, on demand — and once produced, they are gone. Walk it a second time and there is nothing left to give.
+
+That behaviour is not a quirk of `zip`. It is the defining property of an **iterator**, and `enumerate`, `range`'s companions, generator expressions and file objects all share it. If you need the pairs more than once, capture them with `list(...)`. Chapter 1.4 takes this apart properly — for now, simply notice that Python often returns a thing that *will produce* values rather than a container that already holds them.
 
 ???+ warning "Pitfall: don't loop over `range(len(...))`"
     A common habit from other languages is `for i in range(len(colors)): color = colors[i]`. In Python this is clumsy and error-prone — iterate directly (`for color in colors`) when you need the items, or use `enumerate` when you genuinely need the index too.
@@ -131,10 +232,19 @@ The example below combines an `if`-chain with a `for` loop — the everyday patt
     ```
 
 ???+ question "Exercise: conditional filtering"
-    Using `l = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10]`:
-    
-    1. Print only the odd numbers.
-    2. Print `"fizz"` for multiples of 3, `"buzz"` for multiples of 5, and the number otherwise.
+    Using the thirteen-element list
+    `l = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13]`:
+
+    1. Print the elements that are **odd**.
+    2. Print the elements that are **perfect squares** (1, 4, 9, …).
+    3. Print the elements that are **perfect cubes**.
+    4. Print `"fizz"` for multiples of 3, `"buzz"` for multiples of 5, and the number otherwise.
+
+    For 2 and 3, you need to decide whether a number *is* a square without a
+    built-in that tells you. Two approaches: test whether `round(n ** 0.5) ** 2 == n`,
+    or check membership in a set you build first, such as
+    `{i * i for i in range(1, 4)}`. Which would you trust for very large numbers,
+    and why?
 
 ## 5. Conditions: comparisons and booleans
 
@@ -160,7 +270,32 @@ Everything is an object: == compares the objects' values, while is compares thei
 ```
 
 ???+ warning "Pitfall: test for `None` with `is`"
-    `None` is a single, unique object, so the idiomatic test is `x is None` (and `x is not None`), not `x == None`. Use `is` whenever you mean "the same object," and especially for `None`.
+    `None` is a single, unique object — there is exactly one of it in a running
+    program, no matter how many names point at it. So after `a = None; b = None`,
+    `a is b` is `True`, because both names label that same one object. That is why
+    the idiomatic test is `x is None` (and `x is not None`) rather than
+    `x == None`: you are asking about identity, and identity is the stronger and
+    faster question. Use `is` whenever you mean "the same object," and always for
+    `None`.
+
+Every comparison is an **expression** — a piece of code that evaluates to a value — and comparisons evaluate to a `bool`. That is what lets you put one straight into an `if`.
+
+Python also allows comparisons to be **chained**, and it means what mathematical notation means, not what most languages do. Writing `0 <= x < 10` really does test both halves, and reads exactly as it would on a blackboard.
+
+???+ example "Example: chained comparisons"
+    ```python
+    a, b, c, d, e = 1, 4, 3, 3, 5
+
+    print(a < b > c == d != e)   # True
+    print(a < b and b > c and c == d and d != e)   # the same thing, spelled out
+
+    x = 7
+    print(0 <= x < 10)           # True — one clear test, not two
+    ```
+
+A chain is evaluated pairwise and joined with `and`, so `a < b > c` means `a < b and b > c`. One detail follows from that: each middle operand is evaluated only **once**, and the chain stops early if any link is false.
+
+Chaining is genuinely useful for ranges like `0 <= x < 10`. Longer chains such as the first line above are legal, but they are a puzzle rather than good style — if you find yourself writing one, `and` says it more plainly.
 
 ### 5.2 Boolean logic and truthiness
 
@@ -233,6 +368,49 @@ A comprehension can **filter** with a trailing `if`, and it has **set** and **di
     1. Build a list of the squares of the odd numbers from 1 to 19.
     2. From `words = ["Ada", "bob", "CLEO"]`, build a list of their lowercased forms.
     3. Build a dict mapping each word in `words` to its length.
+
+## 7. What people mean by "Pythonic"
+
+You have now met the word twice — §1.2 called `enumerate` and `zip` "the Pythonic way" — so it deserves a definition, even a loose one.
+
+**Pythonic** is not a technical term. It describes code that uses the constructs Python actually gives you, rather than habits carried over from another language and transliterated. C-style code written in Python usually *works*; it just reads as though the author would rather have been writing C. The Pythonic version is normally shorter, and — more to the point — it says what it means, so a reader spends no effort reconstructing the intent.
+
+The clearest test is the one from §1.2. Both of these produce the same output:
+
+```python
+for i in range(len(colors)):        # not Pythonic: indices as a means to an end
+    print(i, colors[i])
+
+for i, color in enumerate(colors):  # Pythonic: says "index and item"
+    print(i, color)
+```
+
+The second is not merely tidier. It cannot go out of range, it does not repeat `colors`, and it states the actual intention — *number these items* — instead of leaving the reader to infer it from arithmetic.
+
+Without labelling them, this chapter has already handed you most of the standard vocabulary:
+
+| Feature | Where it appeared | What it replaces |
+|---|---|---|
+| **f-strings** | 1.1 | `+` concatenation, `%`, `.format()` |
+| **`None`** and `is None` | 1.1, §5.1 | sentinel values like `-1` or `""` |
+| **`with`** | 1.2 §3.1 | remembering to call `.close()` |
+| **`zip`** | §1.2 | index arithmetic over two lists |
+| **`enumerate`** | §1.2 | `range(len(...))` plus a counter |
+| **`sorted`** with `key=` | 1.2 | hand-written sorting |
+| **comprehensions** | §6 | a loop that only exists to fill a list |
+| **truthiness** (`if not d[i]`) | §5.2 | `if len(x) == 0`, `if x == None` |
+
+Two cautions, because "Pythonic" gets used as a bludgeon. It is not a synonym for *short* — a comprehension three lines wide with two conditions is worse than the loop it replaced, and §6's deep dive says so. And it is not a synonym for *clever*; the chained comparison in §5.1 is legal and compact and still harder to read than `and`. The goal is code whose meaning is obvious to the next reader, which is usually you.
+
+???+ question "Exercise: make it Pythonic"
+    Rewrite each of these, then say in one sentence what the rewrite makes clearer.
+
+    1. `i = 0`, then a `while i < len(items):` loop that prints `items[i]` and increments `i`.
+    2. `result = []` followed by a `for` loop that appends `n * n` when `n` is even.
+    3. `if len(names) == 0: print("empty")`.
+    4. `f = open("data.txt"); text = f.read(); f.close()`.
+    5. `msg = "Total: " + str(total) + " items"`.
+    6. Two lists `ks` and `vs` combined into a dict with a `range(len(ks))` loop.
 
 ## Summary
 
