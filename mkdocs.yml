@@ -26,6 +26,14 @@ copyright: |
 # build works everywhere. See SERVER_DEPLOY.md.
 site_url: https://www.maguoliang.com/teaching/py101/
 
+# Build standalone HTML slides from editable Markdown for every deployment.
+hooks:
+  - scripts/build_slides.py
+
+# Slides have their own header entry, not a place in the textbook sidebar.
+not_in_nav: |
+  slides/*.md
+
 theme:
   name: material
   custom_dir: overrides
@@ -133,11 +141,13 @@ plugins:
 # whenever you edit one of these files.
 extra_css:
   - stylesheets/extra.css?v=4
+  - stylesheets/slides-library.css?v=2
   - vendor/katex/katex.min.css
 
 extra_javascript:
   - javascripts/lang-switch-fix.js?v=1
   - javascripts/main-site-link.js
+  - javascripts/slides-link.js?v=1
   - javascripts/runnable.js?v=3
   - javascripts/shell.js?v=1
   - javascripts/memory-diagram.js

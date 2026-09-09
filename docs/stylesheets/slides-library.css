@@ -1,0 +1,117 @@
+/* These links are added after MkDocs has generated the textbook table of contents. */
+.md-typeset .textbook-slides-link {
+  display: inline-flex;
+  align-items: center;
+  margin-left: 0.5em;
+  padding: 0.12em 0.5em;
+  border: 1px solid var(--md-default-fg-color--lightest);
+  border-radius: 1em;
+  color: var(--md-primary-fg-color);
+  background: var(--md-default-bg-color);
+  font-size: 0.6rem;
+  font-weight: 550;
+  line-height: 1.6;
+  vertical-align: middle;
+  white-space: nowrap;
+  text-decoration: none;
+}
+.md-typeset .textbook-slides-link:hover { border-color: var(--md-primary-fg-color); background: var(--md-code-bg-color); }
+.md-typeset .textbook-slides-link:focus-visible { outline: 0.12rem solid var(--md-accent-fg-color); outline-offset: 0.1rem; }
+.textbook-topic-anchor { scroll-margin-top: 5rem; }
+
+/* Compact header entry; the presentation icon remains visible on phones. */
+.md-header__inner .slides-link {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.28rem;
+  color: var(--md-primary-bg-color);
+  white-space: nowrap;
+  text-decoration: none;
+}
+.slides-link__label {
+  font-size: 0.65rem;
+  font-weight: 600;
+}
+.md-header__inner .slides-link:hover,
+.md-header__inner .slides-link:focus-visible {
+  color: var(--md-primary-bg-color);
+}
+.md-header__inner .slides-link[aria-current="page"] {
+  border-radius: 0.2rem;
+  background: rgba(255, 255, 255, 0.12);
+}
+.slides-library {
+  max-width: 48rem;
+  margin: 0 auto;
+}
+.slides-library__intro {
+  max-width: 38rem;
+  color: var(--md-default-fg-color--light);
+  font-size: 0.9rem;
+}
+.slides-library__grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(min(100%, 19rem), 1fr));
+  gap: 1rem;
+  margin: 1.5rem 0;
+}
+.slides-library .slides-library__card {
+  display: block;
+  padding: 1.35rem;
+  color: var(--md-default-fg-color);
+  border: 1px solid var(--md-default-fg-color--lightest);
+  border-top: 0.2rem solid var(--md-primary-fg-color);
+  border-radius: 0.5rem;
+  background: var(--md-default-bg-color);
+  text-decoration: none;
+  transition: border-color 0.15s ease, box-shadow 0.15s ease;
+}
+.slides-library .slides-library__card:hover {
+  color: var(--md-default-fg-color);
+  border-color: var(--md-primary-fg-color);
+  box-shadow: 0 0.2rem 0.7rem rgba(0, 0, 0, 0.08);
+}
+.slides-library__card:focus-visible,
+.md-header__inner .slides-link:focus-visible {
+  outline: 0.15rem solid var(--md-accent-fg-color);
+  outline-offset: 0.15rem;
+}
+.slides-library__number {
+  color: var(--md-primary-fg-color);
+  font-size: 0.7rem;
+  font-weight: 700;
+  letter-spacing: 0.06em;
+}
+.slides-library .slides-library__card h2 {
+  margin: 0.55rem 0 0.75rem;
+  font-size: 1.2rem;
+  line-height: 1.4;
+}
+.slides-library__description {
+  margin: 0 0 1.1rem;
+  font-size: 0.8rem;
+  color: var(--md-default-fg-color--light);
+}
+.slides-library__action {
+  color: var(--md-primary-fg-color);
+  font-size: 0.8rem;
+  font-weight: 650;
+}
+.slides-library__note,
+.slides-library__back {
+  color: var(--md-default-fg-color--light);
+  font-size: 0.75rem;
+}
+@media (max-width: 44.9375em) {
+  .slides-link__label {
+    display: none;
+  }
+  .md-header__inner .slides-link {
+    gap: 0;
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .slides-library .slides-library__card {
+    transition: none;
+  }
+}

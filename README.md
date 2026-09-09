@@ -31,6 +31,49 @@ first page's filename without `.md` or a language suffix. No page URLs change.
 After building, run `python scripts/check_navigation.py site` to check the links
 and initial expansion states in both languages.
 
+## Lecture slides
+
+The header's **Slides / 课件** shortcut opens a separate slide library. Slides
+do not appear in the textbook sidebar or search results. The first pilot is
+Lecture 1.1, converted from `resource/deck1_1_AoL.pptx` into 23 editable HTML
+slides, with the original diagrams and exercises.
+
+- Edit `slides-src/lecture-1-1.md`; a line containing only `---` starts the next
+  slide. The initial YAML block provides the title, description, and language.
+  Additional decks use `lecture-*.md` filenames and need a card in both slide
+  library pages; supporting notes in this folder are not turned into slides.
+- Each deck's optional `sections` list provides stable named destinations and
+  a Contents outline. A section has `id`, `title`, `start` (one-based slide
+  number), `level` (1–3), and a `textbook` topic key. Keep IDs stable when adding
+  slides, and update the start numbers. No divider slides are added.
+- `slides-src/textbook-links.yml` maps shared topic keys to an English source
+  page and its existing EN/ZH heading IDs. The build adds stable
+  `textbook-<topic-key>` aliases without changing old heading URLs or ToC entries.
+  Matching textbook headings get a Slides link to the first matching section
+  in each deck. In the player, Textbook follows the current slide or reading
+  position and preserves the textbook language through `?lang=zh`.
+- Use `related: true` for broader reading when there is no exact counterpart.
+  This labels the player link Related reading and does not advertise an exact
+  slide match on the textbook heading. The pilot uses it for array/deque.
+- `scripts/build_slides.py` runs as a MkDocs hook. Normal `mkdocs build` and
+  `mkdocs serve` generate the deck; no PowerPoint, Node, or online conversion
+  service is needed for deployment.
+- The deck is at `slides/decks/lecture-1-1/` under whichever site prefix serves
+  the course. The player and its fonts/assets require no external CDN.
+- Use arrow keys / Space to advance, Esc for the overview, and F for full screen
+  where the browser permits it. Reading mode works well in a narrow VS Code
+  browser panel. Code blocks can be copied into your adjacent `.ipynb` notebook;
+  these slides do not execute code or save classroom notes.
+- Keep saving the notebook in VS Code as before. Nothing in this pilot changes
+  notebook storage or publishes your in-class notes automatically.
+- Original PPTX/PDF files remain in the ignored `resource/` folder. See
+  `slides-src/conversion-notes.md` for the small source corrections in this pilot.
+
+After building, run `python scripts/check_slides.py site` and
+`python scripts/check_navigation.py site`. Commit the Markdown, hook, library,
+player assets, and images; do not commit generated `site/` files. Existing
+deployment builds pick up the slides with the rest of the site.
+
 ## Preview locally
 
 ```bash

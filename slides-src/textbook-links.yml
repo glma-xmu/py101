@@ -1,0 +1,49 @@
+# Stable textbook destinations shared by current and future lecture decks.
+# Keep the keys stable. If a heading changes, update only its selector below.
+# Existing heading IDs and textbook ToC links remain unchanged.
+topics:
+  objects-overview:
+    page: py101_md/ch1_1_objects.md
+    headings:
+      en: objects-and-types
+      zh: _1
+  objects-introduction:
+    page: py101_md/ch1_1_objects.md
+    headings:
+      en: introduction
+      zh: _2
+  objects-identity:
+    page: py101_md/ch1_1_objects.md
+    headings:
+      en: 1-objects-identity-type-and-value
+      zh: "1"
+  type-organisation:
+    page: py101_md/ch1_1_objects.md
+    headings:
+      en: 2-two-questions-that-organise-every-type
+      zh: "2"
+  numbers:
+    page: py101_md/ch1_1_objects.md
+    headings:
+      en: 31-numbers
+      zh: "31"
+  sequences:
+    page: py101_md/ch1_2_collections.md
+    headings:
+      en: 1-sequences-lists-tuples-and-ranges
+      zh: 1-range
+  mutability:
+    page: py101_md/ch1_2_collections.md
+    headings:
+      en: 4-mutability-and-identity
+      zh: "4"
+  slicing:
+    page: py101_md/ch1_2_collections.md
+    headings:
+      en: 5-slicing-reading-subsequences
+      zh: "5"
+  objects-summary:
+    page: py101_md/ch1_1_objects.md
+    headings:
+      en: summary
+      zh: _3
