@@ -1,0 +1,43 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="referrer" content="no-referrer">
+  <title>Teacher live desk · 教师提问台</title>
+  <link rel="stylesheet" href="/live/assets/live.css">
+  <script src="/live/assets/shared.js" defer></script>
+  <script src="/live/assets/teacher.js" defer></script>
+</head>
+<body>
+  <header class="site-header"><a href="/" class="brand">Python 101</a><span>Teacher live desk · 教师提问台</span><button id="logout-button" class="header-button" type="button" hidden>Sign out · 退出</button></header>
+  <main class="teacher-layout">
+    <section id="login-panel" class="card login-card" aria-labelledby="login-title">
+      <p class="eyebrow">TEACHER ACCESS · 教师入口</p><h1 id="login-title">Open your live desk.<br>打开课堂提问台。</h1>
+      <form id="login-form"><label for="teacher-password">Teacher password · 教师密码</label><input id="teacher-password" type="password" autocomplete="current-password" required><button id="login-button" class="button primary" type="submit">Sign in · 登录</button></form>
+      <p class="hint">Students join at <a href="/live/">/live/</a> using your classroom code.<br>学生使用课堂码在学生页面参与提问。</p>
+    </section>
+    <p id="teacher-status" class="status" role="status" aria-live="polite"></p>
+    <div id="teacher-desk" hidden>
+      <div class="private-note"><strong>Private teacher screen · 教师私人页面</strong><span> Questions appear without content approval. Do not project this screen to the classroom.<br>问题未经人工审核即显示，请勿将此页面投屏给全班。</span></div>
+      <section class="card room-card" aria-labelledby="room-title">
+        <div class="section-heading"><h1 id="room-title">Your classroom · 你的课堂</h1><span id="connection-state" class="pill" role="status">Connecting · 连接中</span></div>
+        <div id="no-room"><p>Start a class to create a temporary student code.<br>开始课堂后将生成临时学生课堂码。</p><button id="start-button" class="button primary" type="button">Start class · 开始课堂</button></div>
+        <div id="active-room" hidden>
+          <div class="room-details"><div><span class="hint">CLASSROOM CODE · 课堂码</span><p id="teacher-room-code" class="room-code"></p></div><div><p id="teacher-room-expiry" class="hint"></p><button id="copy-link-button" class="button" type="button">Copy student link · 复制学生链接</button></div></div>
+          <div class="toolbar"><button id="pause-button" class="button" type="button">Pause · 暂停提问</button><button id="clear-button" class="button" type="button">Clear questions · 清空问题</button><button id="end-button" class="button danger" type="button">End class · 结束课堂</button></div>
+          <p class="hint" id="retention-note">Questions expire after 10 minutes. Only the newest 100 are kept in memory. Class end and service restart erase them.<br>问题保留 10 分钟，内存中最多保留最新 100 条；课堂结束或服务重启后清空。</p>
+        </div>
+      </section>
+      <section class="card feed-card" id="feed-panel" aria-labelledby="feed-title" hidden>
+        <div class="section-heading"><h2 id="feed-title">Incoming questions · 实时提问 <span id="question-total" class="count">0</span></h2><div class="view-toggle" role="group" aria-label="Question view / 提问显示方式"><button id="feed-view-button" class="button selected" type="button" aria-pressed="true">Feed · 列表</button><button id="barrage-view-button" class="button" type="button" aria-pressed="false">Barrage · 弹幕</button></div></div>
+        <p class="hint">Dismiss removes one question. Mute removes this session’s questions and blocks it until class ends; it is not a permanent identity ban.<br>移除会删除该问题；静音会清除该学生会话的问题，并阻止其继续提问，直到课堂结束。静音不等于永久封禁。</p>
+        <div id="barrage-view" hidden><p class="hint">Teacher-only preview. Switch to Feed to dismiss or mute.<br>仅供教师预览；切换到列表可移除或静音。</p><div id="barrage-stage" class="barrage-stage" aria-label="Live barrage / 实时弹幕"></div></div>
+        <div id="feed-view"><p id="empty-feed" class="empty-state">Room for a good question.<br>等待一个好问题。</p><ol id="question-list" class="question-list" aria-label="Questions / 问题"></ol></div>
+        <p id="new-question-notice" class="sr-only" role="status" aria-live="polite"></p>
+      </section>
+    </div>
+    <footer class="page-footer"><a href="/">Back to course · 返回课程</a> · <a href="https://v.wjx.cn/vm/OttnIWh.aspx#" target="_blank" rel="noopener noreferrer">Wenjuanxing fallback · 问卷星备用入口</a></footer>
+  </main>
+</body>
+</html>

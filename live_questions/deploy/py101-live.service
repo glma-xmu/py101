@@ -1,0 +1,47 @@
+[Unit]
+Description=Py101 live classroom questions (memory only)
+After=network.target
+StartLimitIntervalSec=60
+StartLimitBurst=5
+
+[Service]
+Type=simple
+User=py101-live
+Group=py101-live
+WorkingDirectory=/opt/py101-live
+EnvironmentFile=/etc/py101-live.env
+Environment=PYTHONDONTWRITEBYTECODE=1
+Environment=PYTHONUNBUFFERED=1
+ExecStart=/opt/py101-live/.venv/bin/python -m uvicorn live_questions.app:create_app --factory --host 127.0.0.1 --port 8765 --workers 1 --no-access-log --proxy-headers --forwarded-allow-ips 127.0.0.1
+Restart=on-failure
+RestartSec=3
+TimeoutStopSec=20
+UMask=0077
+LimitCORE=0
+
+# Source/configuration are read-only to the service user. Questions stay in RAM.
+NoNewPrivileges=true
+ProtectSystem=strict
+ProtectHome=true
+PrivateTmp=true
+PrivateDevices=true
+ProtectKernelTunables=true
+ProtectKernelModules=true
+ProtectControlGroups=true
+RestrictSUIDSGID=true
+RestrictRealtime=true
+RestrictNamespaces=true
+LockPersonality=true
+CapabilityBoundingSet=
+AmbientCapabilities=
+RestrictAddressFamilies=AF_UNIX AF_INET AF_INET6
+TasksMax=64
+MemoryMax=192M
+
+# Lifecycle/errors may reach journald; HTTP request access logging is disabled.
+StandardOutput=journal
+StandardError=journal
+SyslogIdentifier=py101-live
+
+[Install]
+WantedBy=multi-user.target

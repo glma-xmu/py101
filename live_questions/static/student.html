@@ -1,0 +1,41 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="referrer" content="no-referrer">
+  <title>Live questions · 课堂提问</title>
+  <link rel="stylesheet" href="/live/assets/live.css">
+  <script src="/live/assets/shared.js" defer></script>
+  <script src="/live/assets/student.js" defer></script>
+</head>
+<body>
+  <header class="site-header"><a href="/" class="brand">Python 101</a><span>Live questions · 课堂提问</span></header>
+  <main class="student-layout">
+    <div class="intro"><p class="eyebrow">IN THE CLASSROOM · 在课堂</p><h1>A question worth asking.<br><span lang="zh-CN">想到就问。</span></h1><p>Your question goes to the teacher’s private screen.<br><span lang="zh-CN">你的问题将发送到教师的私人页面。</span></p></div>
+    <section class="card" aria-labelledby="join-title" id="join-panel">
+      <h2 id="join-title">Join your class · 加入课堂</h2>
+      <form id="join-form">
+        <label for="room-code">Classroom code · 课堂码</label>
+        <input id="room-code" name="code" type="text" maxlength="16" autocomplete="off" autocapitalize="characters" spellcheck="false" required aria-describedby="code-help">
+        <p class="hint" id="code-help">Use the temporary code shared by your teacher.<br>输入老师提供的临时课堂码。</p>
+        <button class="button primary" id="join-button" type="submit">Join class · 加入课堂</button>
+      </form>
+    </section>
+    <section class="card" aria-labelledby="question-title" id="question-panel" hidden>
+      <div class="section-heading"><h2 id="question-title">Ask the teacher · 向老师提问</h2><span id="class-state" class="pill">Connected · 已连接</span></div>
+      <p id="room-expiry" class="hint"></p>
+      <form id="question-form">
+        <label for="question">Your question · 你的问题</label>
+        <textarea id="question" name="question" rows="6" maxlength="500" required aria-describedby="question-count question-help" placeholder="What would you like to understand? / 你想了解什么？"></textarea>
+        <div class="field-footer"><span class="hint" id="question-help">Plain text only · 仅限纯文本</span><span class="hint" id="question-count">0 / 500</span></div>
+        <button class="button primary" id="send-button" type="submit">Send question · 发送问题</button>
+      </form>
+      <button id="change-class" class="button subtle" type="button">Use another classroom code · 更换课堂码</button>
+    </section>
+    <p id="student-status" class="status" role="status" aria-live="polite"></p>
+    <aside class="privacy-note"><strong>No permanent question history · 不永久保存提问</strong><p id="privacy-detail">Questions are held briefly in memory and disappear when the class ends or the service restarts. Do not include personal or sensitive information.<br>问题仅在内存中短暂保留；课堂结束或服务重启后消失。请勿包含个人或敏感信息。</p><p>A successful submission means the service received it, not that your teacher has read it.<br>发送成功表示服务已收到，不代表老师已阅读。</p></aside>
+    <footer class="page-footer">Need the original form? · 仍想使用原问卷？ <a href="https://v.wjx.cn/vm/OttnIWh.aspx#" target="_blank" rel="noopener noreferrer">Wenjuanxing · 问卷星</a><br><a href="/">Back to course · 返回课程</a></footer>
+  </main>
+</body>
+</html>

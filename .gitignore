@@ -4,6 +4,8 @@ __pycache__/
 site/
 venv/
 .venv/
+.venv-live/
+.pytest_cache/
 
 # Collected data. Never published on the site — distributed to students over the
 # college network instead. Regenerate with scripts/fetch_edgar.py.

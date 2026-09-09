@@ -1,0 +1,28 @@
+name: Test live questions
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - "live_questions/**"
+      - ".github/workflows/test-live-questions.yml"
+  pull_request:
+    paths:
+      - "live_questions/**"
+      - ".github/workflows/test-live-questions.yml"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - run: python -m pip install -r live_questions/requirements-dev.txt
+      - run: python -m pytest live_questions/tests -q

@@ -184,6 +184,27 @@
 .ask-fab-ic{font-size:1.1rem;line-height:1;}
 @media (max-width:480px){.ask-fab-tx{display:none;} .ask-fab{padding:0.6rem;}}
 
+/* Optional live-classroom pilot, above the unchanged Wenjuanxing Ask button. */
+.live-fab {
+  position: fixed;
+  left: 1rem;
+  bottom: 4.6rem;
+  z-index: 50;
+  padding: 0.5rem 0.8rem;
+  border: 1px solid var(--md-primary-fg-color);
+  border-radius: 2rem;
+  color: var(--md-primary-fg-color);
+  background: var(--md-default-bg-color);
+  box-shadow: 0 3px 12px rgba(0, 0, 0, 0.16);
+  font-size: 0.75rem;
+  font-weight: 700;
+  text-decoration: none;
+}
+.live-fab:hover, .live-fab:focus-visible {
+  color: var(--md-primary-bg-color);
+  background: var(--md-primary-fg-color);
+}
+
 /* ---- Chapter motto (epigraph) + recall callbacks ---- */
 .epigraph{font-size:1.15rem;font-style:italic;color:var(--md-default-fg-color--light);border-left:3px solid var(--md-primary-fg-color);padding:0.3rem 0 0.3rem 1rem;margin:0.2rem 0 1.6rem;}
 .callback{font-size:0.85rem;font-style:italic;color:var(--md-default-fg-color--light);background:var(--md-default-fg-color--lightest);border-left:3px solid var(--md-primary-fg-color);border-radius:0 0.2rem 0.2rem 0;padding:0.4rem 0.8rem;margin:0.9rem 0;}

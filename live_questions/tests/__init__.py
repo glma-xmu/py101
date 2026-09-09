@@ -1,0 +1,1 @@
+"""Classroom relay tests."""

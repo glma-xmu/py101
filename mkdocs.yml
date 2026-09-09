@@ -131,7 +131,7 @@ plugins:
 # page whose HTML and JS are new but whose styling is old. Bump the number
 # whenever you edit one of these files.
 extra_css:
-  - stylesheets/extra.css?v=2
+  - stylesheets/extra.css?v=3
   - vendor/katex/katex.min.css
 
 extra_javascript:
@@ -142,6 +142,7 @@ extra_javascript:
   - javascripts/memory-diagram.js
   - javascripts/reading-mode.js
   - javascripts/ask-button.js
+  - javascripts/live-button.js?v=1
   - javascripts/katex.js
   - vendor/katex/katex.min.js
   - vendor/katex/auto-render.min.js
