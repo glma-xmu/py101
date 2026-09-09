@@ -6,7 +6,7 @@
  */
 (function () {
   "use strict";
-  var LIVE_URL = "";
+  var LIVE_URL = "https://maguoliang.cn/live/";
 
   if (!LIVE_URL) return;
   try {

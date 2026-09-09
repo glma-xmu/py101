@@ -6,6 +6,7 @@ venv/
 .venv/
 .venv-live/
 .pytest_cache/
+resource/
 
 # Collected data. Never published on the site — distributed to students over the
 # college network instead. Regenerate with scripts/fetch_edgar.py.
@@ -18,3 +19,4 @@ py101_deploy*
 *.pem
 id_ed25519*
 id_rsa*
+*.pdf
