@@ -39,6 +39,11 @@
 }
 
 /* Main-site header icon */
+@media (max-width: 360px) {
+  .md-header__inner .md-header__button { margin-inline: 0; }
+  .md-header__inner .md-header__title { margin-inline: 0.2rem; }
+}
+
 .main-site-link {
   color: var(--md-primary-bg-color);
 }
@@ -175,7 +180,7 @@
 .syn-k{color:#c1121f;font-weight:800;background:rgba(255,209,0,0.45);padding:0 0.14em;border-radius:0.15em;}
 .syn-p{color:#1e6fd9;font-style:italic;}
 
-/* Live classroom entry, in the former question button's lower-left position. */
+/* Live classroom entry in the lower-left corner. */
 .live-fab {
   position: fixed;
   left: 1rem;

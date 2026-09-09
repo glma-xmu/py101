@@ -177,7 +177,9 @@ After a successful public health check and classroom trial, the enabled constant
 var LIVE_URL = "https://maguoliang.cn/live/";
 ```
 
-The MkDocs script URL is `javascripts/live-button.js?v=2`, and the stylesheet is `stylesheets/extra.css?v=4`. Increment the respective version again after future edits. This avoids reusing the old disabled script or old styling from browser caches. Commit and push static-site changes through the existing deployment workflow. The teacher can bookmark `https://maguoliang.cn/teacher/`.
+The MkDocs script URL is `javascripts/live-button.js?v=4`, and the stylesheet is `stylesheets/extra.css?v=7`. Increment the respective version again after future edits. This avoids reusing the old disabled script or old styling from browser caches. Commit and push static-site changes through the existing deployment workflow. The teacher can bookmark `https://maguoliang.cn/teacher/`.
+
+The same script adds an "AI assistant" / "AI 助教" chat icon in the header, immediately after the language switcher. It opens the course's supplied Zhihuishu assistant URL in a new tab. This is an external link only: the course does not embed the chatbot or send its questions through the live-question backend.
 
 All course copies use the same absolute student URL. The nested personal-site path, such as `/teaching/py101/py101_md/ch1_2_collections/`, is unchanged; students on that copy also open the Aliyun classroom when they click the button. The separate teacher page remains unchanged in purpose; an in-lesson teacher panel is not implemented.
 
