@@ -5,6 +5,7 @@ site/
 venv/
 .venv/
 .venv-live/
+.venv-projects-deps/
 .pytest_cache/
 resource/
 

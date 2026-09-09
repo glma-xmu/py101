@@ -1,0 +1,152 @@
+[
+  {
+    "id": "26s-01",
+    "cohort": "26S",
+    "title": "DataMind: Stock Data Analysis with Machine Learning",
+    "count": 23
+  },
+  {
+    "id": "26s-02",
+    "cohort": "26S",
+    "title": "Forecasting Commodity Returns",
+    "count": 34
+  },
+  {
+    "id": "26s-04",
+    "cohort": "26S",
+    "title": "Predicting Student Performance from Game Play",
+    "count": 30
+  },
+  {
+    "id": "26s-05",
+    "cohort": "26S",
+    "title": "AI-Generated Text Detection",
+    "count": 16
+  },
+  {
+    "id": "26s-06",
+    "cohort": "26S",
+    "title": "Forest Cover Type Prediction",
+    "count": 31
+  },
+  {
+    "id": "26s-07",
+    "cohort": "26S",
+    "title": "Christmas Tree Bin Packing Optimization",
+    "count": 29
+  },
+  {
+    "id": "26s-08",
+    "cohort": "26S",
+    "title": "Dynamic Retraining for Quantitative Models",
+    "count": 28
+  },
+  {
+    "id": "26s-09",
+    "cohort": "26S",
+    "title": "F1 Pit Stop Strategy Modeling",
+    "count": 15
+  },
+  {
+    "id": "26s-10",
+    "cohort": "26S",
+    "title": "F1 Pit Stop Prediction",
+    "count": 20
+  },
+  {
+    "id": "26s-11",
+    "cohort": "26S",
+    "title": "Plant Disease Classification",
+    "count": 21
+  },
+  {
+    "id": "26s-12",
+    "cohort": "26S",
+    "title": "Money Talks, But Does Happiness Walk?",
+    "count": 14
+  },
+  {
+    "id": "26s-13",
+    "cohort": "26S",
+    "title": "AI4Code: Understanding Code in Python Notebooks",
+    "count": 21
+  },
+  {
+    "id": "26s-14",
+    "cohort": "26S",
+    "title": "Ocean Temperature Profile Prediction",
+    "count": 20
+  },
+  {
+    "id": "26s-15",
+    "cohort": "26S",
+    "title": "Orbit War Agent Development",
+    "count": 23
+  },
+  {
+    "id": "25s-01",
+    "cohort": "25S",
+    "title": "Time-Series Climate Forecasting",
+    "count": 32
+  },
+  {
+    "id": "25s-02",
+    "cohort": "25S",
+    "title": "Predicting Calorie Expenditure",
+    "count": 60
+  },
+  {
+    "id": "25s-03",
+    "cohort": "25S",
+    "title": "Predicting Problematic Internet Use in Children",
+    "count": 42
+  },
+  {
+    "id": "25s-04",
+    "cohort": "25S",
+    "title": "A Word Guessing Game",
+    "count": 24
+  },
+  {
+    "id": "25s-05",
+    "cohort": "25S",
+    "title": "Calorie Expenditure Prediction with a Hybrid Model",
+    "count": 22
+  },
+  {
+    "id": "25s-06",
+    "cohort": "25S",
+    "title": "Smoking Prediction with XGBoost and TabNet",
+    "count": 40
+  },
+  {
+    "id": "25s-07",
+    "cohort": "25S",
+    "title": "AI Text Adventure Game Platform",
+    "count": 38
+  },
+  {
+    "id": "25s-08",
+    "cohort": "25S",
+    "title": "Podcast Listening Time: Exploration and Prediction",
+    "count": 42
+  },
+  {
+    "id": "25s-09",
+    "cohort": "25S",
+    "title": "Titanic: Machine Learning from Disaster",
+    "count": 38
+  },
+  {
+    "id": "25s-10",
+    "cohort": "25S",
+    "title": "House Prices: Advanced Regression Techniques",
+    "count": 80
+  },
+  {
+    "id": "25s-11",
+    "cohort": "25S",
+    "title": "Titanic: Who Survives?",
+    "count": 18
+  }
+]

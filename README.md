@@ -33,7 +33,7 @@ and initial expansion states in both languages.
 
 ## Lecture slides
 
-The header's **Slides / 课件** shortcut opens a separate slide library. Slides
+The header's slideshow icon (tooltip: **Browse lecture slides / 浏览课堂课件**) opens a separate slide library. Slides
 do not appear in the textbook sidebar or search results. The first pilot is
 Lecture 1.1, converted from `resource/deck1_1_AoL.pptx` into 23 editable HTML
 slides, with the original diagrams and exercises.
@@ -73,6 +73,38 @@ After building, run `python scripts/check_slides.py site` and
 `python scripts/check_navigation.py site`. Commit the Markdown, hook, library,
 player assets, and images; do not commit generated `site/` files. Existing
 deployment builds pick up the slides with the rest of the site.
+
+## Student project gallery
+
+The gallery icon beside the slideshow icon opens `/projects/` (or
+`/zh/projects/`). Cards show the original cover, project title, cohort and slide
+count. Cohort filters and a keyboard-accessible dialog let visitors browse slides
+with Previous/Next, arrow keys, Home/End and Escape. The interface follows the
+site language; student presentations retain their original language and layouts.
+
+Only compressed WebP previews and `docs/projects/manifest.json` are published.
+The source PPTX/PDF files stay in ignored `resource/projects/`; no original deck
+URLs or download controls are included. This prevents access to the originals
+through the site, but is not DRM: visitors can still save preview images or take
+screenshots. Previews are static and do not play embedded video or animations.
+
+To regenerate locally, run `powershell -File scripts/export_project_slides.ps1`
+with Microsoft PowerPoint and Poppler (`pdftoppm`) available, then run
+`python scripts/build_project_previews.py` with Pillow installed. Intermediate
+PNGs and source metadata stay under `resource/projects/.previews/`. Review titles
+in `scripts/project_titles.json` and `scripts/build_project_previews.py`, inspect
+the private contact sheet, and commit the gallery assets. Normal CI builds only
+copy the prepared previews; PowerPoint is not required on the deployment server.
+Run `python scripts/check_projects.py site` after building to check gallery
+coverage, preview assets, both languages, and the absence of original decks.
+If replacing a source, delete its cached preview folder before rendering again.
+Keep existing source filenames stable when updating the library.
+
+The initial import contains 25 readable presentations (2025/2026 spring).
+`resource/projects/26S/Group 8.pptx` has an invalid all-zero header and PowerPoint
+cannot open it; replace it with a working file before adding its preview. The
+presentation advice and grading criteria at the projects folder root are not
+student submissions and are not included in the gallery.
 
 ## Preview locally
 

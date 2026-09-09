@@ -35,10 +35,7 @@
     var path = document.createElementNS("http://www.w3.org/2000/svg", "path");
     path.setAttribute("d", "M4 3h16a1 1 0 0 1 1 1v11a1 1 0 0 1-1 1h-7v2.3l4.5 2.3-.9 1.8L12 20l-4.6 2.4-.9-1.8L11 18.3V16H4a1 1 0 0 1-1-1V4a1 1 0 0 1 1-1Zm1 2v9h14V5H5Zm2 2h10v2H7V7Zm0 4h6v1H7v-1Z");
     svg.appendChild(path);
-    var label = document.createElement("span");
-    label.className = "slides-link__label";
-    label.textContent = text;
-    link.append(svg, label);
+    link.appendChild(svg);
 
     var home = header.querySelector(".main-site-link");
     var controls = header.querySelector(".md-header__option");

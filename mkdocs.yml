@@ -33,6 +33,7 @@ hooks:
 # Slides have their own header entry, not a place in the textbook sidebar.
 not_in_nav: |
   slides/*.md
+  projects/*.md
 
 theme:
   name: material
@@ -141,13 +142,15 @@ plugins:
 # whenever you edit one of these files.
 extra_css:
   - stylesheets/extra.css?v=7
-  - stylesheets/slides-library.css?v=2
+  - stylesheets/slides-library.css?v=3
+  - stylesheets/projects.css?v=1
   - vendor/katex/katex.min.css
 
 extra_javascript:
   - javascripts/lang-switch-fix.js?v=1
   - javascripts/main-site-link.js
-  - javascripts/slides-link.js?v=1
+  - javascripts/slides-link.js?v=2
+  - javascripts/projects.js?v=1
   - javascripts/runnable.js?v=3
   - javascripts/shell.js?v=1
   - javascripts/memory-diagram.js

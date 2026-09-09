@@ -23,14 +23,9 @@
 .md-header__inner .slides-link {
   display: inline-flex;
   align-items: center;
-  gap: 0.28rem;
   color: var(--md-primary-bg-color);
   white-space: nowrap;
   text-decoration: none;
-}
-.slides-link__label {
-  font-size: 0.65rem;
-  font-weight: 600;
 }
 .md-header__inner .slides-link:hover,
 .md-header__inner .slides-link:focus-visible {
@@ -101,14 +96,6 @@
 .slides-library__back {
   color: var(--md-default-fg-color--light);
   font-size: 0.75rem;
-}
-@media (max-width: 44.9375em) {
-  .slides-link__label {
-    display: none;
-  }
-  .md-header__inner .slides-link {
-    gap: 0;
-  }
 }
 @media (prefers-reduced-motion: reduce) {
   .slides-library .slides-library__card {
