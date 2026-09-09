@@ -50,10 +50,10 @@ slides, with the original diagrams and exercises.
   page and its existing EN/ZH heading IDs. The build adds stable
   `textbook-<topic-key>` aliases without changing old heading URLs or ToC entries.
   Matching textbook headings get a Slides link to the first matching section
-  in each deck. In the player, Textbook follows the current slide or reading
+  in each deck. In the player, the top-left Text / 正文 link follows the current slide or reading
   position and preserves the textbook language through `?lang=zh`.
 - Use `related: true` for broader reading when there is no exact counterpart.
-  This labels the player link Related reading and does not advertise an exact
+  This labels the Text link's tooltip as related reading and does not advertise an exact
   slide match on the textbook heading. The pilot uses it for array/deque.
 - `scripts/build_slides.py` runs as a MkDocs hook. Normal `mkdocs build` and
   `mkdocs serve` generate the deck; no PowerPoint, Node, or online conversion

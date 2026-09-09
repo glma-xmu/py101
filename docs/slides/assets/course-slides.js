@@ -56,9 +56,8 @@
     var related = slide.getAttribute("data-textbook-related") === "true";
     if (textbookLink) {
       var href = slide.getAttribute(chinese ? "data-textbook-zh" : "data-textbook-en");
-      textbookLink.hidden = !href;
-      if (href) textbookLink.setAttribute("href", href);
-      textbookLink.textContent = related ? t("Related reading", "延伸阅读") : t("Textbook", "教材");
+      textbookLink.setAttribute("href", href || (chinese ? "../../../zh/" : "../../../"));
+      textbookLink.textContent = t("Text", "正文");
       textbookLink.title = (related ? t("Related textbook reading", "教材延伸阅读") : t("Read this topic in the textbook", "在教材中阅读本节")) + (title ? ": " + title : "");
       textbookLink.setAttribute("aria-label", textbookLink.textContent + (title ? ": " + title : ""));
     }

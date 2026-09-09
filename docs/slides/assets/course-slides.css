@@ -23,7 +23,7 @@ body { overflow: hidden; }
   background: var(--slide-blue);
   font: 14px/1.3 system-ui, -apple-system, "Segoe UI", sans-serif;
 }
-.slide-toolbar .slides-back { margin-right: auto; font-weight: 650; }
+.slide-toolbar #slides-textbook { margin-right: auto; font-weight: 650; }
 .slide-toolbar a, .slide-toolbar button, .slide-toolbar summary {
   display: inline-flex;
   align-items: center;

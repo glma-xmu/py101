@@ -23,7 +23,7 @@ from mkdocs.structure.files import File, InclusionLevel
 
 
 GENERATOR = "scripts/build_slides.py"
-ASSET_VERSION = "2"
+ASSET_VERSION = "3"
 SLUG = re.compile(r"[a-z0-9]+(?:-[a-z0-9]+)*\Z")
 LANG = re.compile(r"[a-zA-Z]{2,3}(?:-[a-zA-Z0-9]{2,8})*\Z")
 CLASSES = re.compile(r"[a-z][a-z0-9-]*(?: +[a-z][a-z0-9-]*)*\Z")
@@ -283,12 +283,12 @@ def render_deck(deck: Deck, topics: dict[str, TextbookTopic] | None = None,
         attrs = " ".join(f'{key}="{escape(value, quote=True)}"' for key, value in attributes.items())
         sections.append(f'<section {attrs}>\n{content}\n</section>')
     body = "\n".join(sections)
-    textbook_control = ""
+    textbook_control = '<a id="slides-textbook" href="../../../" target="_self">Text</a>'
     outline_control = ""
     if deck.sections:
         first = topics[deck.sections[0].textbook]
         textbook_control = (f'<a id="slides-textbook" href="../../../{escape(first.url("en", directory_urls), quote=True)}" '
-                            'target="_self">Textbook</a>')
+                            'target="_self">Text</a>')
         entries = []
         for index, section in enumerate(deck.sections):
             end = deck.sections[index + 1].start - 1 if index + 1 < len(deck.sections) else len(deck.slides)
@@ -311,8 +311,8 @@ def render_deck(deck: Deck, topics: dict[str, TextbookTopic] | None = None,
 </head>
 <body data-deck-title="{escape(deck.title, quote=True)}" data-source="{escape(deck.source, quote=True)}">
   <nav class="slide-toolbar" aria-label="Slide controls">
-    <a class="slides-back" href="../../">Slides</a>
     {textbook_control}
+    <a class="slides-back" href="../../">Slides</a>
     {outline_control}
     <button type="button" id="slides-overview" title="Overview (O)">Overview</button>
     <button type="button" id="slides-fullscreen" title="Fullscreen (F)">Fullscreen</button>
