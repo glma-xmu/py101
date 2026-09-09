@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Bounded renderer and built-site checks for the static slides pilot.
+"""Renderer and built-site checks for the static course slide library.
 
 Usage: python scripts/check_slides.py path/to/built/site
 Run after a normal MkDocs build; no browser, network, or source writes are used.
@@ -15,6 +15,7 @@ import os
 from pathlib import Path
 import re
 import sys
+import tempfile
 from types import SimpleNamespace
 from urllib.parse import parse_qs, urljoin, urlsplit
 
@@ -29,7 +30,12 @@ from build_slides import (
 from check_navigation import Document
 
 
-EXPECTED_SLIDES = {"lecture-1-1": 23}
+EXPECTED_SLIDES = {
+    "lecture-1-1": 23, "lecture-1-2": 31, "lecture-1-3": 6,
+    "lecture-2-1": 25, "lecture-2-2": 13, "lecture-2-3": 35,
+    "lecture-2-project": 10, "lecture-3-1": 33, "lecture-3-2": 36,
+    "lecture-3-3": 31, "lecture-3-4": 22,
+}
 REVEAL_SHA256 = {
     "reveal.js": "3fb84c30d2e610dd598843d75a123ef2c4dbc588847cda86cd8c7a61e18ddb6b",
     "reveal.css": "64e6203ee2048665c9f49c368f345fb3d7f936c404934162c70369a7682f388f",
@@ -53,6 +59,17 @@ def expect_invalid(function, *args):
 
 
 def check_renderer(root: Path, site: Path) -> None:
+    # Exercise the same English-source fallback used by chapter 3 in Chinese.
+    with tempfile.TemporaryDirectory() as temporary:
+        fallback_root = Path(temporary)
+        (fallback_root / "docs").mkdir()
+        (fallback_root / "docs/chapter.md").write_text("# Chapter\n", encoding="utf-8")
+        entry = {"topics": {"chapter": {"page": "chapter.md", "headings": {"en": "chapter", "zh": "chapter"}}}}
+        topic = parse_registry(entry, fallback_root)["chapter"]
+        require(not topic.translated and topic.source_page("zh") == "chapter.md", "English fallback source was lost")
+        require(topic.url("zh") == "zh/chapter/#textbook-chapter", "Chinese fallback URL left the Chinese site")
+        entry["topics"]["chapter"]["headings"]["zh"] = "missing"
+        expect_invalid(parse_registry, entry, fallback_root)
     source = '''---
 title: Test deck
 description: A renderer check
@@ -251,6 +268,10 @@ def check_built_mapping(site: Path, decks, topics) -> None:
             title_section = next(s for s in search_parser.data if s.el.tag == heading.tag)
             original_title = "".join(title_section.title).strip()
             location = book_page + ("#" + heading.id if heading.tag != "h1" else "")
+            if language == "zh" and not topic.translated:
+                # i18n renders fallback pages in Chinese navigation but indexes
+                # their English source only once at its canonical EN location.
+                location = topic.url("en").split("#")[0] + ("#" + heading.id if heading.tag != "h1" else "")
             indexed_titles = [title.replace("\u200b", "") for path, title in search_entries if path == location]
             require(bool(indexed_titles) and all(title == original_title for title in indexed_titles),
                     f"Search title changed after link injection: {topic.id}/{language}")
@@ -301,7 +322,12 @@ def check_built(root: Path, site: Path) -> tuple[int, int]:
         slides = [n for n in nodes if n.tag == "section" and n.parent and n.parent.has_class("slides")]
         require(len(slides) == len(deck.slides), f"{deck.slug}: source/build slide count differs")
         if deck.slug in EXPECTED_SLIDES:
-            require(len(slides) == EXPECTED_SLIDES[deck.slug], f"{deck.slug}: expected 23 pilot slides")
+            require(len(slides) == EXPECTED_SLIDES[deck.slug], f"{deck.slug}: original slide count changed")
+        for number, (_, source) in enumerate(deck.slides, 1):
+            for code in re.findall(r"```python\n(.*?)\n```", source, re.S):
+                # Compile only; do not execute network or dataset examples.
+                # Deliberately invalid teaching templates use text fences.
+                compile(code, f"{deck.slug} slide {number}", "exec")
         require(not any(n.has_class("md-nav") for n in nodes), "Standalone deck contains textbook navigation")
         require(not (root / "docs" / deck.route).exists(), "Generated HTML must not be written into docs/")
         require(not (site / "zh" / deck.route).exists(), "English deck was incorrectly duplicated under zh/")

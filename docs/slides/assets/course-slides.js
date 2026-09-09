@@ -87,6 +87,7 @@
   }
   if (contentsButton) contentsButton.textContent = t("Contents", "目录");
   if (overviewButton) overviewButton.textContent = t("Overview", "概览");
+  if (readingButton) readingButton.textContent = t("Reading view", "阅读视图");
   if (outline) {
     var outlineNav = outline.querySelector("nav");
     if (outlineNav) outlineNav.setAttribute("aria-label", t("Slide sections", "幻灯片章节"));

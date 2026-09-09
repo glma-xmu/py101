@@ -23,7 +23,7 @@ from mkdocs.structure.files import File, InclusionLevel
 
 
 GENERATOR = "scripts/build_slides.py"
-ASSET_VERSION = "3"
+ASSET_VERSION = "4"
 SLUG = re.compile(r"[a-z0-9]+(?:-[a-z0-9]+)*\Z")
 LANG = re.compile(r"[a-zA-Z]{2,3}(?:-[a-zA-Z0-9]{2,8})*\Z")
 CLASSES = re.compile(r"[a-z][a-z0-9-]*(?: +[a-z][a-z0-9-]*)*\Z")
@@ -46,13 +46,14 @@ class TextbookTopic:
     id: str
     page: str
     headings: dict[str, str]
+    translated: bool = True
 
     @property
     def alias(self) -> str:
         return "textbook-" + self.id
 
     def source_page(self, language: str) -> str:
-        return self.page if language == "en" else self.page[:-3] + ".zh.md"
+        return self.page if language == "en" or not self.translated else self.page[:-3] + ".zh.md"
 
     def url(self, language: str, directory_urls: bool = True) -> str:
         page = PurePosixPath(self.page)
@@ -136,7 +137,10 @@ def parse_registry(value, root: Path) -> dict[str, TextbookTopic]:
         if (not isinstance(headings, dict) or set(headings) != {"en", "zh"}
                 or any(not isinstance(v, str) or not v.strip() or any(c.isspace() for c in v) for v in headings.values())):
             raise ValueError(f"Textbook topic {topic_id}: expected existing en/zh heading ids")
-        topic = TextbookTopic(topic_id, page, headings)
+        translated = (docs / (page[:-3] + ".zh.md")).is_file()
+        if not translated and headings["zh"] != headings["en"]:
+            raise ValueError(f"Textbook topic {topic_id}: an untranslated page must use the English heading in both locales")
+        topic = TextbookTopic(topic_id, page, headings, translated)
         for language in ("en", "zh"):
             source = (docs / topic.source_page(language)).resolve()
             if not source.is_relative_to(docs) or not source.is_file():
@@ -470,7 +474,9 @@ def on_page_content(html, page, config, files):
     try:
         topics = read_registry(root)
         source = page.file.src_uri
-        language = "zh" if source.endswith(".zh.md") else "en"
+        # i18n uses English source files for untranslated pages in the Chinese
+        # build. Follow the build locale, not only the filename suffix.
+        language = "zh" if source.endswith(".zh.md") or config.theme.get("language") == "zh" else "en"
         if not any(topic.source_page(language) == source for topic in topics.values()):
             return html
         decks = read_decks(root)

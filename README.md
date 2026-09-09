@@ -34,11 +34,14 @@ and initial expansion states in both languages.
 ## Lecture slides
 
 The header's slideshow icon (tooltip: **Browse lecture slides / 浏览课堂课件**) opens a separate slide library. Slides
-do not appear in the textbook sidebar or search results. The first pilot is
-Lecture 1.1, converted from `resource/deck1_1_AoL.pptx` into 23 editable HTML
-slides, with the original diagrams and exercises.
+do not appear in the textbook sidebar or search results. The library covers all
+11 source decks through chapter 3: 265 HTML slides, including the chapter 1 web
+crawler and chapter 2 function-practice decks. Chapters 4 and 5 are not imported.
+Lecture text and code remain selectable; examples have Copy controls, equations
+use native MathML, and the original artwork is stored locally. Exercises retain
+their original order and numbering, with no added solutions.
 
-- Edit `slides-src/lecture-1-1.md`; a line containing only `---` starts the next
+- Edit the corresponding `slides-src/lecture-*.md`; a line containing only `---` starts the next
   slide. The initial YAML block provides the title, description, and language.
   Additional decks use `lecture-*.md` filenames and need a card in both slide
   library pages; supporting notes in this folder are not turned into slides.
@@ -58,7 +61,7 @@ slides, with the original diagrams and exercises.
 - `scripts/build_slides.py` runs as a MkDocs hook. Normal `mkdocs build` and
   `mkdocs serve` generate the deck; no PowerPoint, Node, or online conversion
   service is needed for deployment.
-- The deck is at `slides/decks/lecture-1-1/` under whichever site prefix serves
+- Each deck is at `slides/decks/lecture-<number>/` under whichever site prefix serves
   the course. The player and its fonts/assets require no external CDN.
 - Use arrow keys / Space to advance, Esc for the overview, and F for full screen
   where the browser permits it. Reading mode works well in a narrow VS Code
@@ -67,7 +70,9 @@ slides, with the original diagrams and exercises.
 - Keep saving the notebook in VS Code as before. Nothing in this pilot changes
   notebook storage or publishes your in-class notes automatically.
 - Original PPTX/PDF files remain in the ignored `resource/` folder. See
-  `slides-src/conversion-notes.md` for the small source corrections in this pilot.
+  `slides-src/conversion-notes.md` for the pilot corrections and
+  `slides-src/chapters-1-3-conversion-notes.md` for the expanded library's source
+  inventory, adaptation choices, and corrections.
 
 After building, run `python scripts/check_slides.py site` and
 `python scripts/check_navigation.py site`. Commit the Markdown, hook, library,

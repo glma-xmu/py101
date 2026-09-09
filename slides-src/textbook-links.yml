@@ -1,6 +1,4 @@
-# Stable textbook destinations shared by current and future lecture decks.
-# Keep the keys stable. If a heading changes, update only its selector below.
-# Existing heading IDs and textbook ToC links remain unchanged.
+# Stable textbook destinations for lecture navigation.
 topics:
   objects-overview:
     page: py101_md/ch1_1_objects.md
@@ -16,17 +14,17 @@ topics:
     page: py101_md/ch1_1_objects.md
     headings:
       en: 1-objects-identity-type-and-value
-      zh: "1"
+      zh: '1'
   type-organisation:
     page: py101_md/ch1_1_objects.md
     headings:
       en: 2-two-questions-that-organise-every-type
-      zh: "2"
+      zh: '2'
   numbers:
     page: py101_md/ch1_1_objects.md
     headings:
       en: 31-numbers
-      zh: "31"
+      zh: '31'
   sequences:
     page: py101_md/ch1_2_collections.md
     headings:
@@ -36,14 +34,384 @@ topics:
     page: py101_md/ch1_2_collections.md
     headings:
       en: 4-mutability-and-identity
-      zh: "4"
+      zh: '4'
   slicing:
     page: py101_md/ch1_2_collections.md
     headings:
       en: 5-slicing-reading-subsequences
-      zh: "5"
+      zh: '5'
   objects-summary:
     page: py101_md/ch1_1_objects.md
     headings:
       en: summary
       zh: _3
+  ch1-2-collections-0:
+    page: py101_md/ch1_2_collections.md
+    headings:
+      en: collections
+      zh: _1
+  ch1-2-collections-4:
+    page: py101_md/ch1_2_collections.md
+    headings:
+      en: 3-mappings-the-dictionary
+      zh: '3'
+  ch1-3-control-flow-2:
+    page: py101_md/ch1_3_control_flow.md
+    headings:
+      en: 1-the-for-loop
+      zh: 1-for
+  ch1-3-control-flow-5:
+    page: py101_md/ch1_3_control_flow.md
+    headings:
+      en: 4-conditional-execution-if-elif-else
+      zh: 4-if-elif-else
+  ch1-3-control-flow-6:
+    page: py101_md/ch1_3_control_flow.md
+    headings:
+      en: 5-conditions-comparisons-and-booleans
+      zh: '5'
+  ch1-4-iterators-2:
+    page: py101_md/ch1_4_iterators.md
+    headings:
+      en: 1-iterables-what-a-for-loop-needs
+      zh: 1-for
+  ch1-1-objects-5:
+    page: py101_md/ch1_1_objects.md
+    headings:
+      en: 4-text-and-binary-data
+      zh: '4'
+  ch1-2-collections-3:
+    page: py101_md/ch1_2_collections.md
+    headings:
+      en: 2-sets
+      zh: '2'
+  ch1-3-control-flow-8:
+    page: py101_md/ch1_3_control_flow.md
+    headings:
+      en: 7-what-people-mean-by-pythonic
+      zh: 7-pythonic
+  ch1-3-control-flow-7:
+    page: py101_md/ch1_3_control_flow.md
+    headings:
+      en: 6-comprehensions-looping-as-an-expression
+      zh: '6'
+  ch1-2-collections-7:
+    page: py101_md/ch1_2_collections.md
+    headings:
+      en: summary
+      zh: _3
+  ch1-4-iterators-0:
+    page: py101_md/ch1_4_iterators.md
+    headings:
+      en: iterables-and-iterators
+      zh: _1
+  ch1-4-iterators-4:
+    page: py101_md/ch1_4_iterators.md
+    headings:
+      en: 3-why-it-matters-lazy-evaluation
+      zh: '3'
+  ch1-4-iterators-3:
+    page: py101_md/ch1_4_iterators.md
+    headings:
+      en: 2-iterators-producing-one-value-at-a-time
+      zh: '2'
+  ch2-1-defining-functions-0:
+    page: py101_md/ch2_1_defining_functions.md
+    headings:
+      en: defining-functions
+      zh: _1
+  ch2-1-defining-functions-2:
+    page: py101_md/ch2_1_defining_functions.md
+    headings:
+      en: 1-defining-and-calling-a-function
+      zh: '1'
+  ch2-1-defining-functions-5:
+    page: py101_md/ch2_1_defining_functions.md
+    headings:
+      en: 4-the-return-statement
+      zh: 4-return
+  ch2-1-defining-functions-4:
+    page: py101_md/ch2_1_defining_functions.md
+    headings:
+      en: 3-how-a-call-runs-frames-on-the-call-stack
+      zh: '3'
+  ch2-1-defining-functions-7:
+    page: py101_md/ch2_1_defining_functions.md
+    headings:
+      en: 6-default-parameter-values
+      zh: '6'
+  ch2-1-defining-functions-8:
+    page: py101_md/ch2_1_defining_functions.md
+    headings:
+      en: 7-a-function-factory-and-a-name-that-surprises-you
+      zh: '7'
+  ch2-1-defining-functions-6:
+    page: py101_md/ch2_1_defining_functions.md
+    headings:
+      en: 5-a-worked-function-newtons-method
+      zh: '5'
+  ch2-2-namespaces-scope-2:
+    page: py101_md/ch2_2_namespaces_scope.md
+    headings:
+      en: 1-a-namespace-is-a-dictionary-of-names
+      zh: '1'
+  ch2-2-namespaces-scope-5:
+    page: py101_md/ch2_2_namespaces_scope.md
+    headings:
+      en: 4-scope-and-the-legb-rule
+      zh: 4-legb
+  ch2-2-namespaces-scope-7:
+    page: py101_md/ch2_2_namespaces_scope.md
+    headings:
+      en: 6-assigning-inside-a-function-local-by-default
+      zh: '6'
+  ch2-2-namespaces-scope-6:
+    page: py101_md/ch2_2_namespaces_scope.md
+    headings:
+      en: 5-shadowing-when-one-name-hides-another
+      zh: '5'
+  ch2-2-namespaces-scope-8:
+    page: py101_md/ch2_2_namespaces_scope.md
+    headings:
+      en: 7-why-have-scopes-at-all
+      zh: '7'
+  ch2-3-first-class-0:
+    page: py101_md/ch2_3_first_class.md
+    headings:
+      en: functions-are-first-class-objects
+      zh: _1
+  ch2-3-first-class-2:
+    page: py101_md/ch2_3_first_class.md
+    headings:
+      en: 1-a-function-is-an-object
+      zh: '1'
+  ch2-3-first-class-5:
+    page: py101_md/ch2_3_first_class.md
+    headings:
+      en: 4-functions-as-return-values-closures
+      zh: '4'
+  ch2-3-first-class-3:
+    page: py101_md/ch2_3_first_class.md
+    headings:
+      en: 2-higher-order-functions
+      zh: '2'
+  ch2-3-first-class-4:
+    page: py101_md/ch2_3_first_class.md
+    headings:
+      en: 3-how-arguments-reach-parameters
+      zh: '3'
+  ch2-5-loose-ends-3:
+    page: py101_md/ch2_5_loose_ends.md
+    headings:
+      en: 2-finer-parameter-lists-keyword-only-and-positional-only
+      zh: '2'
+  ch2-4-use-cases-0:
+    page: py101_md/ch2_4_use_cases.md
+    headings:
+      en: functions-in-practice-five-use-cases
+      zh: _1
+  ch2-4-use-cases-2:
+    page: py101_md/ch2_4_use_cases.md
+    headings:
+      en: 1-decorators
+      zh: '1'
+  ch2-4-use-cases-3:
+    page: py101_md/ch2_4_use_cases.md
+    headings:
+      en: 2-recursion
+      zh: '2'
+  ch2-4-use-cases-4:
+    page: py101_md/ch2_4_use_cases.md
+    headings:
+      en: 3-map-filter-and-reduce
+      zh: 3-mapfilter-reduce
+  ch2-3-first-class-6:
+    page: py101_md/ch2_3_first_class.md
+    headings:
+      en: 5-lambda-a-function-with-no-name
+      zh: 5-lambda
+  ch2-4-use-cases-5:
+    page: py101_md/ch2_4_use_cases.md
+    headings:
+      en: 4-generators
+      zh: '4'
+  ch2-4-use-cases-6:
+    page: py101_md/ch2_4_use_cases.md
+    headings:
+      en: 5-handling-errors-with-try-except
+      zh: 5-try-except
+  ch2-5-loose-ends-4:
+    page: py101_md/ch2_5_loose_ends.md
+    headings:
+      en: 3-pep-8-the-shared-style-guide
+      zh: 3-pep-8
+  ch2-4-use-cases-7:
+    page: py101_md/ch2_4_use_cases.md
+    headings:
+      en: summary
+      zh: _3
+  ch3-1-numpy-0:
+    page: py101_md/ch3_1_numpy.md
+    headings:
+      en: numpy
+      zh: numpy
+  ch3-1-numpy-1:
+    page: py101_md/ch3_1_numpy.md
+    headings:
+      en: introduction
+      zh: introduction
+  ch3-1-numpy-2:
+    page: py101_md/ch3_1_numpy.md
+    headings:
+      en: 1-the-ndarray
+      zh: 1-the-ndarray
+  ch3-1-numpy-3:
+    page: py101_md/ch3_1_numpy.md
+    headings:
+      en: 2-vectorization-operate-on-the-whole-array
+      zh: 2-vectorization-operate-on-the-whole-array
+  ch3-1-numpy-4:
+    page: py101_md/ch3_1_numpy.md
+    headings:
+      en: 3-broadcasting
+      zh: 3-broadcasting
+  ch3-1-numpy-5:
+    page: py101_md/ch3_1_numpy.md
+    headings:
+      en: 4-shape-reshape-and-transpose
+      zh: 4-shape-reshape-and-transpose
+  ch3-1-numpy-6:
+    page: py101_md/ch3_1_numpy.md
+    headings:
+      en: 5-universal-functions-and-aggregations
+      zh: 5-universal-functions-and-aggregations
+  ch3-1-numpy-7:
+    page: py101_md/ch3_1_numpy.md
+    headings:
+      en: 6-view-vs-copy
+      zh: 6-view-vs-copy
+  ch3-2-pandas-0:
+    page: py101_md/ch3_2_pandas.md
+    headings:
+      en: pandas-one-table
+      zh: pandas-one-table
+  ch3-2-pandas-2:
+    page: py101_md/ch3_2_pandas.md
+    headings:
+      en: 1-how-a-data-table-is-organised
+      zh: 1-how-a-data-table-is-organised
+  ch3-2-pandas-3:
+    page: py101_md/ch3_2_pandas.md
+    headings:
+      en: 2-series-just-one-column
+      zh: 2-series-just-one-column
+  ch3-2-pandas-4:
+    page: py101_md/ch3_2_pandas.md
+    headings:
+      en: 3-dataframe-the-whole-table
+      zh: 3-dataframe-the-whole-table
+  ch3-2-pandas-5:
+    page: py101_md/ch3_2_pandas.md
+    headings:
+      en: 4-sorting-putting-what-matters-on-top
+      zh: 4-sorting-putting-what-matters-on-top
+  ch3-2-pandas-6:
+    page: py101_md/ch3_2_pandas.md
+    headings:
+      en: 5-aggregating-the-birds-eye-view
+      zh: 5-aggregating-the-birds-eye-view
+  ch3-2-pandas-7:
+    page: py101_md/ch3_2_pandas.md
+    headings:
+      en: 6-reading-and-writing-data-files
+      zh: 6-reading-and-writing-data-files
+  ch3-2-pandas-10:
+    page: py101_md/ch3_2_pandas.md
+    headings:
+      en: 9-two-level-indices-stack-and-unstack
+      zh: 9-two-level-indices-stack-and-unstack
+  ch3-2-pandas-9:
+    page: py101_md/ch3_2_pandas.md
+    headings:
+      en: 8-loc-and-iloc
+      zh: 8-loc-and-iloc
+  ch3-2-pandas-8:
+    page: py101_md/ch3_2_pandas.md
+    headings:
+      en: 7-new-columns-arithmetic-across-a-table
+      zh: 7-new-columns-arithmetic-across-a-table
+  ch3-2-pandas-11:
+    page: py101_md/ch3_2_pandas.md
+    headings:
+      en: 10-lead-lag-and-rolling-windows
+      zh: 10-lead-lag-and-rolling-windows
+  ch3-3-reshape-group-0:
+    page: py101_md/ch3_3_reshape_group.md
+    headings:
+      en: pandas-reshaping-and-grouping
+      zh: pandas-reshaping-and-grouping
+  ch3-3-reshape-group-2:
+    page: py101_md/ch3_3_reshape_group.md
+    headings:
+      en: 1-long-and-wide-two-shapes-of-the-same-information
+      zh: 1-long-and-wide-two-shapes-of-the-same-information
+  ch3-3-reshape-group-3:
+    page: py101_md/ch3_3_reshape_group.md
+    headings:
+      en: 2-pivot_table-from-long-to-wide
+      zh: 2-pivot_table-from-long-to-wide
+  ch3-3-reshape-group-4:
+    page: py101_md/ch3_3_reshape_group.md
+    headings:
+      en: 3-melt-from-wide-to-long
+      zh: 3-melt-from-wide-to-long
+  ch3-3-reshape-group-5:
+    page: py101_md/ch3_3_reshape_group.md
+    headings:
+      en: 4-groupby-split-apply-combine
+      zh: 4-groupby-split-apply-combine
+  ch3-3-reshape-group-6:
+    page: py101_md/ch3_3_reshape_group.md
+    headings:
+      en: 5-three-methods-you-will-use-constantly
+      zh: 5-three-methods-you-will-use-constantly
+  ch3-3-reshape-group-7:
+    page: py101_md/ch3_3_reshape_group.md
+    headings:
+      en: 6-putting-it-together-provincial-savings
+      zh: 6-putting-it-together-provincial-savings
+  ch3-4-merge-0:
+    page: py101_md/ch3_4_merge.md
+    headings:
+      en: pandas-combining-tables
+      zh: pandas-combining-tables
+  ch3-4-merge-2:
+    page: py101_md/ch3_4_merge.md
+    headings:
+      en: 1-why-you-cannot-just-assign-a-column
+      zh: 1-why-you-cannot-just-assign-a-column
+  ch3-4-merge-3:
+    page: py101_md/ch3_4_merge.md
+    headings:
+      en: 2-merge-and-the-on-parameter
+      zh: 2-merge-and-the-on-parameter
+  ch3-4-merge-4:
+    page: py101_md/ch3_4_merge.md
+    headings:
+      en: 3-the-five-modes-of-how
+      zh: 3-the-five-modes-of-how
+  ch3-4-merge-5:
+    page: py101_md/ch3_4_merge.md
+    headings:
+      en: 4-different-key-names-left_on-and-right_on
+      zh: 4-different-key-names-left_on-and-right_on
+  ch3-4-merge-6:
+    page: py101_md/ch3_4_merge.md
+    headings:
+      en: 5-validate-catching-a-merge-that-multiplies-rows
+      zh: 5-validate-catching-a-merge-that-multiplies-rows
+  ch3-4-merge-7:
+    page: py101_md/ch3_4_merge.md
+    headings:
+      en: 6-a-full-analysis-chinas-provincial-gdp
+      zh: 6-a-full-analysis-chinas-provincial-gdp
