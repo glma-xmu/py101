@@ -1,6 +1,6 @@
 # Live classroom questions
 
-This is an optional pilot beside the existing static MkDocs course site. Wenjuanxing stays available. Students submit at `https://maguoliang.cn/live/`; the teacher signs in at `https://maguoliang.cn/teacher/`. A small FastAPI service checks permissions and sends questions to the teacher using server-sent events (SSE). There is no database.
+This is a live-question service beside the existing static MkDocs course site. The old Wenjuanxing entrance has been retired after the classroom acceptance check. Students submit at `https://maguoliang.cn/live/`; the teacher signs in at `https://maguoliang.cn/teacher/`. A small FastAPI service checks permissions and sends questions to the teacher using server-sent events (SSE). There is no database.
 
 ## Scope and operating limits
 
@@ -163,23 +163,29 @@ In a teacher browser at `https://maguoliang.cn/teacher/`:
 4. Check that a student cannot view questions or use teacher controls. A guessed teacher page URL must still require authentication.
 5. Exercise pause/resume and end-class controls. A closed or expired class must reject new submissions.
 6. Briefly disconnect/reconnect the teacher browser and confirm its connection state and recent-question behavior. End the test class afterward.
-7. Confirm existing course pages and the Wenjuanxing link still work.
+7. Confirm existing course pages still work, and their live-question button opens the canonical student page.
 
 Do a small real-device trial before inviting the whole class. Local tests cannot establish campus connectivity, latency, or your Aliyun instance's capacity.
 
 ### 7. Enable the course-site entry point
 
-The new `docs/javascripts/live-button.js` is loaded by MkDocs but starts with an empty `LIVE_URL`, so it adds no public button until the service is ready. The original `docs/javascripts/ask-button.js` and Wenjuanxing button remain unchanged.
+The course now loads only `docs/javascripts/live-button.js` for questions. Its enabled `LIVE_URL` opens the Aliyun student page in a new tab. A single "Live questions" / "实时提问" button appears in the lower-left corner on every course page. The old `ask-button.js` is no longer loaded and contains no link.
 
-After the public health check and classroom trial succeed, set this constant in `docs/javascripts/live-button.js`:
+After a successful public health check and classroom trial, the enabled constant in `docs/javascripts/live-button.js` is:
 
 ```javascript
 var LIVE_URL = "https://maguoliang.cn/live/";
 ```
 
-If the disabled script was already published, bump its MkDocs URL from `javascripts/live-button.js?v=1` to `javascripts/live-button.js?v=2` to avoid reusing a cached copy. Commit and push these static-site changes through the existing deployment workflow. The live button appears separately above the existing Ask button on all published course-site copies. The teacher can bookmark `https://maguoliang.cn/teacher/`.
+The MkDocs script URL is `javascripts/live-button.js?v=2`, and the stylesheet is `stylesheets/extra.css?v=4`. Increment the respective version again after future edits. This avoids reusing the old disabled script or old styling from browser caches. Commit and push static-site changes through the existing deployment workflow. The teacher can bookmark `https://maguoliang.cn/teacher/`.
 
-To withdraw the student entry point later, set `LIVE_URL` back to an empty string, bump the script version, and republish. Wenjuanxing remains the fallback throughout.
+All course copies use the same absolute student URL. The nested personal-site path, such as `/teaching/py101/py101_md/ch1_2_collections/`, is unchanged; students on that copy also open the Aliyun classroom when they click the button. The separate teacher page remains unchanged in purpose; an in-lesson teacher panel is not implemented.
+
+If one copy looks old, check the published HTML's script version and the served script's `LIVE_URL`. On GitHub Actions, inspect the "Mirror to the Aliyun server" and "Rebuild the personal site" steps individually: both are best-effort, so a green overall run alone does not establish that those copies updated. Try a hard refresh after confirming the new assets are served.
+
+To withdraw the student entry point later, set `LIVE_URL` back to an empty string, bump the script version, and republish. The old form will not reappear automatically.
+
+Changes to `live_questions/static/`, including removal of the old form links from the student and teacher footers, require updating the backend files on Aliyun too; the static-site workflow does not copy those files.
 
 ## Updates and troubleshooting
 
@@ -209,4 +215,4 @@ sudo ss -ltnp
 
 If local health succeeds but public health fails, inspect nginx/TLS routing. If login works but delivery stalls, check buffering and proxy timeouts and verify there is one worker. If login is rejected, confirm the browser uses `https://maguoliang.cn`, the configured origin matches exactly, and the teacher hash was copied correctly.
 
-To pause the pilot, `sudo systemctl stop py101-live` stops live questions; Wenjuanxing and the static course remain available. Changing the password hash takes effect after restart, which also invalidates existing teacher sessions.
+To pause the pilot, `sudo systemctl stop py101-live` stops live questions; the static course remains available, but students cannot submit live questions. Hide the course entry point if the outage will be prolonged. Changing the password hash takes effect after restart, which also invalidates existing teacher sessions.

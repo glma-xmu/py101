@@ -1,0 +1,73 @@
+{#
+  Course-specific top-level navigation. Keep Material's native page rendering,
+  mobile drawer, checkbox toggles, and relative URL handling.
+  Based on Material for MkDocs' partials/nav.html (MIT, Martin Donath).
+#}
+{% import "partials/nav-item.html" as item with context %}
+
+{% macro render_group(nav_item, path) %}
+  {% set first = nav_item.children | first %}
+  {% set key = first.file.src_uri.rsplit('/', 1)[-1].split('.', 1)[0] %}
+  {% set collapsed = key in config.extra.course_navigation.collapsed_first_pages %}
+  {% set expanded = nav_item.active or ("navigation.expand" in features and not collapsed) %}
+  {% set active = " md-nav__item--active" if nav_item.active else "" %}
+  {% set link_active = " md-nav__link--active" if first == page else "" %}
+  {% set toggle_text = "展开或折叠" if config.theme.language == "zh" else "Expand or collapse" %}
+  <li class="md-nav__item md-nav__item--nested{{ active }}" data-course-section="{{ key }}">
+    <input class="md-nav__toggle md-toggle{% if expanded and not nav_item.active %} md-toggle--indeterminate{% endif %}"
+      type="checkbox" id="{{ path }}" {% if nav_item.active %}checked{% endif %}>
+    <div class="md-nav__link md-nav__container">
+      <a href="{{ first.url | url }}" class="md-nav__link{{ link_active }}" id="{{ path }}_title">
+        {{ item.render_content(nav_item) }}
+      </a>
+      <label class="md-nav__link{{ link_active }}" for="{{ path }}" id="{{ path }}_label"
+        tabindex="0" aria-label="{{ toggle_text }}: {{ nav_item.title }}" aria-controls="{{ path }}_children">
+        <span class="md-nav__icon md-icon"></span>
+      </label>
+    </div>
+    <nav class="md-nav" id="{{ path }}_children" data-md-level="1"
+      aria-labelledby="{{ path }}_label" aria-expanded="{{ nav_item.active | tojson }}">
+      <label class="md-nav__title" for="{{ path }}">
+        <span class="md-nav__icon md-icon"></span>
+        {{ item.render_title(nav_item) }}
+      </label>
+      <ul class="md-nav__list" data-md-scrollfix>
+        {% for child in nav_item.children %}
+          {{ item.render(child, path ~ "_" ~ loop.index, 2, nav_item) }}
+        {% endfor %}
+      </ul>
+    </nav>
+  </li>
+{% endmacro %}
+
+{% set class = "md-nav md-nav--primary" %}
+{% if "navigation.tabs" in features %}
+  {% set class = class ~ " md-nav--lifted" %}
+{% endif %}
+{% if "toc.integrate" in features %}
+  {% set class = class ~ " md-nav--integrated" %}
+{% endif %}
+<nav class="{{ class }}" aria-label="{{ lang.t('nav') }}" data-md-level="0">
+  <label class="md-nav__title" for="__drawer">
+    <a href="{{ config.extra.homepage | d(nav.homepage.url, true) | url }}" title="{{ config.site_name | e }}"
+      class="md-nav__button md-logo" aria-label="{{ config.site_name }}" data-md-component="logo">
+      {% include "partials/logo.html" %}
+    </a>
+    {{ config.site_name }}
+  </label>
+  {% if config.repo_url %}
+    <div class="md-nav__source">
+      {% include "partials/source.html" %}
+    </div>
+  {% endif %}
+  <ul class="md-nav__list" data-md-scrollfix>
+    {% for nav_item in nav.items %}
+      {% set path = "__nav_" ~ loop.index %}
+      {% if nav_item.children and (nav_item.children | first).is_page %}
+        {{ render_group(nav_item, path) }}
+      {% else %}
+        {{ item.render(nav_item, path, 1) }}
+      {% endif %}
+    {% endfor %}
+  </ul>
+</nav>

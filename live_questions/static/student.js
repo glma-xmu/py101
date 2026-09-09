@@ -199,7 +199,7 @@
     if (results[1].status === "fulfilled") {
       showRoom(results[1].value.room);
     } else if (![401, 410].includes(results[1].reason.status)) {
-      L.status(status, "Live questions are temporarily unavailable. Try joining shortly, or use Wenjuanxing below. / 实时提问暂不可用，请稍后尝试，或使用下方问卷星。", "error");
+      L.status(status, "Live questions are temporarily unavailable. Please retry shortly or let your teacher know. / 实时提问暂不可用，请稍后重试或告知老师。", "error");
     }
     el("join-button").disabled = false;
     updateCount();

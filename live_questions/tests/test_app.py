@@ -354,6 +354,15 @@ def test_api_cache_and_security_headers(env, path, status):
     assert "unsafe-inline" not in csp
 
 
+@pytest.mark.parametrize("path", ["/live/", "/teacher/", "/live/assets/student.js"])
+def test_retired_question_form_is_not_linked(env, path):
+    response = env.client.get(path)
+    assert response.status_code == 200
+    assert "wjx.cn" not in response.text
+    assert "Wenjuanxing" not in response.text
+    assert "问卷星" not in response.text
+
+
 def test_hash_and_development_settings(password_hash):
     validate_hash(password_hash)
     assert verify_password(PASSWORD, password_hash)

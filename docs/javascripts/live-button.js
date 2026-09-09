@@ -1,8 +1,9 @@
 /*
- * Optional live classroom entrance. Keep the Wenjuanxing Ask button unchanged.
- * After deploying and testing live_questions/, set LIVE_URL below to
- * "https://maguoliang.cn/live/" and bump this script's ?v= in mkdocs.yml.
- * An empty URL keeps the pilot hidden until the service is ready.
+ * Live classroom entrance shared by all course-site copies.
+ * The absolute URL keeps students on the same Aliyun classroom service,
+ * including when this course is served below /teaching/py101/ or /py101/.
+ * Bump this script's ?v= in mkdocs.yml after changing it.
+ * An empty URL hides the entrance if the service is withdrawn.
  */
 (function () {
   "use strict";
@@ -25,6 +26,7 @@
     link.rel = "noopener noreferrer";
     link.textContent = chinese ? "实时提问" : "Live questions";
     link.title = chinese ? "加入教师开启的课堂" : "Join a classroom opened by your teacher";
+    link.setAttribute("aria-label", link.textContent + " — " + link.title);
     document.body.appendChild(link);
   }
   if (document.readyState === "loading") {

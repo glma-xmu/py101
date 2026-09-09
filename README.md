@@ -16,6 +16,21 @@ All course content lives in `docs/`:
 
 To add or rename a chapter, edit the Markdown file and update `nav:` in `mkdocs.yml`.
 
+### Left navigation
+
+Chapter/group titles open their first section; the separate arrow expands or
+collapses the section list. On desktop, Chapters 1–3 start expanded. Exercises, Appendix, and
+Two-Day Crash Course start collapsed unless they contain the current page.
+This works in English and Chinese. The mobile menu retains Material's nested
+drawer navigation, with the same separate title links and arrow controls.
+
+`overrides/partials/nav.html` customizes only the top-level groups and delegates
+page entries to Material's standard template. The collapsed groups are listed
+in `extra.course_navigation.collapsed_first_pages` in `mkdocs.yml`, using their
+first page's filename without `.md` or a language suffix. No page URLs change.
+After building, run `python scripts/check_navigation.py site` to check the links
+and initial expansion states in both languages.
+
 ## Preview locally
 
 ```bash

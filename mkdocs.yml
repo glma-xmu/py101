@@ -28,6 +28,7 @@ site_url: https://www.maguoliang.com/teaching/py101/
 
 theme:
   name: material
+  custom_dir: overrides
   favicon: assets/favicon.png
   logo: assets/logo.png
   features:
@@ -131,7 +132,7 @@ plugins:
 # page whose HTML and JS are new but whose styling is old. Bump the number
 # whenever you edit one of these files.
 extra_css:
-  - stylesheets/extra.css?v=3
+  - stylesheets/extra.css?v=4
   - vendor/katex/katex.min.css
 
 extra_javascript:
@@ -141,8 +142,7 @@ extra_javascript:
   - javascripts/shell.js?v=1
   - javascripts/memory-diagram.js
   - javascripts/reading-mode.js
-  - javascripts/ask-button.js
-  - javascripts/live-button.js?v=1
+  - javascripts/live-button.js?v=2
   - javascripts/katex.js
   - vendor/katex/katex.min.js
   - vendor/katex/auto-render.min.js
@@ -193,3 +193,13 @@ nav:
   - Copyright: copyright.md
   # More chapters and exercise sets are added here as each is rewritten.
   # Backups of the original files remain in docs/py101_md (slide_*, Lecture_*).
+
+# First-page filenames (without language suffix or extension), not translated
+# titles: these groups start folded, except when they contain the current page.
+# Chapters keep navigation.expand; every group title links to its first page.
+extra:
+  course_navigation:
+    collapsed_first_pages:
+      - exercises_ch1
+      - appendix_a1_environment
+      - camp_index
