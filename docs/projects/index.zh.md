@@ -8,7 +8,7 @@ search:
 ---
 
 <div class="projects-library" data-projects>
-  <p class="projects-intro">看看往届同学如何运用 Python 开展数据分析、机器学习与游戏开发。点击项目，即可浏览展示课件。</p>
+  <p class="projects-intro">看看往届同学如何运用 Python 开展数据分析、机器学习与游戏开发。点击项目，即可浏览展示课件。如果作者不希望自己的项目在此展示，请联系我删除。</p>
   <div class="projects-filters" role="group" aria-label="按学期筛选">
     <button type="button" data-cohort="all" aria-pressed="true">全部项目</button>
     <button type="button" data-cohort="26S" aria-pressed="false">2026 春季</button>

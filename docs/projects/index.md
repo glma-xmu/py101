@@ -8,7 +8,7 @@ search:
 ---
 
 <div class="projects-library" data-projects>
-  <p class="projects-intro">Explore past students’ work, from economic data analysis to machine learning and games. Select a project to browse its presentation.</p>
+  <p class="projects-intro">Explore past students’ work, from economic data analysis to machine learning and games. Select a project to browse its presentation. If any of the materials violates your rights, please contact me to remove them from the gallery.</p>
   <div class="projects-filters" role="group" aria-label="Filter by cohort">
     <button type="button" data-cohort="all" aria-pressed="true">All projects</button>
     <button type="button" data-cohort="26S" aria-pressed="false">2026 Spring</button>
