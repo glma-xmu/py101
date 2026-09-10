@@ -6,17 +6,17 @@ Everything in Python is an object.
 
 ## Introduction
 
-Before you can write a useful Python program, you need a clear picture of the *stuff* a program manipulates. In Python that stuff has a single, unifying name: every piece of data — a number, a piece of text, a list of results, even a function — is an **object**. This page builds your mental model of objects, and then uses two simple questions to organise every built-in type Python gives you. By the end you should be able to look at any value and say what it is, what you can do with it, and whether it can change.
+We formally starts the journey to Python programming here. Writing Python programs are just like constructing a building: a simplest building is an assembly of walls; walls are themselves assemblies of bricks.[^bricks] We think of a Python program as a building, so before you can write a useful Python program, you need a clear picture of the *bricks* are. In Python, that stuff has a single, unifying name: every piece, be it a number, a string of text, a list of results, even a function, is an **object**. This page builds a mental model of objects, and then uses two simple questions to organise every built-in type Python gives us. By the end you should be able to look at any value and say what it is, what you can do with it, and whether it can change.
 
-A helpful analogy: if a program is a building, objects are the materials and types are the *kinds* of material. Knowing your materials — which are rigid, which are flexible, which hold other things — is what lets you design something that stands up.
+This Chapter is a bit more loaded than a practical guide and more intelligently challenging. I will walk you through a very simple model of the computer memory, where a computer stores everything. Then you will see how Python manages memory, by giving each part of the memory it manages a name. If you know the story of "[A white horse is not a horse](https://en.wikipedia.org/wiki/White_Horse_Dialogue)", that's almost how Python separates names and objects.
 
 Most of the code on this page is **live**: edit it and press *Run* (or Ctrl/Cmd+Enter) to execute it right here in your browser, then change it and run again. The best way to learn these ideas is to poke at them.
 
 ## 1. Objects: identity, type, and value
 
-Programming is, in large part, the art of putting mathematical ideas into practice, and the most important idea it borrows from mathematics is abstraction. The most elementary abstraction is the **variable**. You have met it before: in primary school you counted with concrete numbers like 1, 2, 3, and in middle school you used a symbol such as $x$ to stand for a generic number that might be 1, 2, or 100. That versatility is the whole point.
+Programming is, in large part, the art of putting mathematical ideas into practice, and the most important idea it borrows from mathematics is *abstraction*. The most elementary abstraction is the **variable**. You have met it before: in primary school you counted with concrete numbers like 1, 2, 3, and in middle school you used a symbol such as $x$ to stand for a generic number that might be 1, 2, or 100. That versatility is the whole point.
 
-In Python we call such a symbol a **name**. When you write `x = 1`, Python sets aside a chunk of memory holding the value `1`, and then *binds* the name `x` to that object. The name is a label; the object is the thing the label points to.
+In Python we call such a symbol a **name**. When you write `x = 1`, Python sets aside a chunk of memory holding the value `1`, and then *binds* the name `x` to that object. The name is a label; the object is the thing the label points to. We will not learn how computer memory stores values in detail; the binary conversion is out of the scopr of this text. All you need to know is a bird-eye view: a computer memory stores values somehow. ![A RAM module with four memory chips](../assets/ram-module.png)
 
 ???+ note "Key concept: object"
     An **object** is a piece of data living in memory with a well-defined structure. Every object carries three things at once:
@@ -210,3 +210,5 @@ When you need raw binary data rather than text, Python offers `bytes` (immutable
 ## Summary
 
 Everything in Python is an **object**, and every object carries an **identity** (`id()`), a **type** (`type()`), and a **value**. To organise the many types, ask two questions — *what does it hold?* (scalar vs. container) and *can it change?* (mutable vs. immutable). This page covered the **scalars** — the numbers (`int`, `float`, `complex`, `bool`) and the lone `None` — and the **text** types (`str`, plus `bytes`/`bytearray`). The next page, **1.2 Collections**, takes up the containers — sequences, sets, and mappings — and returns to mutability, which ties them all together.
+
+[^bricks]: We stop short of breaking bricks into atoms.
