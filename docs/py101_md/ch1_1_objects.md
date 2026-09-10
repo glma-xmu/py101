@@ -16,7 +16,14 @@ Most of the code on this page is **live**: edit it and press *Run* (or Ctrl/Cmd+
 
 Programming is, in large part, the art of putting mathematical ideas into practice, and the most important idea it borrows from mathematics is *abstraction*. The most elementary abstraction is the **variable**. You have met it before: in primary school you counted with concrete numbers like 1, 2, 3, and in middle school you used a symbol such as $x$ to stand for a generic number that might be 1, 2, or 100. That versatility is the whole point.
 
-In Python we call such a symbol a **name**. When you write `x = 1`, Python sets aside a chunk of memory holding the value `1`, and then *binds* the name `x` to that object. The name is a label; the object is the thing the label points to. We will not learn how computer memory stores values in detail; the binary conversion is out of the scopr of this text. All you need to know is a bird-eye view: a computer memory stores values somehow. ![A RAM module with four memory chips](../assets/ram-module.png)
+In Python we call such a symbol a **name**. When you write `x = 1`, Python sets aside a chunk of memory holding the value `1`, and then *binds* the name `x` to that object. The name is a label; the object is the thing the label points to. We will not learn how computer memory stores values in detail; the binary conversion is out of the scopr of this text. All you need to know is a bird-eye view: a computer memory stores values somehow. 
+<figure style="text-align: center;">
+  <img src="../../assets/ram-module.png"
+       alt="A RAM module with four memory chips"
+       width="700">
+  <figcaption>Figure 1. A RAM module and its memory chips.</figcaption>
+</figure>
+In the picture, some data indicates the actual value the memory holds. When you want to use this memory, you cannot just reach your hand to the memory chip. You ask Python to fetch that value for you. Python will look up the name `x` in the memory, find where the object lives, and then fetch the value stored there.
 
 ???+ note "Key concept: object"
     An **object** is a piece of data living in memory with a well-defined structure. Every object carries three things at once:
@@ -25,7 +32,7 @@ In Python we call such a symbol a **name**. When you write `x = 1`, Python sets 
     - its **type** — what kind of thing it is, which fixes the values it can hold and the operations it allows, read with `type()`;
     - its **value** — the actual data it stores.
 
-You have already met this chapter's motto — *everything in Python is an object*. Here in Section 1 we add its companion principle, the one that makes assignment make sense: **names refer to objects**. Binding a name never copies a value; it simply attaches another label to an object that already exists.
+You have already met this chapter's motto — *Everything in Python is an object*. Here in Section 1 we add its companion principle, the one that makes assignment make sense: **names refer to objects**. Binding a name never copies a value; it simply attaches another label to an object that already exists.
 
 The example below demonstrates that assignment binds a name to an object rather than copying a value — run it and watch how two names end up sharing one identity.
 
