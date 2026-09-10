@@ -16,6 +16,8 @@ for project in projects:
 for locale in ['', 'zh/']:
     page = (site / locale / 'projects/index.html').read_text(encoding='utf-8')
     assert 'data-projects' in page and 'data-cohort="25S"' in page and 'data-cohort="26S"' in page
+    for cohort in {project['cohort'] for project in projects}:
+        assert f'data-cohort="{cohort}"' in page, f'Missing cohort filter: {locale}{cohort}'
     assert 'javascripts/projects.js?v=1' in page
     for path in (site / locale / 'projects').rglob('*'):
         assert path.suffix.lower() not in {'.pptx', '.ppt', '.pdf', '.docx'}, path

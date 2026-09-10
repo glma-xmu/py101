@@ -105,7 +105,7 @@ coverage, preview assets, both languages, and the absence of original decks.
 If replacing a source, delete its cached preview folder before rendering again.
 Keep existing source filenames stable when updating the library.
 
-The initial import contains 25 readable presentations (2025/2026 spring).
+The gallery contains 36 readable presentations (2024/2025/2026 spring).
 `resource/projects/26S/Group 8.pptx` has an invalid all-zero header and PowerPoint
 cannot open it; replace it with a working file before adding its preview. The
 presentation advice and grading criteria at the projects folder root are not

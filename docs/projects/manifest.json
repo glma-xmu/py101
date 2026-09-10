@@ -148,5 +148,71 @@
     "cohort": "25S",
     "title": "Titanic: Who Survives?",
     "count": 18
+  },
+  {
+    "id": "24s-01",
+    "cohort": "24S",
+    "title": "Feedforward Neural Networks for Iris Classification",
+    "count": 23
+  },
+  {
+    "id": "24s-02",
+    "cohort": "24S",
+    "title": "Lasso, Ridge Regression, and Elastic Net",
+    "count": 22
+  },
+  {
+    "id": "24s-03",
+    "cohort": "24S",
+    "title": "PCA and PLS: An Iris Data Example",
+    "count": 26
+  },
+  {
+    "id": "24s-04",
+    "cohort": "24S",
+    "title": "Random Forest",
+    "count": 32
+  },
+  {
+    "id": "24s-05",
+    "cohort": "24S",
+    "title": "Naive Bayes",
+    "count": 29
+  },
+  {
+    "id": "24s-06",
+    "cohort": "24S",
+    "title": "End-of-Life Care Data Analysis",
+    "count": 31
+  },
+  {
+    "id": "24s-07",
+    "cohort": "24S",
+    "title": "K-Nearest Neighbors",
+    "count": 18
+  },
+  {
+    "id": "24s-08",
+    "cohort": "24S",
+    "title": "Glass Classification with KNN and Random Forest",
+    "count": 27
+  },
+  {
+    "id": "24s-09",
+    "cohort": "24S",
+    "title": "K-Means Clustering",
+    "count": 22
+  },
+  {
+    "id": "24s-10",
+    "cohort": "24S",
+    "title": "Long Short-Term Memory Networks",
+    "count": 21
+  },
+  {
+    "id": "24s-11",
+    "cohort": "24S",
+    "title": "Predicting Heart Failure Outcomes with Random Forest and GBDT",
+    "count": 45
   }
 ]

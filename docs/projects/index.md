@@ -13,6 +13,7 @@ search:
     <button type="button" data-cohort="all" aria-pressed="true">All projects</button>
     <button type="button" data-cohort="26S" aria-pressed="false">2026 Spring</button>
     <button type="button" data-cohort="25S" aria-pressed="false">2025 Spring</button>
+    <button type="button" data-cohort="24S" aria-pressed="false">2024 Spring</button>
   </div>
   <p class="projects-status" role="status">Loading projects…</p>
   <div class="projects-grid"></div>

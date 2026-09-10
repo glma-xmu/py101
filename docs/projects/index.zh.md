@@ -13,6 +13,7 @@ search:
     <button type="button" data-cohort="all" aria-pressed="true">全部项目</button>
     <button type="button" data-cohort="26S" aria-pressed="false">2026 春季</button>
     <button type="button" data-cohort="25S" aria-pressed="false">2025 春季</button>
+    <button type="button" data-cohort="24S" aria-pressed="false">2024 春季</button>
   </div>
   <p class="projects-status" role="status">正在加载项目…</p>
   <div class="projects-grid"></div>

@@ -43,6 +43,11 @@ def build():
         destination = DEST / 'previews' / project_id
         destination.mkdir(parents=True, exist_ok=True)
         for number in range(1, record['count'] + 1):
+            source_image = SOURCE / project_id / f'{number}.png'
+            preview = destination / f'{number}.webp'
+            if (preview.exists() and preview.stat().st_mtime >= source_image.stat().st_mtime
+                    and (number != 1 or (destination / 'cover.webp').exists())):
+                continue
             with Image.open(SOURCE / project_id / f'{number}.png') as image:
                 image.convert('RGB').save(destination / f'{number}.webp', quality=83, method=6)
                 if number == 1:

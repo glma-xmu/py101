@@ -9,5 +9,16 @@
   "25s-08": "Podcast Listening Time: Exploration and Prediction",
   "25s-09": "Titanic: Machine Learning from Disaster",
   "25s-10": "House Prices: Advanced Regression Techniques",
-  "25s-11": "Titanic: Who Survives?"
+  "25s-11": "Titanic: Who Survives?",
+  "24s-01": "Feedforward Neural Networks for Iris Classification",
+  "24s-02": "Lasso, Ridge Regression, and Elastic Net",
+  "24s-03": "PCA and PLS: An Iris Data Example",
+  "24s-04": "Random Forest",
+  "24s-05": "Naive Bayes",
+  "24s-06": "End-of-Life Care Data Analysis",
+  "24s-07": "K-Nearest Neighbors",
+  "24s-08": "Glass Classification with KNN and Random Forest",
+  "24s-09": "K-Means Clustering",
+  "24s-10": "Long Short-Term Memory Networks",
+  "24s-11": "Predicting Heart Failure Outcomes with Random Forest and GBDT"
 }

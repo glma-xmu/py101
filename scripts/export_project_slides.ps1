@@ -9,7 +9,7 @@ $records = @()
 $previous = @()
 if (Test-Path (Join-Path $renderRoot 'sources.json')) { $previous = Get-Content -Raw (Join-Path $renderRoot 'sources.json') | ConvertFrom-Json }
 try {
-    foreach ($cohort in @('26S', '25S')) {
+    foreach ($cohort in @('26S', '25S', '24S')) {
         $number = 0
         foreach ($file in (Get-ChildItem -LiteralPath (Join-Path $inputRoot $cohort) -File | Sort-Object Name)) {
             if ($file.Extension -notin @('.pptx', '.pdf')) { continue }
@@ -48,7 +48,18 @@ try {
                 $pages = Get-ChildItem -LiteralPath $output -Filter 'page-*.png' | Sort-Object { [int]($_.BaseName -replace 'page-', '') }
                 $record.count = $pages.Count
                 $i=0
-                foreach ($page in $pages) { $i++; Move-Item -LiteralPath $page.FullName -Destination (Join-Path $output "$i.png") -Force }
+                foreach ($page in $pages) {
+                    $i++
+                    for ($attempt=1; $attempt -le 5; $attempt++) {
+                        try {
+                            Move-Item -LiteralPath $page.FullName -Destination (Join-Path $output "$i.png") -Force
+                            break
+                        } catch {
+                            if ($attempt -eq 5) { throw }
+                            Start-Sleep -Seconds 1
+                        }
+                    }
+                }
             }
             $records += $record
             Write-Output "$id $($file.Name): $($record.count) slides"
