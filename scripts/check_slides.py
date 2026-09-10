@@ -31,9 +31,9 @@ from check_navigation import Document
 
 
 EXPECTED_SLIDES = {
-    "lecture-1-1": 23, "lecture-1-2": 31, "lecture-1-3": 6,
-    "lecture-2-1": 25, "lecture-2-2": 13, "lecture-2-3": 35,
-    "lecture-2-project": 10, "lecture-3-1": 33, "lecture-3-2": 36,
+    "lecture-1-1": 23, "lecture-1-2": 30,
+    "lecture-2-1": 33, "lecture-2-2": 13, "lecture-2-3": 34,
+    "lecture-2-project": 6, "lecture-3-1": 33, "lecture-3-2": 36,
     "lecture-3-3": 31, "lecture-3-4": 22,
 }
 REVEAL_SHA256 = {
@@ -144,7 +144,7 @@ def check_mapping_contract(root: Path, sample_deck) -> None:
     expect_invalid(parse_registry, {"topics": {"test": {"page": "missing-page.md", "headings": {"en": "a", "zh": "b"}}}}, root)
     expect_invalid(parse_registry, {"topics": {"test": {"page": sample_topic.page, "headings": {"en": "a"}}}}, root)
     fake = TextbookTopic(sample_topic.id, sample_topic.page, {"en": "original-heading", "zh": "original-heading"})
-    content = '<h2 id="original-heading">Original <code>text</code><a href="#original-heading">¶</a></h2><p>Unchanged body.</p>'
+    content = '<h2 id="original-heading">Original <code>text</code><a href="#original-heading">露</a></h2><p>Unchanged body.</p>'
     def inject(value, decks=None):
         return inject_textbook_links(value, page_source=fake.page,
             page_url=fake.url("en").split("#")[0], language="en", decks=decks or [mapped], topics={fake.id: fake})

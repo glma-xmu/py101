@@ -1,95 +1,97 @@
 ---
-title: "Lecture 1.1 · Python Basics"
-description: "Names, objects, types, sequences, and slices — Python and Big Data in Economics."
+title: Lecture 1.1 · Python Basics
+description: Names, objects, types, sequences, and slices — Python and Big Data in
+  Economics.
 lang: en
-source: resource/deck1_1_AoL.pptx
+source: ../course materials/deck1_1.pptx
 sections:
-  - id: introduction
-    title: Introduction
-    start: 1
-    level: 1
-    textbook: objects-overview
-  - id: learning-goals
-    title: Learning goals
-    start: 2
-    level: 2
-    textbook: objects-introduction
-  - id: variables
-    title: Variables and objects
-    start: 3
-    level: 1
-    textbook: objects-identity
-  - id: object-structure
-    title: Object structure and memory
-    start: 7
-    level: 2
-    textbook: objects-identity
-  - id: types
-    title: Types
-    start: 10
-    level: 1
-    textbook: numbers
-  - id: boolean
-    title: Boolean and isinstance
-    start: 11
-    level: 2
-    textbook: numbers
-  - id: containers
-    title: Containers
-    start: 13
-    level: 2
-    textbook: type-organisation
-  - id: sequences
-    title: Lists and tuples
-    start: 14
-    level: 1
-    textbook: sequences
-  - id: methods
-    title: Methods
-    start: 16
-    level: 2
-    textbook: sequences
-  - id: mutability
-    title: Mutability and identity
-    start: 17
-    level: 2
-    textbook: mutability
-  - id: slicing
-    title: Slicing
-    start: 19
-    level: 1
-    textbook: slicing
-  - id: slice-objects
-    title: Slice objects
-    start: 20
-    level: 2
-    textbook: slicing
-  - id: slice-practice
-    title: Slicing practice
-    start: 21
-    level: 2
-    textbook: slicing
-  - id: other-sequences
-    title: Other sequences
-    start: 22
-    level: 1
-    textbook: sequences
-    related: true
-  - id: review
-    title: Review
-    start: 23
-    level: 1
-    textbook: objects-summary
+- id: introduction
+  title: Introduction
+  start: 1
+  level: 1
+  textbook: objects-overview
+- id: learning-goals
+  title: Learning goals
+  start: 2
+  level: 2
+  textbook: objects-introduction
+- id: variables
+  title: Variables and objects
+  start: 3
+  level: 1
+  textbook: objects-identity
+- id: object-structure
+  title: Object structure and memory
+  start: 7
+  level: 2
+  textbook: objects-identity
+- id: types
+  title: Types
+  start: 10
+  level: 1
+  textbook: numbers
+- id: boolean
+  title: Boolean and isinstance
+  start: 11
+  level: 2
+  textbook: numbers
+- id: containers
+  title: Containers
+  start: 13
+  level: 2
+  textbook: type-organisation
+- id: sequences
+  title: Lists and tuples
+  start: 14
+  level: 1
+  textbook: sequences
+- id: methods
+  title: Methods
+  start: 16
+  level: 2
+  textbook: sequences
+- id: mutability
+  title: Mutability and identity
+  start: 17
+  level: 2
+  textbook: mutability
+- id: slicing
+  title: Slicing
+  start: 19
+  level: 1
+  textbook: slicing
+- id: slice-objects
+  title: Slice objects
+  start: 20
+  level: 2
+  textbook: slicing
+- id: slice-practice
+  title: Slicing practice
+  start: 21
+  level: 2
+  textbook: slicing
+- id: other-sequences
+  title: Other sequences
+  start: 22
+  level: 1
+  textbook: sequences
+  related: true
+- id: review
+  title: Review
+  start: 23
+  level: 1
+  textbook: objects-summary
 ---
 
 <!-- slide: title-slide -->
+
 <p class="eyebrow">Lecture 1.1</p>
 
-# Python and Big Data<br>in Economics
+# Programming for AI (Python)
 
 ## Chapter 1 · Basics
 
-<p class="author">Guoliang Ma<br><span>The Chow Institute, 2026</span></p>
+<p class="author">Guoliang Ma<br><span>The Chow Institute, 2025</span></p>
 
 ---
 
@@ -109,6 +111,7 @@ If a program is a **building**, variables are the **blocks**, and syntax tells u
 ---
 
 <!-- slide: dense -->
+
 ## 1. The boring ⚠ variables
 
 <div class="columns" markdown="1">
@@ -156,8 +159,6 @@ print(f"{id(b):02X}")
 ---
 
 ## 1. Variables
-<p class="aol">AoL 2 (H)</p>
-
 In the previous chunk of code, we saw:
 
 1. **`print`** — displays the supplied content.
@@ -167,9 +168,8 @@ In the previous chunk of code, we saw:
 ---
 
 <!-- slide: exercise-slide -->
-## 1. Variables
-<p class="aol">AoL 3 (M)</p>
 
+## 1. Variables
 <div class="exercise" markdown="1">
 ### In-class exercise 1.1
 
@@ -182,6 +182,7 @@ In the previous chunk of code, we saw:
 ---
 
 <!-- slide: diagram-slide -->
+
 ## 1.1 “Names refer to objects”
 
 - “Everything in Python is an object.”
@@ -196,9 +197,8 @@ In the previous chunk of code, we saw:
 ---
 
 <!-- slide: exercise-slide -->
-## 1.1 “Names refer to objects”
-<p class="aol">AoL 3 (M)</p>
 
+## 1.1 “Names refer to objects”
 What is special about an object?
 
 <div class="exercise" markdown="1">
@@ -214,9 +214,8 @@ An object comprises …
 ---
 
 <!-- slide: diagram-slide -->
-## 1.1 “Names refer to objects”
-<p class="aol">AoL 2 (H)</p>
 
+## 1.1 “Names refer to objects”
 - An object's **memory layout** describes how its contents are arranged in memory.
 - This arrangement tells us how the chunk of memory stores the data.
 
@@ -232,8 +231,6 @@ sys.getsizeof(a)
 ---
 
 ## 1.2 Objects’ types
-<p class="aol">AoL 2 (H)</p>
-
 Types are a large topic: [Python's built-in types documentation](https://docs.python.org/3/library/stdtypes.html) is long. Let's start with a few examples.
 
 ```python
@@ -285,9 +282,8 @@ print(cond + 1)
 ---
 
 <!-- slide: exercise-slide -->
-## 1.2.1 Simple types — Boolean
-<p class="aol">AoL 3 (M)</p>
 
+## 1.2.1 Simple types — Boolean
 <div class="exercise" markdown="1">
 ### In-class exercise 1.2.1.1
 
@@ -307,8 +303,6 @@ print(cond + 1)
 ---
 
 ## 1.2.2 Sequences — list & tuple
-<p class="aol">AoL 3 (M)</p>
-
 **Lists** and **tuples** are frequently encountered. Here, we create them by enumerating their elements:
 
 ```python
@@ -327,9 +321,8 @@ t = (1, 2, 3)
 ---
 
 <!-- slide: exercise-slide -->
-## 1.2.2 Sequences — list & tuple
-<p class="aol">AoL 3 (M)</p>
 
+## 1.2.2 Sequences — list & tuple
 <div class="exercise" markdown="1">
 ### In-class exercise 1.2.2.2
 
@@ -357,9 +350,8 @@ t = (1, 2, 3)
 ---
 
 <!-- slide: exercise-slide -->
-## 1.2.2 Sequences — list & tuple
-<p class="aol">AoL 3 (M)</p>
 
+## 1.2.2 Sequences — list & tuple
 You know how to get an element from a list or a tuple. Now let's try to **set** an element's value.
 
 <div class="exercise" markdown="1">
@@ -374,6 +366,7 @@ You know how to get an element from a list or a tuple. Now let's try to **set** 
 ---
 
 <!-- slide: comparison-slide -->
+
 ## 1.2.2 Sequences — list & tuple
 
 <p class="caption">Similarities and comparisons · each column starts afresh. “OK” means a valid operation, not a True result.</p>
@@ -460,9 +453,8 @@ t += (8,)
 ---
 
 <!-- slide: diagram-slide slice-slide -->
-## 1.2.2.1 Slices
-<p class="aol">AoL 2 (H)</p>
 
+## 1.2.2.1 Slices
 We can take one element from a list — or many elements, using a **slice**.
 
 The notation is `start:stop[:step]`.
@@ -506,9 +498,8 @@ l[s]
 ---
 
 <!-- slide: exercise-slide -->
-## 1.2.2.1 Slices
-<p class="aol">AoL 3 (M)</p>
 
+## 1.2.2.1 Slices
 <div class="exercise" markdown="1">
 ### In-class exercise 1.2.2.5
 
@@ -542,14 +533,7 @@ There are too many functions and methods to cover in class. You have learned the
 
 ---
 
-<!-- slide: diagram-slide review-slide -->
 ## Review
-<p class="aol">AoL 5 (H)</p>
-
 - Python **names refer to objects**.
 - Objects have an **identity**, a **type**, and a **value**.
 - Basic types include **Boolean**, **sequences**, and more.
-
-<figure class="diagram review-meme">
-  <img src="images/review-meme.jpg" alt="The original end-of-lecture meme: two confused characters ask who killed whom.">
-</figure>

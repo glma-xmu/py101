@@ -3,7 +3,7 @@ title: Lecture 2.3 · Five Function Use Cases
 description: Decorators, recursion, map/filter/reduce, generators, errors, and PEP
   8.
 lang: en
-source: resource/deck2_3_AoL.pptx
+source: ../course materials/deck2_3_AoL.pptx
 sections:
 - id: introduction
   title: Introduction
@@ -63,13 +63,13 @@ sections:
   related: true
 ---
 
-
 <!-- slide: title-slide -->
+
 <p class="eyebrow">Lecture 2.3</p>
 
 # Five Function Use Cases
 
-## Python and Big Data in Economics
+## Programming for AI (Python)
 
 <p class="author">Guoliang Ma<br><span>The Chow Institute, 2026</span></p>
 
@@ -817,20 +817,5 @@ finally:
 
 
 
-
-</div>
-
----
-
-<!-- slide: lecture-import -->
-
-## Review
-
-<div class="lecture-content" markdown="1">
-
-
-
-
-<figure class="diagram"><img src="images/slide-35-0.webp" alt="Five Function Use Cases: original illustration, slide 35."></figure>
 
 </div>

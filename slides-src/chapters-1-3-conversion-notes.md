@@ -1,21 +1,38 @@
 # Chapters 1–3 conversion notes
 
-The library contains 11 decks and 265 slides. This expansion adds 10 decks and
-242 slides to the existing 23-slide Lecture 1.1 pilot. Source PowerPoint files
-remain unchanged under the ignored `resource/` directory.
+The library contains 10 decks and 261 slides. Chapters 1–2 follow the updated
+PowerPoints in `../course materials/`. Chapter 3 is unchanged from the earlier
+import. Original PowerPoints are not published by the site.
 
-| HTML source | Original PowerPoint | Slides |
+| HTML source | PowerPoint | Slides |
 | --- | --- | ---: |
-| lecture-1-2.md | deck1_2_AoL.pptx | 31 |
-| lecture-1-3.md | deck1_3_project.pptx | 6 |
-| lecture-2-1.md | deck2_1_AoL.pptx | 25 |
+| lecture-1-1.md | deck1_1.pptx | 23 |
+| lecture-1-2.md | deck1_2.pptx | 30 |
+| lecture-2-1.md | deck2_1.pptx | 33 |
 | lecture-2-2.md | deck2_2_AoL.pptx | 13 |
-| lecture-2-3.md | deck2_3_AoL.pptx | 35 |
-| lecture-2-project.md | deck2_project_AoL.pptx | 10 |
-| lecture-3-1.md | deck3_1.pptx | 33 |
-| lecture-3-2.md | deck3_2_AoL.pptx | 36 |
-| lecture-3-3.md | deck3_3_26S-AoL.pptx | 31 |
-| lecture-3-4.md | deck3_4-26S_Aol.pptx | 22 |
+| lecture-2-3.md | deck2_3_AoL.pptx | 34 |
+| lecture-2-project.md | deck2_3_project.pptx | 6 |
+| lecture-3-1.md | resource/deck3_1.pptx | 33 |
+| lecture-3-2.md | resource/deck3_2_AoL.pptx | 36 |
+| lecture-3-3.md | resource/deck3_3_26S-AoL.pptx | 31 |
+| lecture-3-4.md | resource/deck3_4-26S_Aol.pptx | 22 |
+
+## Updated source alignment
+
+- Removed the crawler deck and its English/Chinese library entries.
+- Removed Lecture 1.1's closing picture and Lecture 1.2's deleted final slide.
+- Lecture 2.1 follows the new 33-slide order, including default-parameter
+  motivation and first-class functions/unpacking. Removed the former return-value
+  exercises and closure slide absent from this source.
+- Retained Lecture 2.2 explicitly at the author's request, even where it overlaps
+  the expanded Lecture 2.1.
+- Removed Lecture 2.3's deleted final picture slide.
+- Function Practice now has four exercises: runs, timing decorator, secant method,
+  and generators. Preserved their existing editable code, equations, and artwork.
+- Updated chapter 1–2 title-slide course names, source years, and AoL labels to
+  match the supplied files. Chapter 3 remains unchanged.
+- The corrections below describe the original import and use its slide numbers;
+  retained content keeps these corrections after reordering.
 
 ## Adaptation
 

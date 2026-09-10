@@ -35,8 +35,8 @@ and initial expansion states in both languages.
 
 The header's slideshow icon (tooltip: **Browse lecture slides / 浏览课堂课件**) opens a separate slide library. Slides
 do not appear in the textbook sidebar or search results. The library covers all
-11 source decks through chapter 3: 265 HTML slides, including the chapter 1 web
-crawler and chapter 2 function-practice decks. Chapters 4 and 5 are not imported.
+10 source decks through chapter 3: 261 HTML slides, including the chapter 2
+function-practice deck. Chapters 4 and 5 are not imported.
 Lecture text and code remain selectable; examples have Copy controls, equations
 use native MathML, and the original artwork is stored locally. Exercises retain
 their original order and numbering, with no added solutions.
@@ -69,7 +69,8 @@ their original order and numbering, with no added solutions.
   these slides do not execute code or save classroom notes.
 - Keep saving the notebook in VS Code as before. Nothing in this pilot changes
   notebook storage or publishes your in-class notes automatically.
-- Original PPTX/PDF files remain in the ignored `resource/` folder. See
+- Updated chapter 1–2 PowerPoints are in `../course materials/`; chapter 3 retains
+  the existing import from ignored `resource/`. See
   `slides-src/conversion-notes.md` for the pilot corrections and
   `slides-src/chapters-1-3-conversion-notes.md` for the expanded library's source
   inventory, adaptation choices, and corrections.

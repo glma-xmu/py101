@@ -1,8 +1,9 @@
 ---
 title: Lecture 2.1 · Functions, Namespaces, and Scope
-description: Defining functions, return values, call frames, defaults, and LEGB.
+description: Defining functions, call frames, defaults, scope, first-class functions,
+  and unpacking.
 lang: en
-source: resource/deck2_1_AoL.pptx
+source: ../course materials/deck2_1.pptx
 sections:
 - id: introduction
   title: Introduction
@@ -19,75 +20,98 @@ sections:
   start: 5
   level: 1
   textbook: ch2-1-defining-functions-2
-- id: return-values
-  title: Return values
-  start: 10
-  level: 1
-  textbook: ch2-1-defining-functions-5
 - id: the-call-stack
   title: The call stack
-  start: 13
+  start: 10
   level: 1
   textbook: ch2-1-defining-functions-4
+- id: newton-s-method
+  title: Newton’s method
+  start: 12
+  level: 1
+  textbook: ch2-1-defining-functions-6
 - id: default-parameters
   title: Default parameters
-  start: 15
+  start: 13
   level: 1
   textbook: ch2-1-defining-functions-7
 - id: function-factories
   title: Function factories
-  start: 16
+  start: 15
   level: 1
   textbook: ch2-1-defining-functions-8
-- id: newton-s-method
-  title: Newton’s method
-  start: 17
-  level: 1
-  textbook: ch2-1-defining-functions-6
 - id: namespaces
   title: Namespaces
-  start: 18
+  start: 16
   level: 1
   textbook: ch2-2-namespaces-scope-2
 - id: scope-and-legb
   title: Scope and LEGB
-  start: 21
+  start: 19
   level: 1
   textbook: ch2-2-namespaces-scope-5
-- id: closures-and-nonlocal
-  title: Closures and nonlocal
-  start: 22
-  level: 1
-  textbook: ch2-2-namespaces-scope-7
 - id: shadowing
   title: Shadowing
-  start: 23
+  start: 20
   level: 1
   textbook: ch2-2-namespaces-scope-6
 - id: why-scopes
   title: Why scopes?
-  start: 24
+  start: 21
   level: 1
   textbook: ch2-2-namespaces-scope-8
+- id: first-class-objects
+  title: First-class objects
+  start: 22
+  level: 1
+  textbook: ch2-3-first-class-2
+- id: functions-as-return-values
+  title: Functions as return values
+  start: 23
+  level: 1
+  textbook: ch2-3-first-class-5
+- id: functions-as-arguments
+  title: Functions as arguments
+  start: 24
+  level: 1
+  textbook: ch2-3-first-class-3
+- id: passing-arguments
+  title: Passing arguments
+  start: 26
+  level: 1
+  textbook: ch2-3-first-class-4
+- id: unpacking-with-a-star
+  title: Unpacking with a star
+  start: 27
+  level: 1
+  textbook: ch2-3-first-class-4
+- id: keyword-arguments
+  title: Keyword arguments
+  start: 30
+  level: 1
+  textbook: ch2-3-first-class-4
+- id: argument-order
+  title: Argument order
+  start: 31
+  level: 1
+  textbook: ch2-5-loose-ends-3
 ---
 
-
 <!-- slide: title-slide -->
+
 <p class="eyebrow">Lecture 2.1</p>
 
 # Functions, Namespaces, and Scope
 
-## Python and Big Data in Economics
+## Programming for AI (Python)
 
-<p class="author">Guoliang Ma<br><span>The Chow Institute, 2026</span></p>
+<p class="author">Guoliang Ma<br><span>The Chow Institute, 2025</span></p>
 
 ---
 
 <!-- slide: lecture-import -->
 
 ## What you will learn
-
-<span class="aol">AoL 2 (H)</span>
 
 <div class="lecture-content" markdown="1">
 
@@ -106,8 +130,6 @@ sections:
 <!-- slide: lecture-import -->
 
 ## 2.1 Simple functions
-
-<span class="aol">AoL 3 (M)</span>
 
 <div class="lecture-content" markdown="1">
 
@@ -146,31 +168,23 @@ sections:
 
 <!-- slide: lecture-import -->
 
-## 2.1.1 Simple functions: def and call
+## 2.1 Simple functions
 
-<span class="aol">AoL 2 (H)</span>
+How is a function composed?
 
-<div class="lecture-content" markdown="1">
-
-<p class="">We start from the creation (definition) of a function.</p>
-<p class="">How is a function composed?</p>
-<p class="lecture-subpoint">As always, the name is so important. A function also needs a <strong>name</strong>.</p>
-<p class="lecture-subpoint">The function will work on different classes (or more generally, objects). We need to let it know which one we need to proceed. We provide case-dependent information to the function via <strong>parameters</strong>.</p>
 <p class="lecture-subpoint">A function is designed to free us from repetitive jobs so that we can work more efficiently. So we need the function to know what we want to do. This is known as the function <strong>body</strong>.</p>
+
+<p class="lecture-subpoint">The function will work on different classes (or more generally, objects). We need to let it know which one we need to proceed. We provide case-dependent information to the function via <strong>parameters</strong>.</p>
+
+<p class="lecture-subpoint">As always, the name is so important. A function also needs a <strong>name</strong>.</p>
+
 <p class="lecture-subpoint">There is another component of a function: the <strong>return</strong> value. We’ll talk about it later.</p>
-
-
-
-
-</div>
 
 ---
 
 <!-- slide: lecture-import -->
 
 ## 2.1.1 Simple functions: def and call
-
-<span class="aol">AoL 3 (M)</span>
 
 <div class="lecture-content" markdown="1">
 
@@ -184,45 +198,6 @@ def <name>(<parameters>):
     <body>
     return None
 ```
-
-
-</div>
-
----
-
-<!-- slide: lecture-import -->
-
-## 2.1.1 Simple functions: def and call
-
-<span class="aol">AoL 3 (M)</span>
-
-<div class="lecture-content" markdown="1">
-
-<h3>In-class exercise 2.1.3</h3>
-<p class="">Call the function you just defined and apply it to class 2.</p>
-
-
-
-
-</div>
-
----
-
-<!-- slide: lecture-import -->
-
-## 2.1.1 Simple functions: def and call
-
-<span class="aol">AoL 3 (M)</span>
-
-<div class="lecture-content" markdown="1">
-
-<h3>In-class exercise 2.1.4</h3>
-<p class="">Summarize the steps to define a function.</p>
-<h3>In-class exercise 2.1.5</h3>
-<p class="">Define a function that computes the square of all numbers in a list. For example, if the list is l = [1, 2, 3], the function finds [1, 4, 9].</p>
-<p class="">Store the new list for future use.</p>
-
-
 
 
 </div>
@@ -252,17 +227,12 @@ def <name>(<parameters>):
 
 <!-- slide: lecture-import -->
 
-## 2.1.2 Simple functions: return values
-
-<span class="aol">AoL 5 (H)</span>
+## 2.1.1 Simple functions: def and call
 
 <div class="lecture-content" markdown="1">
 
-<p class="">return</p>
-<p class="">In the previous discussion, we used the print function inside customized functions.</p>
-<p class="">The function call communicates with the caller in the global environment through return statements. Without this mechanism, each function call would become a self-contained “little kingdom.”</p>
-<h3>In-class exercise 2.1.6</h3>
-<p class="">When does a variable disappear in memory?</p>
+<h3>In-class exercise 2.1.3</h3>
+<p class="">Call the function you just defined and apply it to class 2.</p>
 
 
 
@@ -273,75 +243,15 @@ def <name>(<parameters>):
 
 <!-- slide: lecture-import -->
 
-## Return values — exercise 1
+## 2.1.1 Simple functions: def and call
 
 <div class="lecture-content" markdown="1">
 
-Record customers’ purchases and analyze them. Write two functions with these interfaces:
-
-```text
-sum_buy(name: str, clothes: int, food: int) -> dict
-highest(cus1: dict, cus2: dict, cus3: dict) -> str
-```
-
-The first computes the total spent by one customer. The second returns the name of the customer with the largest total.
-
-```python
-alice = sum_buy("Alice", 900, 500)
-# Create bob and charlie using their purchase records, then:
-first = highest(alice, bob, charlie)
-print(first)
-```
-
-For records where Alice has the largest total, the expected name is `"Alice"`.
-
-</div>
-
----
-
-<!-- slide: lecture-import -->
-
-## Return values — exercise 2
-
-<div class="lecture-content" markdown="1">
-
-Write a function that converts numerical exam scores to letter grades.
-
-```python
-scores = {"Alice": 60, "Bob": 70, "Charlie": 80}
-```
-
-Use non-overlapping intervals: **60 ≤ score < 80: C**, **80 ≤ score < 90: B**, and **90 ≤ score ≤ 100: A**. Decide how your function should handle scores outside these intervals.
-
-```text
-convert(scores: dict) -> dict
-```
-
-For the supplied scores, the expected result is:
-
-```text
-{'Alice': 'C', 'Bob': 'C', 'Charlie': 'B'}
-```
-
-</div>
-
----
-
-<!-- slide: lecture-import -->
-
-## Special topic I: the Python call stack
-
-<span class="aol">AoL 5 (H)</span>
-
-<div class="lecture-content" markdown="1">
-
-<p class="">A summary of a Python function call</p>
-<p class="lecture-subpoint">Add a local frame, forming a new environment</p>
-<p class="lecture-subpoint">Bind the function&#x27;s formal parameters to its arguments in that frame</p>
-<p class="lecture-subpoint">Execute the body of the function in that new environment</p>
-<p class="caption">source: Prof. John DeNero, CS61A, UC Berkeley</p>
-<h3>In-class exercise 2.1.6</h3>
-<p class="">How do you distinguish a function from a function call</p>
+<h3>In-class exercise 2.1.4</h3>
+<p class="">Summarize the steps to define a function.</p>
+<h3>In-class exercise 2.1.5</h3>
+<p class="">Define a function that computes the square of all numbers in a list. For example, if the list is l = [1, 2, 3], the function finds [1, 4, 9].</p>
+<p class="">Store the new list for future use.</p>
 
 
 
@@ -380,9 +290,60 @@ print_stack()
 
 <!-- slide: lecture-import -->
 
-## 2.1.3 Simple functions (default parameters)
+## Special topic I: the Python call stack
 
-<span class="aol">AoL 3 (M)</span>
+<div class="lecture-content" markdown="1">
+
+<p class="">A summary of a Python function call</p>
+<p class="lecture-subpoint">Add a local frame, forming a new environment</p>
+<p class="lecture-subpoint">Bind the function&#x27;s formal parameters to its arguments in that frame</p>
+<p class="lecture-subpoint">Execute the body of the function in that new environment</p>
+<p class="caption">source: Prof. John DeNero, CS61A, UC Berkeley</p>
+<h3>In-class exercise Special topic.1</h3>
+<p class="">How do you distinguish a function from a function call</p>
+
+
+
+
+</div>
+
+---
+
+<!-- slide: lecture-import -->
+
+## Special topic II: the Newton’s method
+
+<div class="lecture-content" markdown="1">
+
+<p class="">This is more mathematical …</p>
+<p class="">Given any function, how do you find its root?</p>
+<p class="">The <a href="https://en.wikipedia.org/wiki/Newton%27s_method">Newton’s method</a> is one of the most commonly used.</p>
+<h3>In-class exercise Special topic II.1</h3>
+<p class="">Write a function to find the root of <span class="lecture-math"><math xmlns="http://www.w3.org/1998/Math/MathML"><mrow><mtext>𝑓</mtext></mrow><mrow><mo>(</mo><mrow><mrow><mtext>𝑥</mtext></mrow></mrow><mo>)</mo></mrow><mrow><mtext>=0.3×</mtext></mrow><msup><mrow><mrow><mtext>𝑥</mtext></mrow></mrow><mrow><mrow><mtext>2</mtext></mrow></mrow></msup><mrow><mtext>−</mtext></mrow><mrow><mrow><mrow><mtext>sin</mtext></mrow></mrow><mrow><mrow><mo>(</mo><mrow><mrow><mtext>𝑥</mtext></mrow></mrow><mo>)</mo></mrow></mrow></mrow><mrow><mtext>+</mtext></mrow><mrow><mtext>𝑥</mtext></mrow></math></span> around <span class="lecture-math"><math xmlns="http://www.w3.org/1998/Math/MathML"><mrow><mtext>−4.5</mtext></mrow></math></span>. When the error is smaller than a value, report the root.</p>
+<p class="">How do you stop the function iteration?</p>
+
+
+
+
+</div>
+
+---
+
+<!-- slide: lecture-import -->
+
+## 2.1 Simple functions (special case I)
+
+In Newton’s method, we can choose an **error bound** each time we call the function.
+
+Usually we want to use the same bound, changing it only when needed.
+
+A **default parameter value** supplies that value when the caller omits the argument.
+
+---
+
+<!-- slide: lecture-import -->
+
+## 2.1.3 Simple functions (default parameters)
 
 <div class="lecture-content" markdown="1">
 
@@ -393,7 +354,7 @@ print_stack()
 def append_to(element, to=[]):
     to.append(element)
     return to
-    
+
 my_list = append_to(12)
 print(my_list)
 
@@ -409,8 +370,6 @@ print(my_other_list)
 <!-- slide: lecture-import -->
 
 ## 2.1.3 Simple functions (function factory)
-
-<span class="aol">AoL 3 (M)</span>
 
 <div class="lecture-content" markdown="1">
 
@@ -436,37 +395,13 @@ ff[3]()
 
 <!-- slide: lecture-import -->
 
-## Special topic II: the Newton’s method
-
-<span class="aol">AoL 3 (M)</span>
-
-<div class="lecture-content" markdown="1">
-
-<p class="">This is more mathematical …</p>
-<p class="">Given any function, how do you find its root?</p>
-<p class="">The <a href="https://en.wikipedia.org/wiki/Newton%27s_method">Newton’s method</a> is one of the most commonly used.</p>
-<h3>In-class exercise Special topic II.1</h3>
-<p class="">Write a function to find the root of <span class="lecture-math"><math xmlns="http://www.w3.org/1998/Math/MathML"><mrow><mtext>𝑓</mtext></mrow><mrow><mo>(</mo><mrow><mrow><mtext>𝑥</mtext></mrow></mrow><mo>)</mo></mrow><mrow><mtext>=0.3×</mtext></mrow><msup><mrow><mrow><mtext>𝑥</mtext></mrow></mrow><mrow><mrow><mtext>2</mtext></mrow></mrow></msup><mrow><mtext>−</mtext></mrow><mrow><mrow><mrow><mtext>sin</mtext></mrow></mrow><mrow><mrow><mo>(</mo><mrow><mrow><mtext>𝑥</mtext></mrow></mrow><mo>)</mo></mrow></mrow></mrow><mrow><mtext>+</mtext></mrow><mrow><mtext>𝑥</mtext></mrow></math></span> around <span class="lecture-math"><math xmlns="http://www.w3.org/1998/Math/MathML"><mrow><mtext>−4.5</mtext></mrow></math></span>. When the error is smaller than a value, report the root.</p>
-<p class="">How do you stop the function iteration?</p>
-
-
-
-
-</div>
-
----
-
-<!-- slide: lecture-import -->
-
 ## 2.2 Namespaces and scopes of variables
-
-<span class="aol">AoL 2 (H)</span>
 
 <div class="lecture-content" markdown="1">
 
 <p class="">We have learned that Python interpreter binds names to objects. A <strong>namespace</strong> is a dictionary (more precisely, a hash map) telling us which name is bound to which value.</p>
 <p class="">For example, we have the builtins, globals, closure, and the local namespaces.</p>
-<p class="">A relative concept is <strong>scope</strong>, which describes the range where an object can be accessed freely.</p>
+<p class="">A related concept is <strong>scope</strong>, which describes the range where a name can be resolved.</p>
 
 
 
@@ -479,11 +414,9 @@ ff[3]()
 
 ## 2.2.1 Namespaces and scopes of variables
 
-<span class="aol">AoL 3 (M)</span>
-
 <div class="lecture-content" markdown="1">
 
-<h3>In-class exercise 2.2.1</h3>
+<h3>In-class exercise 2.2.2.1</h3>
 <p class="">Write a function to swap the values of two objects. For example, a, b = 1, 2. After swapping, a is 2 and b is 1.</p>
 <p class="">Analyze the function for variable names.</p>
 <p class="">Check the names in the namespaces</p>
@@ -505,11 +438,9 @@ globals()
 
 ## 2.2.1 Namespaces and scopes of variables
 
-<span class="aol">AoL 3 (M)</span>
-
 <div class="lecture-content" markdown="1">
 
-<h3>In-class exercise 2.2.2</h3>
+<h3>In-class exercise 2.2.2.2</h3>
 <p class="">Can you please check the objects living in the local namespace?</p>
 
 
@@ -524,8 +455,6 @@ globals()
 ## 2.2.2 Scope of a variable
 
 <div class="lecture-content" markdown="1">
-
-<span class="aol">AoL 2 (H)</span>
 
 When Python resolves a name, it searches in **LEGB** order:
 
@@ -549,45 +478,9 @@ globals()
 
 ---
 
-<!-- slide: lecture-import lecture-compact -->
-
-## 2.2.2 Scope of a variable
-
-<div class="lecture-content" markdown="1">
-
-<p class=""><strong>Code Example </strong><strong>(closure </strong><strong>namespaces)</strong></p>
-
-```python
-def make_player(name, hp, damage):
-    def attack(other):
-        nonlocal hp
-        other["take_damage"](damage)
-        print(f"{name} attacks for {damage} damage.")
-
-    def take_damage(amount):
-        nonlocal hp
-        hp -= amount
-
-    def status():
-        print(f"{name} has {hp} HP and {damage} damage.")
-
-    return {
-        "attack": attack,
-        "take_damage": take_damage,
-        "status": status,
-    }
-```
-
-
-</div>
-
----
-
 <!-- slide: lecture-import -->
 
 ## 2.2.2 Scope of a variable
-
-<span class="aol">AoL 3 (M)</span>
 
 <div class="lecture-content" markdown="1">
 
@@ -609,13 +502,11 @@ print(max(1, 2))
 
 ## 2.2.2 Scope of a variable
 
-<span class="aol">AoL 3 (M)</span>
-
 <div class="lecture-content" markdown="1">
 
 <p class="">A long example</p>
 <p class=""><a href="https://www.bilibili.com/video/BV1edH2eqEno/?spm_id_from=333.999.0.0&amp;vd_source=ec7b194853f6121829b0f428c7736022">A more complicated example</a></p>
-<h3>In-class exercise 2.2.4 [purpose of variable scopes]</h3>
+<h3>In-class exercise 2.2.2.3 [purpose of variable scopes]</h3>
 <p class="">How does Python count number of references?</p>
 <p class="lecture-subpoint">avoid unnecessary global variables</p>
 <p class="">How do you modify the function factory in Special case II?</p>
@@ -632,9 +523,282 @@ print(max(1, 2))
 
 <!-- slide: lecture-import -->
 
-## The assembly of tools
+## 2.3 Functions are first-class objects
 
-<span class="aol">AoL 5 (H)</span>
+<div class="lecture-content" markdown="1">
+
+<p class="">First-class objects are flexible. Being first class means there is no restrictions on the use of the object. We can pass this object as an argument to a function and can return it as a return value. We can also create dictionaries to store it, etc.</p>
+<p class="">When we use a function as an argument and return values of another &quot;higher-level&quot; functions, we are using <strong>higher-order functions</strong>.</p>
+
+
+
+
+</div>
+
+---
+
+<!-- slide: lecture-import -->
+
+## 2.3 Functions are first-class objects
+
+<div class="lecture-content" markdown="1">
+
+<p class="">Functions as return values</p>
+
+```python
+def intercept_1():
+    a = 1
+    def slope_2(x):
+        return 2 * x + a
+    return slope_2
+
+
+linear_trans = intercept_1()
+linear_trans(3)
+```
+
+
+</div>
+
+---
+
+<!-- slide: lecture-import -->
+
+## 2.3 Functions are first-class objects
+
+<div class="lecture-content" markdown="1">
+
+<p class="">Functions as arguments</p>
+
+```python
+def call_count(func, x=[0]):
+    print(f"calling {x[0] + 1} times")
+    x[0] += 1
+    func()
+
+
+call_count(print)
+call_count(print)
+call_count(print)
+```
+
+
+</div>
+
+---
+
+<!-- slide: lecture-import -->
+
+## 2.3 Functions are first-class objects
+
+<div class="lecture-content" markdown="1">
+
+<h3>In-class exercise 2.3.1</h3>
+<p class="">Modify code example 1, so that we can select the intercept.</p>
+<p class="">Modify code example 1, so that we can also select the slope.</p>
+<p class="">Modify code example 2, so that we do not need default parameters.</p>
+
+
+
+
+</div>
+
+---
+
+<!-- slide: lecture-import -->
+
+## 2.3 Functions … objects (special case III)
+
+<div class="lecture-content" markdown="1">
+
+<div class="columns" markdown="1">
+<div class="column" markdown="1">
+<p class="">In the call_count example, we can pass a function as an argument to the function. But this function cannot have its own parameters. How can we pass arguments to the function being counted?</p>
+</div>
+<div class="column" markdown="1">
+
+```python
+def call_count(func, arg_to_called, x=[0]):
+    print(f"calling {x[0]} times")
+    x[0] += 1
+    func(arg_to_called)
+
+
+call_count(print, "hello")
+call_count(print, "python")
+call_count(print, "world")
+```
+
+
+</div>
+</div>
+
+</div>
+
+---
+
+<!-- slide: lecture-import -->
+
+## 2.3 Functions … objects (special case III)
+
+<div class="lecture-content" markdown="1">
+
+<p class="">When we are not sure about how many parameters to pass to the function, the conventional parameter names are <code>args</code> and <code>kwargs</code>. The special syntax is <code>*args</code> and <code>**kwargs</code>; the names themselves are not keywords.</p>
+<p class="lecture-subpoint">The * operator. A star is known as the (un)packing operator.</p>
+<h3>In-class exercise 2.3.2</h3>
+<p class="">How do they differ?</p>
+
+```python
+a = 1, 2, 3
+
+a, b, c = 1, 2, 3
+
+a, b = 1, 2, 3
+
+a, *b, c = 1, 2, 3, 4, 5
+```
+
+
+</div>
+
+---
+
+<!-- slide: lecture-import -->
+
+## 2.3 Functions … objects (special case III)
+
+<div class="lecture-content" markdown="1">
+
+<h3>In-class exercise 2.3.3</h3>
+<p>Some cases deliberately contain errors. Consider and run each assignment separately.</p>
+<p class="">Summarize the pattern by considering</p>
+
+```	ext
+*a, b = 1, 2, 3, 4, 5
+
+a, *b = 1, 2, 3, 4, 5
+
+*a, *b = 1, 2, 3, 4, 5
+
+*a, b, c = 1, 2, 3, 4, 5
+
+*a, b = 1
+```
+
+
+</div>
+
+---
+
+<!-- slide: lecture-import -->
+
+## 2.3 Functions … objects (special case III)
+
+<div class="lecture-content" markdown="1">
+
+<p class="">Note that a is a list but *a <strong>unpacks</strong> the list into several elements. Passing indefinite number of arguments to a function involves two steps:</p>
+<p class="lecture-subpoint">collecting positional arguments in a tuple (when defining <code>*args</code>)</p>
+<p class="lecture-subpoint">unpacking an iterable with <code>*</code> when making a call</p>
+<p class="">To check the unpacking behavior, we can use the sep parameter.</p>
+
+```python
+def call_count(func, *args, x=[0]):
+    print(f"calling {x[0]} times")
+    x[0] += 1
+    func(*args, sep=", ")
+
+
+call_count(print, "hello", "python", "world")
+```
+
+
+</div>
+
+---
+
+<!-- slide: lecture-import -->
+
+## 2.3 Functions … objects (special case III)
+
+<div class="lecture-content" markdown="1">
+
+<div class="columns" markdown="1">
+<div class="column" markdown="1">
+<p class="">The ** operator.</p>
+<p class="lecture-subpoint">Another type of arguments is called <strong>keyword arguments</strong>, which must be passed to a function with the form param=arg. These are named arguments. Unlike * that unpacks a list, we use ** to unpack a dictionary. There are fewer use cases than the unpacking of a list.</p>
+</div>
+<div class="column" markdown="1">
+
+```python
+dict1 = {"a": 1,
+         "b": 2,
+         "c": 3}
+
+dict2 = {"d": 4,
+         "e": 5,
+         "f": 6}
+
+combined_dict = {**dict1, **dict2}
+```
+
+
+</div>
+</div>
+
+</div>
+
+---
+
+<!-- slide: lecture-import -->
+
+## Argument and parameter order
+
+<div class="lecture-content" markdown="1">
+
+Ordinary positional arguments precede keyword arguments in a call:
+
+```python
+print("hello", "Python", sep=", ")
+```
+
+In the positional parameter list of a function definition, required parameters come before parameters with defaults.
+
+Keyword-only parameters follow `*` or `*args`; `**kwargs`, when present, comes last.
+
+```text
+def function(required, optional=0, *args, keyword_only, **kwargs):
+    ...
+```
+
+</div>
+
+---
+
+<!-- slide: lecture-import -->
+
+## 2.3 Functions … objects (special case III)
+
+<div class="lecture-content" markdown="1">
+
+<h3>In-class exercise 2.3.4</h3>
+<p class="">Note that **kwargs is actually unpacking a dict. This is to say, kwargs is a dict. We learned that a dict has keys and values. Read the document about named arguments: <a href="https://docs.python.org/3/library/stdtypes.html#dict">https://docs.python.org/3/library/stdtypes.html#dict</a></p>
+<p class="">Write a function to take the sum of several (the numbers are unknown) named arguments. For example,</p>
+
+```text
+def sum_of_kwargs(???):
+    pass
+
+sum_of_kwargs(Alice=5, Bob=3, Charlie=4)
+```
+
+
+</div>
+
+---
+
+<!-- slide: lecture-import -->
+
+## The assembly of tools
 
 <div class="lecture-content" markdown="1">
 

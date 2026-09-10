@@ -19,19 +19,13 @@ search:
     <a class="slides-library__card" href="decks/lecture-1-2/" target="_self">
       <span class="slides-library__number">LECTURE 1.2</span>
       <h2>Collections and Control Flow</h2>
-      <p class="slides-library__description">31 slides · Dictionaries, strings, sets, loops, conditions, and comprehensions. </p>
-      <span class="slides-library__action">Open slides →</span>
-    </a>
-    <a class="slides-library__card" href="decks/lecture-1-3/" target="_self">
-      <span class="slides-library__number">LECTURE 1.3</span>
-      <h2>Project: A Web Crawler</h2>
-      <p class="slides-library__description">6 slides · HTTP requests, file I/O, and streaming a download. </p>
+      <p class="slides-library__description">30 slides · Dictionaries, strings, sets, loops, conditions, and comprehensions. </p>
       <span class="slides-library__action">Open slides →</span>
     </a>
     <a class="slides-library__card" href="decks/lecture-2-1/" target="_self">
       <span class="slides-library__number">LECTURE 2.1</span>
       <h2>Functions, Namespaces, and Scope</h2>
-      <p class="slides-library__description">25 slides · Defining functions, return values, call frames, defaults, and LEGB. </p>
+      <p class="slides-library__description">33 slides · Defining functions, call frames, defaults, scope, first-class functions, and unpacking. </p>
       <span class="slides-library__action">Open slides →</span>
     </a>
     <a class="slides-library__card" href="decks/lecture-2-2/" target="_self">
@@ -43,13 +37,13 @@ search:
     <a class="slides-library__card" href="decks/lecture-2-3/" target="_self">
       <span class="slides-library__number">LECTURE 2.3</span>
       <h2>Five Function Use Cases</h2>
-      <p class="slides-library__description">35 slides · Decorators, recursion, map/filter/reduce, generators, errors, and PEP 8. </p>
+      <p class="slides-library__description">34 slides · Decorators, recursion, map/filter/reduce, generators, errors, and PEP 8. </p>
       <span class="slides-library__action">Open slides →</span>
     </a>
     <a class="slides-library__card" href="decks/lecture-2-project/" target="_self">
       <span class="slides-library__number">CHAPTER 2 PROJECT</span>
       <h2>Project: Function Practice</h2>
-      <p class="slides-library__description">10 slides · Eight practice problems drawn from class and past exams. </p>
+      <p class="slides-library__description">6 slides · Four practice problems drawn from class and past exams. </p>
       <span class="slides-library__action">Open slides →</span>
     </a>
     <a class="slides-library__card" href="decks/lecture-3-1/" target="_self">

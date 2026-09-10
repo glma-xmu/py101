@@ -1,6 +1,7 @@
 # Lecture 1.1 conversion notes
 
-The HTML lecture retains the 23-slide sequence, exercises, AoL labels, and visible source artwork. The following corrections apply to the HTML adaptation; the source PPTX and PDF remain unchanged.
+The HTML lecture retains the 23-slide sequence and exercises. The latest
+`../course materials/deck1_1.pptx` removes the AoL labels and closing picture. The following corrections apply to the HTML adaptation; the source PPTX and PDF remain unchanged.
 
 | Source slide | Correction |
 | --- | --- |

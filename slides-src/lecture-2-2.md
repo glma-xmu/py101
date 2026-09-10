@@ -2,7 +2,7 @@
 title: Lecture 2.2 · First-Class Functions and Arguments
 description: Higher-order functions, closures, argument unpacking, args, and kwargs.
 lang: en
-source: resource/deck2_2_AoL.pptx
+source: ../course materials/deck2_2_AoL.pptx
 sections:
 - id: introduction
   title: Introduction
@@ -46,13 +46,13 @@ sections:
   textbook: ch2-5-loose-ends-3
 ---
 
-
 <!-- slide: title-slide -->
+
 <p class="eyebrow">Lecture 2.2</p>
 
 # First-Class Functions and Arguments
 
-## Python and Big Data in Economics
+## Programming for AI (Python)
 
 <p class="author">Guoliang Ma<br><span>The Chow Institute, 2026</span></p>
 

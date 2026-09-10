@@ -2,7 +2,7 @@
 title: Lecture 1.2 · Collections and Control Flow
 description: Dictionaries, strings, sets, loops, conditions, and comprehensions.
 lang: en
-source: resource/deck1_2_AoL.pptx
+source: ../course materials/deck1_2.pptx
 sections:
 - id: introduction
   title: Introduction
@@ -77,15 +77,15 @@ sections:
   related: true
 ---
 
-
 <!-- slide: title-slide -->
+
 <p class="eyebrow">Lecture 1.2</p>
 
 # Collections and Control Flow
 
-## Python and Big Data in Economics
+## Programming for AI (Python)
 
-<p class="author">Guoliang Ma<br><span>The Chow Institute, 2026</span></p>
+<p class="author">Guoliang Ma<br><span>The Chow Institute, 2025</span></p>
 
 ---
 
@@ -127,8 +127,6 @@ The dictionary stores **key–value pairs**.
 
 ## 1.2.3 Mapping — dictionary
 
-<span class="aol">AoL 2 (H)</span>
-
 <div class="lecture-content" markdown="1">
 
 <p class=""><strong>Example 1.2.3.1 ways to create a dictionary</strong></p>
@@ -156,8 +154,6 @@ dict.fromkeys(["key1", "key2"], ...)
 ## 1.2.3 Mapping — dictionary
 
 <div class="lecture-content" markdown="1">
-
-<span class="aol">AoL 3 (M)</span>
 
 Dictionary entries consist of **keys** and **values**. Look up a value by passing its key, as in `age["Alice"]`.
 
@@ -200,8 +196,6 @@ age["David"]
 
 ## Special topic: Flow control (I) — for loop
 
-<span class="aol">AoL 2 (H)</span>
-
 <div class="lecture-content" markdown="1">
 
 <p class="">How can we access all the elements in a list one by one?</p>
@@ -231,8 +225,6 @@ for element in container:
 
 ## Special topic: Flow control (I) — for loop
 
-<span class="aol">AoL 3 (M)</span>
-
 <div class="lecture-content" markdown="1">
 
 <h3>In-class exercise Special (I).1</h3>
@@ -252,8 +244,6 @@ for element in container:
 <!-- slide: lecture-import -->
 
 ## Special topic: Flow control (I) — for loop
-
-<span class="aol">AoL 2 (H)</span>
 
 <div class="lecture-content" markdown="1">
 
@@ -479,8 +469,6 @@ for k, v in z1:
 
 ## 1.2 Objects’ types
 
-<span class="aol">AoL 3 (M)</span>
-
 <div class="lecture-content" markdown="1">
 
 <h3>In-class exercise 1.2.2</h3>
@@ -501,8 +489,6 @@ for k, v in z1:
 
 <div class="lecture-content" markdown="1">
 
-<span class="aol">AoL 2 (H)</span>
-
 Quotation marks distinguish string values from variable names. Single and double quotes both delimit strings.
 
 A string is an **immutable sequence of Unicode characters**. Indexing it produces another string of length one.
@@ -522,8 +508,6 @@ A module is Python code stored separately for reuse.
 <!-- slide: lecture-import -->
 
 ## 1.2.4 String
-
-<span class="aol">AoL 3 (M)</span>
 
 <div class="lecture-content" markdown="1">
 
@@ -582,8 +566,6 @@ A module is Python code stored separately for reuse.
 
 ## 1.2.5 Unordered nonduplicate — set
 
-<span class="aol">AoL 3 (M)</span>
-
 <div class="lecture-content" markdown="1">
 
 <h3>In-class exercise 1.2.5.2</h3>
@@ -609,8 +591,6 @@ A module is Python code stored separately for reuse.
 ## 1.3 Pythonic style
 
 <div class="lecture-content" markdown="1">
-
-<span class="aol">AoL 2 (H)</span>
 
 **Pythonic** means writing clear, idiomatic Python. It does not mean every technique is unique to Python.
 
@@ -690,8 +670,6 @@ Next, explore **comprehensions** and **`enumerate`**.
 
 ## 1.4 Objects’ values
 
-<span class="aol">AoL 2 (H)</span>
-
 <div class="lecture-content" markdown="1">
 
 <p class="">Let’s step back before the end of this section.</p>
@@ -714,8 +692,6 @@ Next, explore **comprehensions** and **`enumerate`**.
 
 ## 1.4 Objects’ values
 
-<span class="aol">AoL 3 (M)</span>
-
 <div class="lecture-content" markdown="1">
 
 <h3>In-class exercise 1.4.1</h3>
@@ -732,8 +708,6 @@ Next, explore **comprehensions** and **`enumerate`**.
 
 ## Further readings/watching
 
-<span class="aol">AoL 5 (H)</span>
-
 <div class="lecture-content" markdown="1">
 
 <p class=""><a href="https://nedbatchelder.com/text/names.html">Python</a><a href="https://nedbatchelder.com/text/names.html">开发者 </a><a href="https://nedbatchelder.com/text/names.html">https://nedbatchelder.com/text/names</a><a href="https://nedbatchelder.com/text/names.html">.html</a></p>
@@ -741,23 +715,5 @@ Next, explore **comprehensions** and **`enumerate`**.
 
 
 
-
-</div>
-
----
-
-<!-- slide: lecture-import lecture-small-figure -->
-
-## Review
-
-<div class="lecture-content" markdown="1">
-
-<p class="">More types: Dictionary, string, and set</p>
-<p class="">Control flow: for-loop and if-statement</p>
-<p class="">Pythonic styles</p>
-<p class="caption">source: https://www.thepaper.cn/newsDetail_forward_21329531</p>
-
-
-<figure class="diagram"><img src="images/slide-31-2.webp" alt="Collections and Control Flow: original illustration, slide 31."></figure>
 
 </div>
