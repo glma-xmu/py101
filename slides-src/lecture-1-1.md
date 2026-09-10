@@ -87,7 +87,7 @@ sections:
 
 <p class="eyebrow">Lecture 1.1</p>
 
-# Programming for AI (Python)
+# Python and Big Data in Economics
 
 ## Chapter 1 · Basics
 

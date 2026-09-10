@@ -69,7 +69,7 @@ sections:
 
 # Five Function Use Cases
 
-## Programming for AI (Python)
+## Python and Big Data in Economics
 
 <p class="author">Guoliang Ma<br><span>The Chow Institute, 2026</span></p>
 
