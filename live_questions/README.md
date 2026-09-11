@@ -4,6 +4,12 @@ This is a live-question service beside the existing static MkDocs course site. T
 
 ## Scope and operating limits
 
+Teachers start quiz access from `/teacher/` using their existing login. The
+unlisted student page `/quiz/` accepts one temporary code for the full library,
+including `/quiz/0912/` and `/quiz/0919/`.
+See [quiz editing and deployment](quizzes/README.md) for the content format and
+the additional Nginx routes. It does not require starting a live-question room.
+
 - One teacher and one classroom, intended initially for a 50–200-student pilot. This is a planning scope, not a load guarantee for an unmeasured server.
 - Classrooms expire after two hours. The service keeps at most 100 recent questions in memory and expires each after ten minutes; background cleanup runs every five seconds. Restarting the service loses questions, login sessions, and the active classroom.
 - A successful submission means the service accepted the question, not that the teacher has read it. The teacher's connection indicator helps identify interruptions.

@@ -1,0 +1,17 @@
+{
+  "title": "Quiz 0919",
+  "description": "Functions, return values, and scope. Predict the result before running the code.",
+  "questions": [
+    {
+      "prompt": "What value is stored in result?",
+      "code": "def double(x):\n    return x * 2\n\nresult = double(4)"
+    },
+    {
+      "prompt": "What does the final line print? Explain why.",
+      "code": "x = 10\n\ndef example():\n    x = 3\n    return x\n\nexample()\nprint(x)"
+    },
+    {
+      "prompt": "Write a function that accepts any number of positional numeric arguments and returns their sum."
+    }
+  ]
+}

@@ -50,6 +50,8 @@
     el("teacher-room-code").textContent = "";
     el("teacher-room-expiry").textContent = "";
     el("teacher-password").value = "";
+    el("teacher-quiz-code").textContent = "";
+    el("teacher-quiz-expiry").textContent = "";
     el("login-button").disabled = false;
     setBusy(false);
     el("teacher-desk").hidden = true;
@@ -122,6 +124,11 @@
     el("login-panel").hidden = true;
     el("teacher-desk").hidden = false;
     el("logout-button").hidden = false;
+    el("quiz-closed").hidden = Boolean(next.quiz_room);
+    el("quiz-open").hidden = !next.quiz_room;
+    el("teacher-quiz-code").textContent = next.quiz_room ? next.quiz_room.code : "";
+    el("teacher-quiz-expiry").textContent = next.quiz_room
+      ? "Access ends at " + L.time(next.quiz_room.expires_at) + " · 访问将于此时结束" : "";
     el("no-room").hidden = Boolean(next.room);
     el("active-room").hidden = !next.room;
     el("feed-panel").hidden = !next.room;
@@ -277,6 +284,8 @@
     }
   });
   el("start-button").addEventListener("click", () => mutate("/room/start"));
+  el("start-quiz-button").addEventListener("click", () => mutate("/quiz-start"));
+  el("end-quiz-button").addEventListener("click", () => mutate("/quiz-close"));
   el("pause-button").addEventListener("click", () => {
     if (state && state.room) mutate("/room/pause", { paused: !state.room.paused });
   });

@@ -1,0 +1,10 @@
+.quiz-layout { max-width: 1000px; margin: 2.5rem auto; padding: 0 1.2rem 3rem; }
+.quiz-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 1rem; }
+.quiz-link { display: block; color: inherit; text-decoration: none; }
+.quiz-link:hover { border-color: #326b96; }
+.quiz-link h2 { margin-top: 0; }
+.quiz-question { margin: 1.5rem 0; }
+.quiz-question h2 { font-size: 1.1rem; color: #326b96; }
+.quiz-question p { white-space: pre-wrap; }
+.quiz-question pre { overflow-x: auto; padding: 1rem; background: #edf2f6; border-radius: 8px; font-size: 1.05rem; line-height: 1.6; }
+.quiz-question li { margin: .6rem 0; }

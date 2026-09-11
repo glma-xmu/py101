@@ -1,0 +1,36 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="robots" content="noindex, nofollow">
+  <title>In-class quizzes · Python and Big Data in Economics</title>
+  <link rel="stylesheet" href="/live/assets/live.css">
+  <link rel="stylesheet" href="/live/assets/quiz.css">
+  <script src="/live/assets/shared.js" defer></script>
+  <script src="/live/assets/quiz.js" defer></script>
+</head>
+<body>
+  <header class="site-header"><a href="/" class="brand">Python and Big Data in Economics</a><span>In-class quizzes · 课堂测验</span></header>
+  <main class="quiz-layout">
+    <section id="join-panel" class="card login-card">
+      <p class="eyebrow">STUDENT ACCESS · 学生入口</p>
+      <h1>Open the quiz library · 打开测验库</h1>
+      <form id="join-form">
+        <label for="quiz-code">Temporary passcode · 临时口令</label>
+        <input id="quiz-code" type="text" autocomplete="off" autocapitalize="characters" maxlength="8" required>
+        <button id="join-button" class="button primary" type="submit">Open quiz · 打开测验</button>
+      </form>
+    </section>
+    <p id="quiz-status" class="status" role="status" aria-live="polite"></p>
+    <section id="quiz-content" hidden aria-labelledby="quiz-title">
+      <a id="quiz-back" href="/quiz/" hidden>← All quizzes · 全部测验</a>
+      <h1 id="quiz-title">In-class quizzes · 课堂测验</h1>
+      <p id="quiz-description"></p>
+      <p id="student-expiry" class="hint" hidden></p>
+      <div id="quiz-list" class="quiz-grid"></div>
+      <div id="quiz-questions"></div>
+    </section>
+  </main>
+</body>
+</html>

@@ -9,6 +9,7 @@ from dataclasses import dataclass
 import json
 import hashlib
 import os
+import re
 from pathlib import Path
 import secrets
 import time
@@ -23,6 +24,7 @@ from .password import validate_hash, verify_password
 
 API = "/live/api"
 STATIC = Path(__file__).parent / "static"
+QUIZZES = Path(__file__).parent / "quizzes"
 MAX_BODY = 4096
 MAX_CHARS = 500
 MESSAGE_TTL = 600
@@ -93,6 +95,8 @@ class State:
         self.clock = clock
         self.teachers = {}
         self.students = {}
+        self.quiz_students = {}
+        self.quiz_room = None
         self.room = None
         self.messages = deque(maxlen=MAX_MESSAGES)
         self.muted = set()
@@ -109,6 +113,11 @@ class State:
         self.limits.entries.pop(("questions", "room"), None)
         self.revision += 1
 
+    def close_quiz(self):
+        self.quiz_room = None
+        self.quiz_students.clear()
+        self.revision += 1
+
     def cleanup(self):
         now = self.clock()
         self.limits.cleanup(now)
@@ -117,6 +126,8 @@ class State:
                 del self.teachers[token]
         if self.room and self.room["expires_at"] <= now:
             self.close_room()
+        if self.quiz_room and self.quiz_room["expires_at"] <= now:
+            self.close_quiz()
         old_length = len(self.messages)
         while self.messages and self.messages[0]["created_at"] <= now - MESSAGE_TTL:
             self.messages.popleft()
@@ -125,7 +136,7 @@ class State:
 
     def snapshot(self, item):
         self.cleanup()
-        return {"csrf": item["csrf"], "room": self.room, "messages": list(self.messages),
+        return {"csrf": item["csrf"], "room": self.room, "quiz_room": self.quiz_room, "messages": list(self.messages),
                 "revision": self.revision}
 
 
@@ -211,6 +222,7 @@ def create_app(settings=None, state=None):
             except asyncio.CancelledError:
                 pass
             state.close_room()
+            state.close_quiz()
             state.teachers.clear()
 
     app = FastAPI(docs_url=None, redoc_url=None, openapi_url=None, lifespan=lifespan)
@@ -258,9 +270,129 @@ def create_app(settings=None, state=None):
     async def teacher_page():
         return FileResponse(STATIC / "teacher.html")
 
+    def read_quiz(quiz_id):
+        if not re.fullmatch(r"[a-z0-9][a-z0-9-]{0,63}", quiz_id):
+            raise HTTPException(404, "Quiz not found.")
+        path = QUIZZES / (quiz_id + ".json")
+        if not path.is_file():
+            raise HTTPException(404, "Quiz not found.")
+        try:
+            data = json.loads(path.read_text(encoding="utf-8"))
+            assert isinstance(data, dict) and isinstance(data["title"], str)
+            assert isinstance(data["questions"], list) and data["questions"]
+            assert isinstance(data.get("description", ""), str)
+            for question in data["questions"]:
+                assert isinstance(question, dict)
+                assert isinstance(question["prompt"], str) and question["prompt"]
+                assert isinstance(question.get("code", ""), str)
+                assert isinstance(question.get("options", []), list)
+                assert all(isinstance(option, str) for option in question.get("options", []))
+        except (ValueError, KeyError, AssertionError, TypeError):
+            raise HTTPException(503, "Quiz content needs correction.") from None
+        questions = [{key: question[key] for key in ("prompt", "code", "options") if key in question}
+                     for question in data["questions"]]
+        return {"id": quiz_id, "title": data["title"],
+                "description": data.get("description", ""), "questions": questions}
+
+    @app.get("/quiz/")
+    async def quiz_page():
+        return FileResponse(STATIC / "quiz.html", headers={"X-Robots-Tag": "noindex, nofollow"})
+
+    @app.get("/quiz/{quiz_id}/")
+    async def quiz_detail_page(quiz_id: str):
+        if not re.fullmatch(r"[a-z0-9][a-z0-9-]{0,63}", quiz_id) or not (QUIZZES / (quiz_id + ".json")).is_file():
+            raise HTTPException(404, "Quiz not found.")
+        return FileResponse(STATIC / "quiz.html", headers={"X-Robots-Tag": "noindex, nofollow"})
+
+    @app.get(API + "/quizzes")
+    async def quiz_index(request: Request):
+        item = session(request, "teacher")
+        quizzes = [read_quiz(path.stem) for path in sorted(QUIZZES.glob("*.json"))]
+        return {"csrf": item["csrf"], "quizzes": [
+            {"id": quiz["id"], "title": quiz["title"], "description": quiz["description"],
+             "count": len(quiz["questions"])} for quiz in quizzes]}
+
+    @app.get(API + "/quizzes/{quiz_id}")
+    async def quiz_content(quiz_id: str, request: Request):
+        session(request, "teacher")
+        return read_quiz(quiz_id)
+
+    def quiz_publication():
+        if not state.quiz_room:
+            return None
+        return dict(state.quiz_room)
+
+    def student_quiz(request):
+        state.cleanup()
+        if not state.quiz_room:
+            raise HTTPException(410, "This quiz has closed or expired.")
+        token = request.cookies.get(settings.cookie("quiz_student"), "")
+        if token not in state.quiz_students:
+            raise HTTPException(401, "Enter the quiz passcode.")
+        return {"expires_at": state.quiz_room["expires_at"]}
+
+    @app.get(API + "/quiz-session")
+    async def quiz_session(request: Request):
+        item = session(request, "teacher")
+        return {"csrf": item["csrf"], "publication": quiz_publication()}
+
+    @app.post(API + "/quiz-start")
+    async def start_quiz(request: Request):
+        item = session(request, "teacher", True)
+        await body(request, {})
+        if state.quiz_room:
+            raise HTTPException(409, "Quiz access is already open.")
+        state.quiz_room = {"code": "".join(secrets.choice("ABCDEFGHJKLMNPQRSTUVWXYZ23456789") for _ in range(8)),
+                           "expires_at": state.clock() + ROOM_TTL}
+        state.quiz_students.clear()
+        state.revision += 1
+        return state.snapshot(item)
+
+    @app.post(API + "/quiz-close")
+    async def close_quiz(request: Request):
+        item = session(request, "teacher", True)
+        await body(request, {})
+        state.close_quiz()
+        return state.snapshot(item)
+
+    @app.post(API + "/quiz-join")
+    async def join_quiz(request: Request):
+        limit(request, "quiz-join", 600, 1200)
+        data = await body(request, {"code": str})
+        code = data["code"].strip().upper()
+        if (len(code) != 8 or not code.isascii() or not state.quiz_room
+                or not secrets.compare_digest(code, state.quiz_room["code"])):
+            raise HTTPException(400, "Quiz passcode is incorrect or has expired.")
+        token = request.cookies.get(settings.cookie("quiz_student"), "")
+        if token not in state.quiz_students:
+            if len(state.quiz_students) >= MAX_STUDENTS:
+                raise HTTPException(429, "This quiz is full.")
+            token = secrets.token_urlsafe(32)
+            state.quiz_students[token] = True
+        response = JSONResponse({"expires_at": state.quiz_room["expires_at"]})
+        set_cookie(response, "quiz_student", token)
+        return response
+
+    @app.get(API + "/quiz-student")
+    async def get_student_quiz(request: Request):
+        return student_quiz(request)
+
+    @app.get(API + "/quiz-library")
+    async def student_quiz_library(request: Request):
+        access = student_quiz(request)
+        quizzes = [read_quiz(path.stem) for path in sorted(QUIZZES.glob("*.json"))]
+        return {**access, "quizzes": [
+            {"id": quiz["id"], "title": quiz["title"], "description": quiz["description"],
+             "count": len(quiz["questions"])} for quiz in quizzes]}
+
+    @app.get(API + "/quiz-library/{quiz_id}")
+    async def student_quiz_detail(quiz_id: str, request: Request):
+        access = student_quiz(request)
+        return {**access, "quiz": read_quiz(quiz_id)}
+
     @app.get("/live/assets/{name}")
     async def assets(name: str):
-        if name not in {"live.css", "student.js", "teacher.js", "shared.js"}:
+        if name not in {"live.css", "student.js", "teacher.js", "shared.js", "quiz.js", "quiz.css"}:
             raise HTTPException(404)
         return FileResponse(STATIC / name)
 
@@ -305,6 +437,7 @@ def create_app(settings=None, state=None):
         await body(request, {})
         # One-teacher pilot: logout ends class and revokes every teacher tab.
         state.close_room()
+        state.close_quiz()
         state.teachers.clear()
         response = JSONResponse({"ok": True})
         response.delete_cookie(settings.cookie("teacher"), path="/", secure=not settings.dev, httponly=True, samesite="strict")
