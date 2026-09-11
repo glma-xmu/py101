@@ -31,8 +31,18 @@ optional `description`, and a nonempty `questions` array. Each question contains
 
 - `prompt`: question text, required.
 - `code`: optional code to display, with `\n` for line breaks.
+- `after`: optional text displayed after the code, with `\n` for line breaks.
 - `options`: optional list of choices.
-Only `prompt`, `code`, and `options` are served. No answer fields are needed.
+
+Display order is `prompt`, `code`, `after`, then `options`. No answer fields are needed.
+
+```json
+{
+  "prompt": "Consider the following Python list:",
+  "code": "values = [12, 15, 18, 30, 21, 16]",
+  "after": "Write one expression for each task:\n\n1. Extract the third element.\n2. Extract the second-to-last element."
+}
+```
 
 Text is displayed literally: HTML is not executed and Markdown is not parsed.
 For a new class, copy a file to a name such as `0926.json` and edit its contents.

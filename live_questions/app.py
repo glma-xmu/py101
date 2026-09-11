@@ -285,11 +285,12 @@ def create_app(settings=None, state=None):
                 assert isinstance(question, dict)
                 assert isinstance(question["prompt"], str) and question["prompt"]
                 assert isinstance(question.get("code", ""), str)
+                assert isinstance(question.get("after", ""), str)
                 assert isinstance(question.get("options", []), list)
                 assert all(isinstance(option, str) for option in question.get("options", []))
         except (ValueError, KeyError, AssertionError, TypeError):
             raise HTTPException(503, "Quiz content needs correction.") from None
-        questions = [{key: question[key] for key in ("prompt", "code", "options") if key in question}
+        questions = [{key: question[key] for key in ("prompt", "code", "after", "options") if key in question}
                      for question in data["questions"]]
         return {"id": quiz_id, "title": data["title"],
                 "description": data.get("description", ""), "questions": questions}

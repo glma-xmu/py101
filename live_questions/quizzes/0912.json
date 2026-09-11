@@ -2,30 +2,14 @@
   "title": "Quiz 0912",
   "description": "Python basics: names, objects, and collections. Discuss your reasoning in class.",
   "questions": [
-    // {
-    //   "prompt": "What does this code print?",
-    //   "code": "a = [1, 2]\nb = a\nb.append(3)\nprint(a)",
-    //   "options": [
-    //     "[1, 2]",
-    //     "[1, 2, 3]",
-    //     "An error"
-    //   ]
-    // },
-    // {
-    //   "prompt": "Which of these objects is immutable?",
-    //   "options": [
-    //     "A list",
-    //     "A dictionary",
-    //     "A string"
-    //   ]
-    // },
-    // {
-    //   "prompt": "Write an expression that selects every second element, starting with the first.",
-    //   "code": "values = [10, 20, 30, 40, 50]"
-    // }
     {
       "prompt": "Consider the Python list below. Write one Python expression for each task:\n\n1. Extract the third element.\n2. Extract the second-to-last element.\n3. Extract the second, third, and fourth elements.\n4. Extract every other element, starting with the first.",
       "code": "values = [12, 15, 18, 30, 21, 16]"
+    },
+    {
+      "prompt": "Suppose that the prices and quantities of three products are stored in the following lists:",
+      "code": "prices = [8, 12, 5]\n\nquantities = [3, 2, 6]",
+      "after": "For each product, revenue is equal to price multiplied by quantity. Write a Python expression that creates a new list `revenue` containing the revenue for the three products."
     }
   ]
 }

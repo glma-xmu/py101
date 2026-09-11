@@ -27,6 +27,7 @@
       const card = node("section", undefined, "card quiz-question");
       card.append(node("h2", "Question " + (index + 1)), node("p", question.prompt));
       if (question.code) { const pre = node("pre"); pre.append(node("code", question.code)); card.append(pre); }
+      if (question.after) card.append(node("p", question.after));
       if (question.options && question.options.length) {
         const options = node("ol"); options.type = "A";
         question.options.forEach(option => options.append(node("li", option)));
