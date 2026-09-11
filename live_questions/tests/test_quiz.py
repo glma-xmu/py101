@@ -1,8 +1,26 @@
-"""Quiz access must use the existing teacher session, never public assets."""
+"""Quiz access and lifecycle tests use a temporary library, never class content."""
 import json
+
+import pytest
 
 from live_questions.app import API, TEACHER_TTL, ROOM_TTL, State
 from .test_app import env, password_hash, post, PASSWORD, classroom, joined
+
+
+@pytest.fixture(autouse=True)
+def quiz_files(tmp_path, monkeypatch):
+    library = tmp_path / "quizzes"
+    library.mkdir()
+    for quiz_id in ("0912", "0919"):
+        quiz = {"title": "Quiz " + quiz_id, "questions": [{
+            "prompt": "Consider the following list:",
+            "code": "values = [1, 2, 3]",
+            "after": "Extract the third element.",
+            "answer": "PRIVATE",
+        }]}
+        (library / (quiz_id + ".json")).write_text(json.dumps(quiz), encoding="utf-8")
+    monkeypatch.setattr("live_questions.app.QUIZZES", library)
+    return library
 
 
 def test_quiz_login_and_private_content(env):
@@ -24,6 +42,7 @@ def test_quiz_login_and_private_content(env):
     detail = env.client.get(API + "/quizzes/0912")
     assert detail.status_code == 200
     assert all("answer" not in q for q in detail.json()["questions"])
+    assert detail.json()["questions"][0]["after"] == "Extract the third element."
     assert detail.headers["cache-control"] == "no-store"
     assert env.client.get(API + "/quizzes/missing").status_code == 404
     env.clock.advance(TEACHER_TTL + 1)
@@ -71,6 +90,7 @@ def test_publish_join_close_and_republish(env):
         quiz = env.student.get(API + "/quiz-library/" + quiz_id).json()["quiz"]
         assert quiz["id"] == quiz_id
         assert all("answer" not in q for q in quiz["questions"])
+        assert quiz["questions"][0]["after"] == "Extract the third element."
     assert env.student.get(API + "/quizzes/0919").status_code == 401
     assert env.student.get(API + "/quiz-session").status_code == 401
     assert env.student.get(API + "/quiz-student").status_code == 200
@@ -115,6 +135,19 @@ def test_library_updates_and_no_answer_fields(env, tmp_path, monkeypatch):
     assert len(env.student.get(API + "/quiz-library").json()["quizzes"]) == 2
     assert env.student.get(API + "/quiz-library/0919").json()["quiz"]["questions"] == [{"prompt": "Another question"}]
     assert env.client.get(API + "/quizzes/0912").json()["title"] == "Edited"
+
+
+def test_removed_quizzes_leave_the_library_without_restart(env, quiz_files):
+    csrf = post(env.client, "/login", {"password": PASSWORD}).json()["csrf"]
+    code = post(env.client, "/quiz-start", {}, csrf).json()["quiz_room"]["code"]
+    assert post(env.student, "/quiz-join", {"code": code}).status_code == 200
+    for quiz_id, remaining in [("0919", ["0912"]), ("0912", [])]:
+        (quiz_files / (quiz_id + ".json")).unlink()
+        for client, route in [(env.client, "/quizzes"), (env.student, "/quiz-library")]:
+            response = client.get(API + route)
+            assert response.status_code == 200
+            assert [q["id"] for q in response.json()["quizzes"]] == remaining
+            assert client.get(API + route + "/" + quiz_id).status_code == 404
 
 
 def test_student_entrance_is_separate_from_teacher(env):

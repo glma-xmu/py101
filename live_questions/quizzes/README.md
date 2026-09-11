@@ -26,7 +26,7 @@ is kept only in memory, while quiz files persist on disk.
 
 ## Edit before class
 
-Edit `0912.json` or `0919.json` in this directory. Each file has a `title`, an
+Edit a quiz JSON file in this directory, such as `0912.json`. Each file has a `title`, an
 optional `description`, and a nonempty `questions` array. Each question contains:
 
 - `prompt`: question text, required.

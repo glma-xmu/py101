@@ -6,7 +6,7 @@ This is a live-question service beside the existing static MkDocs course site. T
 
 Teachers start quiz access from `/teacher/` using their existing login. The
 unlisted student page `/quiz/` accepts one temporary code for the full library,
-including `/quiz/0912/` and `/quiz/0919/`.
+including every quiz JSON file currently in `quizzes/`.
 See [quiz editing and deployment](quizzes/README.md) for the content format and
 the additional Nginx routes. It does not require starting a live-question room.
 
