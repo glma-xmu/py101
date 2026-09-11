@@ -29,6 +29,13 @@
           <p class="hint" id="retention-note">Questions expire after 10 minutes. Only the newest 100 are kept in memory. Class end and service restart erase them.<br>问题保留 10 分钟，内存中最多保留最新 100 条；课堂结束或服务重启后清空。</p>
         </div>
       </section>
+      <section class="card feed-card" id="feed-panel" aria-labelledby="feed-title" hidden>
+        <div class="section-heading"><h2 id="feed-title">Incoming questions · 实时提问 <span id="question-total" class="count">0</span></h2><div class="view-toggle" role="group" aria-label="Question view / 提问显示方式"><button id="feed-view-button" class="button selected" type="button" aria-pressed="true">Feed · 列表</button><button id="barrage-view-button" class="button" type="button" aria-pressed="false">Barrage · 弹幕</button></div></div>
+        <p class="hint">Dismiss removes one question. Mute removes this session’s questions and blocks it until class ends; it is not a permanent identity ban.<br>移除会删除该问题；静音会清除该学生会话的问题，并阻止其继续提问，直到课堂结束。静音不等于永久封禁。</p>
+        <div id="barrage-view" hidden><p class="hint">Teacher-only preview. Switch to Feed to dismiss or mute.<br>仅供教师预览；切换到列表可移除或静音。</p><div id="barrage-stage" class="barrage-stage" aria-label="Live barrage / 实时弹幕"></div></div>
+        <div id="feed-view"><p id="empty-feed" class="empty-state">Room for a good question.<br>等待一个好问题。</p><ol id="question-list" class="question-list" aria-label="Questions / 问题"></ol></div>
+        <p id="new-question-notice" class="sr-only" role="status" aria-live="polite"></p>
+      </section>
       <section class="card" aria-labelledby="quiz-access-title">
         <h2 id="quiz-access-title">Quiz library · 课堂测验</h2>
         <div id="quiz-closed">
@@ -41,13 +48,6 @@
           <p id="teacher-quiz-expiry" class="hint"></p>
           <button id="end-quiz-button" class="button danger" type="button">End quiz · 结束测验</button>
         </div>
-      </section>
-      <section class="card feed-card" id="feed-panel" aria-labelledby="feed-title" hidden>
-        <div class="section-heading"><h2 id="feed-title">Incoming questions · 实时提问 <span id="question-total" class="count">0</span></h2><div class="view-toggle" role="group" aria-label="Question view / 提问显示方式"><button id="feed-view-button" class="button selected" type="button" aria-pressed="true">Feed · 列表</button><button id="barrage-view-button" class="button" type="button" aria-pressed="false">Barrage · 弹幕</button></div></div>
-        <p class="hint">Dismiss removes one question. Mute removes this session’s questions and blocks it until class ends; it is not a permanent identity ban.<br>移除会删除该问题；静音会清除该学生会话的问题，并阻止其继续提问，直到课堂结束。静音不等于永久封禁。</p>
-        <div id="barrage-view" hidden><p class="hint">Teacher-only preview. Switch to Feed to dismiss or mute.<br>仅供教师预览；切换到列表可移除或静音。</p><div id="barrage-stage" class="barrage-stage" aria-label="Live barrage / 实时弹幕"></div></div>
-        <div id="feed-view"><p id="empty-feed" class="empty-state">Room for a good question.<br>等待一个好问题。</p><ol id="question-list" class="question-list" aria-label="Questions / 问题"></ol></div>
-        <p id="new-question-notice" class="sr-only" role="status" aria-live="polite"></p>
       </section>
     </div>
     <footer class="page-footer"><a href="/">Back to course · 返回课程</a></footer>
