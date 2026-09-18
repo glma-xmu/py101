@@ -58,8 +58,22 @@ existing `live_questions` service (including this directory and the new static
 assets), retain its existing password configuration, and restart it for the new
 routes. Add the `/quiz` and `/quiz/` locations from
 `../deploy/nginx-locations.conf` to the existing HTTPS server configuration,
-validate with `sudo nginx -t`, and reload Nginx. Later content-only updates need
-only the edited JSON files copied into the service's `quizzes/` directory.
+validate with `sudo nginx -t`, and reload Nginx. This backend/routes installation
+is a one-time prerequisite, not something to repeat for each new quiz.
+
+For subsequent quiz content, complete the one-time directory permission step in
+[CI mirror setup, section 5](../../CI_MIRROR_SETUP.md#5-automatic-quiz-content-deployment-existing-backend-only).
+Then add or edit JSON here, commit, and push to `main`. Wait for the separate
+**Deploy quizzes to Aliyun** Actions run to succeed and refresh `/quiz/`.
+GitHub pushes the JSON to Aliyun; no manual upload or server-side `git pull` is
+needed. No service restart, new quiz code, or Nginx reload is needed either.
+If a run fails, its log explains whether content validation, SSH, or directory
+permissions need attention; rerun on `main` after fixing the problem.
+
+Deployment preserves old server quizzes. Deleting or renaming a file in Git does
+not remove its previous server copy. Keep drafts outside this directory; every
+JSON here is deployed, and files in a public GitHub repository are publicly
+readable regardless of the website's temporary passcode.
 
 Locally, use the same Uvicorn setup documented in `../README.md`. A plain static
 `http.server` serving `site/` cannot handle authentication or `/quiz/`.

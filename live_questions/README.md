@@ -17,7 +17,7 @@ the additional Nginx routes. It does not require starting a live-question room.
 - Keep the teacher's question view private. If you project that browser window, incoming questions become visible to the room. A separate moderated projector display is outside this pilot.
 - The application does not write question bodies to files, a database, browser storage, or access logs. Questions necessarily exist in network and browser memory. This is not a guarantee of forensic erasure: operating-system swap, crash capture, proxy/WAF body logging, or third-party monitoring require separate administrator settings. Do not attach request-body logging or session-replay analytics to these routes.
 
-Run exactly **one worker and one service instance**. The room and event stream share in-process memory; extra workers or replicas would split that state. The existing static deployment does not start or update this service.
+Run exactly **one worker and one service instance**. The room and event stream share in-process memory; extra workers or replicas would split that state. The existing static deployment does not start or update this service. A separate quiz-content workflow can update quiz JSON without restarting it; see [CI mirror setup, section 5](../CI_MIRROR_SETUP.md#5-automatic-quiz-content-deployment-existing-backend-only).
 
 ## Try locally on Windows
 
@@ -197,13 +197,21 @@ Changes to `live_questions/static/`, including removal of the old form links fro
 
 ## Updates and troubleshooting
 
-The existing GitHub Actions workflow continues deploying static MkDocs output only. For a service update, repeat the upload, then on Ubuntu:
+The textbook workflow deploys static MkDocs output; **Deploy quizzes to Aliyun**
+separately deploys validated quiz JSON after its one-time permission setup.
+Content-only quiz edits need only a push to `main`, followed by a successful
+quiz workflow run and a browser refresh. They do not need the commands below.
+
+For a backend-code update, repeat the upload, then on Ubuntu. Preserve the quiz
+directory owner so the root-ownership reset does not disable quiz automation:
 
 ```bash
+QUIZ_OWNER=$(stat -c %U /opt/py101-live/live_questions/quizzes)
 sudo rsync -a --chmod=D755,F644 --exclude='__pycache__/' --exclude='*.pyc' ~/py101-live-upload/live_questions/ /opt/py101-live/live_questions/
 sudo /opt/py101-live/.venv/bin/python -m pip install -r /opt/py101-live/live_questions/requirements.txt
 sudo chown -R root:root /opt/py101-live
 sudo chmod -R u=rwX,go=rX /opt/py101-live
+sudo chown "$QUIZ_OWNER" /opt/py101-live/live_questions/quizzes
 sudo systemctl restart py101-live
 curl --fail http://127.0.0.1:8765/live/api/health
 curl --fail https://maguoliang.cn/live/api/health

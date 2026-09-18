@@ -1,0 +1,93 @@
+name: Deploy quizzes to Aliyun
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - "live_questions/quizzes/**"
+      - ".github/workflows/deploy-quizzes.yml"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+# Separate from Pages: do not interrupt a quiz transfer with a textbook build.
+concurrency:
+  group: aliyun-quiz-content
+  cancel-in-progress: false
+
+jobs:
+  deploy:
+    if: github.ref == 'refs/heads/main'
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          # Re-running an old job must not restore older quiz contents.
+          ref: main
+          persist-credentials: false
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - name: Install validation dependencies
+        run: python -m pip install -r live_questions/requirements-dev.txt
+      - name: Validate every quiz with the backend reader
+        run: python -m pytest live_questions/tests/test_quiz_content.py -q
+      - name: Upload quiz JSON only
+        env:
+          SERVER_HOST: ${{ secrets.SERVER_HOST }}
+          SERVER_USER: ${{ secrets.SERVER_USER }}
+          SERVER_PORT: ${{ secrets.SERVER_PORT }}
+          SSH_KEY: ${{ secrets.SERVER_SSH_KEY }}
+          KNOWN_HOSTS: ${{ secrets.SERVER_KNOWN_HOSTS }}
+        shell: bash
+        run: |
+          set -euo pipefail
+          for name in SERVER_HOST SERVER_USER SSH_KEY; do
+            if [[ -z "${!name}" ]]; then
+              echo "::error::Missing $name. Reuse the textbook mirror's SERVER_* secrets."
+              exit 1
+            fi
+          done
+          PORT="${SERVER_PORT:-22}"
+          if [[ ! "$PORT" =~ ^[0-9]{1,5}$ ]] || (( 10#$PORT < 1 || 10#$PORT > 65535 )); then
+            echo "::error::SERVER_PORT must be a port number (1-65535)."
+            exit 1
+          fi
+          PORT=$((10#$PORT))
+          key="$RUNNER_TEMP/quiz-deploy-key"
+          hosts="$RUNNER_TEMP/quiz-known-hosts"
+          trap 'rm -f -- "$key" "$hosts"' EXIT
+          umask 077
+          printf '%s\n' "$SSH_KEY" > "$key"
+          if [[ -n "$KNOWN_HOSTS" ]]; then
+            printf '%s\n' "$KNOWN_HOSTS" > "$hosts"
+          else
+            # Same first-connection trust model as the existing textbook mirror.
+            ssh-keyscan -T 15 -p "$PORT" -H "$SERVER_HOST" > "$hosts"
+          fi
+          ssh_options=(-i "$key" -p "$PORT" -o BatchMode=yes -o IdentitiesOnly=yes
+            -o ConnectTimeout=15 -o StrictHostKeyChecking=yes -o "UserKnownHostsFile=$hosts")
+          if ! ssh "${ssh_options[@]}" "$SERVER_USER@$SERVER_HOST" \
+            'test -d /opt/py101-live/live_questions/quizzes && test ! -L /opt/py101-live/live_questions/quizzes && test -w /opt/py101-live/live_questions/quizzes'; then
+            echo "::error::Cannot access the quiz directory. Check SSH and the one-time permissions in CI_MIRROR_SETUP.md, section 5."
+            exit 1
+          fi
+          # Only validated top-level JSON, never source, secrets, or static output.
+          # No -t: unchanged root-owned files may not allow timestamp updates.
+          # No --delete: old server quizzes remain until explicitly removed.
+          printf -v RSYNC_RSH '%q ' ssh "${ssh_options[@]}"
+          export RSYNC_RSH
+          rsync -pc --chmod=F644 --delay-updates --timeout=60 \
+            live_questions/quizzes/*.json \
+            "$SERVER_USER@$SERVER_HOST:/opt/py101-live/live_questions/quizzes/"
+          {
+            echo '### Quiz contents uploaded'
+            echo "Source commit: $(git rev-parse HEAD)"
+            echo
+            printf -- '- `%s`\n' live_questions/quizzes/*.json
+            echo
+            echo 'Refresh https://maguoliang.cn/quiz/ while quiz access is open.'
+            echo 'No files deleted; no backend restart; no Nginx changes.'
+          } >> "$GITHUB_STEP_SUMMARY"

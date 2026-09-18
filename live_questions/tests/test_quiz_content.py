@@ -1,9 +1,21 @@
 """Validate whichever class quizzes are present, without requiring example dates."""
 
+import re
+
 import pytest
 
 from live_questions.app import API, QUIZZES
 from .test_app import env, password_hash, post, PASSWORD
+
+
+def test_quiz_files_are_safe_to_deploy():
+    assert not QUIZZES.is_symlink(), "The quiz directory must not be a symlink"
+    paths = sorted(QUIZZES.glob("*.json"))
+    assert paths, "Keep at least one quiz; deployment does not delete server files"
+    assert set(QUIZZES.rglob("*.json")) == set(paths), "Keep quiz JSON at the top level"
+    for path in paths:
+        assert path.is_file() and not path.is_symlink(), f"Not a regular file: {path.name}"
+        assert re.fullmatch(r"[a-z0-9][a-z0-9-]{0,63}\.json", path.name), path.name
 
 
 @pytest.mark.parametrize("quiz_path", sorted(QUIZZES.glob("*.json")), ids=lambda path: path.name)

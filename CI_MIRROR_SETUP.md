@@ -1,9 +1,10 @@
 # Auto-deploy to the Aliyun mirror (GitHub Actions → server over SSH)
 
-Every `git push` builds the site and **rsyncs it to your server over SSH**. The
-server never contacts GitHub (which the GFW blocks from the mainland), so this
-sidesteps that problem completely. GitHub Pages still deploys as before; the mirror
-step is best-effort and never blocks it.
+Every push to `main` builds the textbook and **rsyncs it to your server over SSH**.
+GitHub connects to Aliyun; the server does not need to reach GitHub or run
+`git pull`. GitHub Pages still deploys as before; the textbook mirror step is
+best-effort and never blocks it. Quiz JSON has a separate, failure-visible
+workflow after the one-time setup in section 5 below.
 
 Do this once. Three parts: make a key, trust it on the server, add three secrets.
 
@@ -39,8 +40,9 @@ chmod 600 /home/deploy/.ssh/authorized_keys
 chown -R deploy:deploy /opt/py101/site
 ```
 
-(`deploy` is unprivileged and can only write the site folder — so even if the key
-leaked, it couldn't touch the rest of the server.)
+(`deploy` is unprivileged. Do not give this account sudo access. Besides its own
+home, the intended deployment write locations are the static site folder and,
+after section 5, the quiz-content directory; not backend code or configuration.)
 
 ---
 
@@ -69,6 +71,59 @@ Open the repo's **Actions** tab → the run → the **build** job. The
 **"Mirror to the Aliyun server"** step should connect and rsync the site. From now
 on, **one push updates both GitHub Pages and your server** — you never pull on the
 server again.
+
+---
+
+## 5. Automatic quiz-content deployment (existing backend only)
+
+If `/quiz/` already works and the `SERVER_*` secrets already exist, do not repeat
+the key/account setup above. On **Aliyun**, run this once. `deploy` must match
+your GitHub `SERVER_USER` secret; substitute the existing account if different:
+
+```bash
+sudo chown deploy /opt/py101-live/live_questions/quizzes
+sudo chmod 755 /opt/py101-live/live_questions/quizzes
+sudo -u deploy test -w /opt/py101-live/live_questions/quizzes && echo 'Quiz deployment ready'
+```
+
+This changes only the directory owner, not the owner of `/opt/py101-live`, Python
+source, the service, or `/etc/py101-live.env`. The existing JSON files installed
+with mode `644` can remain root-owned: deployment replaces changed files using
+temporary files and rename. If you previously changed their permissions, restore
+readable mode `644` on the affected JSON files. The service remains read-only.
+Directory ownership permits the deployment account to manage any files in that
+directory; the workflow restricts what it uploads to validated quiz JSON.
+
+Then commit and push your local changes to `main`. GitHub Actions runs
+**Deploy quizzes to Aliyun** whenever quiz contents or that workflow change.
+It checks every quiz with the backend reader, then pushes only top-level JSON
+files to `/opt/py101-live/live_questions/quizzes/`. It never restarts the backend,
+changes Nginx, or uploads quizzes to the public static site. Refresh `/quiz/`
+after the run succeeds; existing login sessions and quiz codes remain valid.
+This first run uploads all committed quizzes, including ones previously missed.
+
+The workflow reuses `SERVER_HOST`, `SERVER_USER`, `SERVER_SSH_KEY`, and optional
+`SERVER_PORT` (default `22`). Optionally supply `SERVER_KNOWN_HOSTS` with a trusted
+OpenSSH known-hosts entry for this host/port to pin the server's host key; without
+it, the workflow obtains that key with `ssh-keyscan` at connection time, as the
+existing textbook mirror does. No server-to-GitHub connection is needed.
+
+Check **Actions → Deploy quizzes to Aliyun**, not just the textbook build. Missing
+secrets, invalid quizzes, connection errors, or missing directory permissions
+fail this separate workflow visibly. After fixing setup, use **Run workflow**
+on `main`. Manual runs on other branches do not deploy; reruns validate and
+publish the latest `main`, not the old run's contents. There is no automatic
+retry schedule: a later quiz push or manual run retries the upload.
+
+Old server quizzes are deliberately **not deleted**. Removing or renaming a JSON
+file in Git does not withdraw its previous server copy; removal from Aliyun is a
+separate explicit administrator action. Updates are atomic per file, not across
+the whole library. A failed transfer may require rerunning the workflow.
+All committed quizzes are available during an open quiz session; keep drafts
+elsewhere. A public GitHub repository also makes committed JSON publicly readable.
+
+Backend code updates still follow `live_questions/README.md` and may require a
+restart outside class. Those instructions preserve this directory's owner.
 
 ---
 
