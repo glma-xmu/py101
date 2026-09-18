@@ -1,0 +1,15 @@
+{
+  "title": "Quiz 0919",
+  "description": "Python basics: names, objects, and collections. Discuss your reasoning in class.",
+  "questions": [
+    {
+      "prompt": "Write an f-string to print the bank accounts of the following people:",
+      "code": "people = ['Alice', 'Bob', 'Charlie']\n\naccounts = [1000, 1500, 2000]",
+      "after": "The output should look like this:\n\nAlice has $1000."
+    },
+    {
+      "prompt": "Pair the names with the scores into a dictionary (one call does it). Then add \"Dan\" with 88, update \"Bob\" to 90, and look up \"Eve\" returning \"unknown\" if absent.",
+      "code": "names  = [\"Ada\", \"Bob\", \"Cleo\"]\n\nscores = [91, 85, 78]"
+    }
+  ]
+}
