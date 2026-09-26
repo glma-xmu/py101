@@ -363,6 +363,23 @@ def test_retired_question_form_is_not_linked(env, path):
     assert "问卷星" not in response.text
 
 
+def test_teacher_theme_control_and_assets_keep_strict_csp(env):
+    response = env.client.get("/teacher/")
+    html = response.text
+    assert response.status_code == 200
+    assert html.count('id="teacher-theme"') == 1
+    assert 'for="teacher-theme"' in html and 'data-theme-select' in html
+    for mode in ("auto", "light", "dark"):
+        assert f'<option value="{mode}">' in html
+    assert html.index('/live/assets/teacher.js?v=2') < html.index('rel="stylesheet"')
+    assert '<script src="/live/assets/shared.js" defer>' in html
+    for path in ("/live/assets/teacher.js?v=2", "/live/assets/live.css?v=2"):
+        asset = env.client.get(path)
+        assert asset.status_code == 200
+        assert "unsafe-inline" not in asset.headers["content-security-policy"]
+    assert "unsafe-inline" not in response.headers["content-security-policy"]
+
+
 def test_hash_and_development_settings(password_hash):
     validate_hash(password_hash)
     assert verify_password(PASSWORD, password_hash)

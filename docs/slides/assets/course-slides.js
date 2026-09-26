@@ -1,5 +1,43 @@
-/* Local controls for the course's standalone Reveal slide decks. */
+/* Apply the saved page theme before CSS paints; store preferences, never class data. */
 (function () {
+  "use strict";
+  var key = "py101-display-theme";
+  var media = window.matchMedia("(prefers-color-scheme: dark)");
+  var select = null;
+  function normalize(value) { return value === "light" || value === "dark" ? value : "auto"; }
+  var preference = "auto";
+  try { preference = normalize(window.localStorage.getItem(key)); } catch (_) {}
+  function apply() {
+    var resolved = preference === "auto" ? (media.matches ? "dark" : "light") : preference;
+    document.documentElement.setAttribute("data-theme", resolved);
+    if (select) select.value = preference;
+  }
+  apply();
+  function systemChanged() { if (preference === "auto") apply(); }
+  if (media.addEventListener) media.addEventListener("change", systemChanged);
+  else if (media.addListener) media.addListener(systemChanged);
+  window.addEventListener("storage", function (event) {
+    if (event.key !== key && event.key !== null) return;
+    preference = normalize(event.newValue);
+    apply();
+  });
+  document.addEventListener("DOMContentLoaded", function () {
+    select = document.querySelector("[data-theme-select]");
+    if (!select) return;
+    select.value = preference;
+    select.addEventListener("change", function () {
+      preference = normalize(select.value);
+      try {
+        if (preference === "auto") window.localStorage.removeItem(key);
+        else window.localStorage.setItem(key, preference);
+      } catch (_) {} // Private/embedded browsers may disallow storage.
+      apply();
+    });
+  });
+})();
+
+/* Reveal is loaded at the end of the body before DOMContentLoaded. */
+document.addEventListener("DOMContentLoaded", function () {
   "use strict";
 
   var reveal = window.Reveal;
@@ -24,6 +62,14 @@
   var originalAttributes = new Map();
   var manualCopy = null;
   var t = function (english, zh) { return chinese ? zh : english; };
+
+  var themeSelect = document.getElementById("slides-theme");
+  if (themeSelect) {
+    document.getElementById("slides-theme-label").textContent = t("Theme", "主题");
+    themeSelect.options[0].textContent = t("Auto", "自动");
+    themeSelect.options[1].textContent = t("Light", "浅色");
+    themeSelect.options[2].textContent = t("Dark", "深色");
+  }
 
   function hashIndex() {
     var id;
@@ -412,4 +458,4 @@
     setReading(true);
     announce(t("Presentation mode is unavailable. The slides remain readable below.", "演示模式暂不可用，仍可在下方阅读课件。"));
   });
-})();
+});

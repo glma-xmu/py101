@@ -342,8 +342,11 @@ def check_built(root: Path, site: Path) -> tuple[int, int]:
             if node.tag == "script":
                 require(bool(node.attrs.get("src")), "Unexpected inline runtime script")
         scripts = [n.attrs.get("src") for n in nodes if n.tag == "script"]
-        require(scripts == ["../../assets/reveal/reveal.js", f"../../assets/course-slides.js?v={ASSET_VERSION}"],
-                "Reveal must load locally before the course player")
+        require(scripts == [f"../../assets/course-slides.js?v={ASSET_VERSION}", "../../assets/reveal/reveal.js"],
+                "Theme bootstrap must load first; the player waits for DOMContentLoaded")
+        bootstrap = next(n for n in nodes if n.tag == "script")
+        require(bootstrap.closest("head") is not None and "defer" not in bootstrap.attrs,
+                "Saved theme must be applied in the head before first paint")
         styles = [n.attrs.get("href") for n in nodes if n.tag == "link" and n.attrs.get("rel") == "stylesheet"]
         require(styles == ["../../assets/reveal/reveal.css", f"../../assets/course-slides.css?v={ASSET_VERSION}"],
                 "Reveal base CSS must load before local course styles")
@@ -356,8 +359,12 @@ def check_built(root: Path, site: Path) -> tuple[int, int]:
             require(back is not None, "Slides-library return link is missing")
             require(resolved_local_path(deck.route, back.attrs.get("href") or "", prefix) == "slides/",
                     "Return link leaves the slides library")
-        for control in ("slides-overview", "slides-fullscreen", "slides-reading"):
+        for control in ("slides-overview", "slides-fullscreen", "slides-reading", "slides-theme"):
             require(sum(n.attrs.get("id") == control for n in nodes) == 1, f"Missing or duplicate control: {control}")
+        theme = next(n for n in nodes if n.attrs.get("id") == "slides-theme")
+        require(theme.tag == "select" and "data-theme-select" in theme.attrs, "Theme selector is not connected")
+        require([n.attrs.get("value") for n in theme.walk() if n.tag == "option"] == ["auto", "light", "dark"],
+                "Theme choices must include Auto, Light and Dark")
 
     for language in ("", "zh/"):
         library_page = language + "slides/index.html"

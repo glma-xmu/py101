@@ -1,6 +1,45 @@
 "use strict";
 
-(() => {
+/* Apply the saved page theme before CSS paints; store preferences, never class data. */
+(function () {
+  "use strict";
+  var key = "py101-display-theme";
+  var media = window.matchMedia("(prefers-color-scheme: dark)");
+  var select = null;
+  function normalize(value) { return value === "light" || value === "dark" ? value : "auto"; }
+  var preference = "auto";
+  try { preference = normalize(window.localStorage.getItem(key)); } catch (_) {}
+  function apply() {
+    var resolved = preference === "auto" ? (media.matches ? "dark" : "light") : preference;
+    document.documentElement.setAttribute("data-theme", resolved);
+    if (select) select.value = preference;
+  }
+  apply();
+  function systemChanged() { if (preference === "auto") apply(); }
+  if (media.addEventListener) media.addEventListener("change", systemChanged);
+  else if (media.addListener) media.addListener(systemChanged);
+  window.addEventListener("storage", function (event) {
+    if (event.key !== key && event.key !== null) return;
+    preference = normalize(event.newValue);
+    apply();
+  });
+  document.addEventListener("DOMContentLoaded", function () {
+    select = document.querySelector("[data-theme-select]");
+    if (!select) return;
+    select.value = preference;
+    select.addEventListener("change", function () {
+      preference = normalize(select.value);
+      try {
+        if (preference === "auto") window.localStorage.removeItem(key);
+        else window.localStorage.setItem(key, preference);
+      } catch (_) {} // Private/embedded browsers may disallow storage.
+      apply();
+    });
+  });
+})();
+
+// shared.js is deferred and ready before this event.
+document.addEventListener("DOMContentLoaded", () => {
   const L = window.LiveQuestions;
   const el = id => document.getElementById(id);
   const status = el("teacher-status");
@@ -376,4 +415,4 @@
     }
   });
   init();
-})();
+});

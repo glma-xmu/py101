@@ -23,7 +23,7 @@ from mkdocs.structure.files import File, InclusionLevel
 
 
 GENERATOR = "scripts/build_slides.py"
-ASSET_VERSION = "4"
+ASSET_VERSION = "5"
 SLUG = re.compile(r"[a-z0-9]+(?:-[a-z0-9]+)*\Z")
 LANG = re.compile(r"[a-zA-Z]{2,3}(?:-[a-zA-Z0-9]{2,8})*\Z")
 CLASSES = re.compile(r"[a-z][a-z0-9-]*(?: +[a-z][a-z0-9-]*)*\Z")
@@ -310,6 +310,7 @@ def render_deck(deck: Deck, topics: dict[str, TextbookTopic] | None = None,
   <meta name="description" content="{escape(deck.description, quote=True)}">
   <meta name="referrer" content="no-referrer">
   <title>{escape(deck.title)} · Course slides</title>
+  <script src="../../assets/course-slides.js?v={ASSET_VERSION}"></script>
   <link rel="stylesheet" href="../../assets/reveal/reveal.css">
   <link rel="stylesheet" href="../../assets/course-slides.css?v={ASSET_VERSION}">
 </head>
@@ -321,12 +322,16 @@ def render_deck(deck: Deck, topics: dict[str, TextbookTopic] | None = None,
     <button type="button" id="slides-overview" title="Overview (O)">Overview</button>
     <button type="button" id="slides-fullscreen" title="Fullscreen (F)">Fullscreen</button>
     <button type="button" id="slides-reading" aria-pressed="false">Reading view</button>
+    <label class="slides-theme-control" for="slides-theme"><span id="slides-theme-label">Theme</span>
+      <select id="slides-theme" data-theme-select>
+        <option value="auto">Auto</option><option value="light">Light</option><option value="dark">Dark</option>
+      </select>
+    </label>
   </nav>
   <div class="reveal"><div class="slides">
 {body}
   </div></div>
   <script src="../../assets/reveal/reveal.js"></script>
-  <script src="../../assets/course-slides.js?v={ASSET_VERSION}"></script>
 </body>
 </html>
 '''

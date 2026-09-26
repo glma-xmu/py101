@@ -197,6 +197,26 @@ Changes to `live_questions/static/`, including removal of the old form links fro
 
 ## Updates and troubleshooting
 
+### Page appearance
+
+The teacher header and standalone slide toolbar have an **Auto / Light / Dark**
+selector. Auto follows the browser's colour preference; an explicit choice
+overrides it, including in VS Code's integrated browser. The preference is
+remembered with the `py101-display-theme` localStorage key, shared across these
+pages only when they use the same browser profile and origin. Different domains,
+ports, or browser profiles can have different settings. Only the appearance
+choice is stored, never classroom data; if storage is unavailable the switcher
+still works for the current page. Auto removes the saved override.
+
+Slides deploy with the normal MkDocs build. Teacher styling changes require
+updating just `static/teacher.html`, `static/teacher.js`, and `static/live.css`
+under `/opt/py101-live/live_questions/`, then refreshing the page.
+The quiz JSON workflow does not copy these files. No service restart, Nginx
+reload, or change to `app.py` is needed for the theme controls. Keep the server's
+TTL and password configuration unchanged when copying these three files.
+
+### Backend and quiz updates
+
 The textbook workflow deploys static MkDocs output; **Deploy quizzes to Aliyun**
 separately deploys validated quiz JSON after its one-time permission setup.
 Content-only quiz edits need only a push to `main`, followed by a successful

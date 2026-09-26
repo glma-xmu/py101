@@ -5,12 +5,22 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <meta name="referrer" content="no-referrer">
   <title>Teacher live desk · 教师提问台</title>
-  <link rel="stylesheet" href="/live/assets/live.css">
+  <script src="/live/assets/teacher.js?v=2"></script>
+  <link rel="stylesheet" href="/live/assets/live.css?v=2">
   <script src="/live/assets/shared.js" defer></script>
-  <script src="/live/assets/teacher.js" defer></script>
 </head>
 <body>
-  <header class="site-header"><a href="/" class="brand">Python 101</a><span>Teacher live desk · 教师提问台</span><button id="logout-button" class="header-button" type="button" hidden>Sign out · 退出</button></header>
+  <header class="site-header">
+    <a href="/" class="brand">Python 101</a><span>Teacher live desk · 教师提问台</span>
+    <div class="header-actions">
+      <label class="theme-control" for="teacher-theme">Theme · 主题
+        <select id="teacher-theme" data-theme-select>
+          <option value="auto">Auto · 自动</option><option value="light">Light · 浅色</option><option value="dark">Dark · 深色</option>
+        </select>
+      </label>
+      <button id="logout-button" class="header-button" type="button" hidden>Sign out · 退出</button>
+    </div>
+  </header>
   <main class="teacher-layout">
     <section id="login-panel" class="card login-card" aria-labelledby="login-title">
       <p class="eyebrow">TEACHER ACCESS · 教师入口</p><h1 id="login-title">Open your live desk.<br>打开课堂提问台。</h1>
