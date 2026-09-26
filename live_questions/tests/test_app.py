@@ -368,16 +368,20 @@ def test_teacher_theme_control_and_assets_keep_strict_csp(env):
     html = response.text
     assert response.status_code == 200
     assert html.count('id="teacher-theme"') == 1
-    assert 'for="teacher-theme"' in html and 'data-theme-select' in html
-    for mode in ("auto", "light", "dark"):
-        assert f'<option value="{mode}">' in html
-    assert html.index('/live/assets/teacher.js?v=2') < html.index('rel="stylesheet"')
+    assert '<summary id="teacher-theme">Theme</summary>' in html
+    assert 'data-theme-menu' in html and '<select' not in html and '主题' not in html
+    for mode in ("light", "dark"):
+        assert f'data-theme-choice="{mode}"' in html
+    assert html.index('id="logout-button"') < html.index('id="teacher-theme"')
+    assert html.index('/live/assets/teacher.js?v=3') < html.index('rel="stylesheet"')
     assert '<script src="/live/assets/shared.js" defer>' in html
-    for path in ("/live/assets/teacher.js?v=2", "/live/assets/live.css?v=2"):
+    for path in ("/live/assets/teacher.js?v=3", "/live/assets/live.css?v=3"):
         asset = env.client.get(path)
         assert asset.status_code == 200
         assert "unsafe-inline" not in asset.headers["content-security-policy"]
     assert "unsafe-inline" not in response.headers["content-security-policy"]
+    css = env.client.get("/live/assets/live.css?v=3").text
+    assert ':root[data-theme="dark"]' in css and '.header-actions' in css
 
 
 def test_hash_and_development_settings(password_hash):

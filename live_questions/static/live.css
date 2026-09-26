@@ -37,8 +37,16 @@ button, a, input, textarea { -webkit-tap-highlight-color: transparent; }
 .header-button { margin-left: auto; color: #fff; border: 1px solid #ffffff80; background: transparent; border-radius: .4rem; padding: .35rem .65rem; cursor: pointer; }
 .header-actions { display: flex; align-items: center; flex-wrap: wrap; gap: .6rem; margin-left: auto; }
 .header-actions .header-button { margin-left: 0; }
-.theme-control { display: inline-flex; align-items: center; gap: .4rem; margin: 0; font-size: .85rem; font-weight: 500; white-space: nowrap; }
-.theme-control select { font: inherit; padding: .35rem .5rem; border: 1px solid #ffffff80; border-radius: .4rem; background: var(--card); color: var(--ink); cursor: pointer; }
+.teacher-theme { position: relative; font-size: .9rem; }
+.teacher-theme summary { display: inline-flex; align-items: center; min-height: 2.4rem; padding: .25rem 0 .25rem .4rem; border: 0; background: transparent; color: #fff; list-style: none; cursor: pointer; user-select: none; }
+.teacher-theme summary::-webkit-details-marker { display: none; }
+.teacher-theme summary:hover { text-decoration: underline; text-underline-offset: .2em; }
+.teacher-theme-options { position: absolute; top: calc(100% + .3rem); right: 0; z-index: 50; min-width: 7rem; padding: .3rem; border: 0; border-radius: .35rem; background: var(--card); box-shadow: 0 6px 20px #10203035; }
+.teacher-theme-options button { display: flex; align-items: center; justify-content: space-between; gap: 1rem; width: 100%; padding: .45rem .6rem; border: 0; border-radius: .2rem; color: var(--ink); background: transparent; text-align: left; cursor: pointer; }
+.teacher-theme-options button:hover, .teacher-theme-options button[aria-pressed="true"] { background: var(--soft); color: var(--blue); }
+.teacher-theme-options button:focus-visible { outline-color: var(--blue); outline-offset: -2px; }
+.teacher-theme .theme-check { visibility: hidden; }
+.teacher-theme [aria-pressed="true"] > .theme-check { visibility: visible; }
 .student-layout { width: min(100% - 2rem, 660px); margin: 3rem auto; }
 .teacher-layout { width: min(100% - 2rem, 1120px); margin: 2rem auto; }
 .intro { margin-bottom: 2rem; }

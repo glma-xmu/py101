@@ -3,14 +3,16 @@
   "use strict";
   var key = "py101-display-theme";
   var media = window.matchMedia("(prefers-color-scheme: dark)");
-  var select = null;
+  var choices = [];
   function normalize(value) { return value === "light" || value === "dark" ? value : "auto"; }
   var preference = "auto";
   try { preference = normalize(window.localStorage.getItem(key)); } catch (_) {}
   function apply() {
     var resolved = preference === "auto" ? (media.matches ? "dark" : "light") : preference;
     document.documentElement.setAttribute("data-theme", resolved);
-    if (select) select.value = preference;
+    choices.forEach(function (button) {
+      button.setAttribute("aria-pressed", String(button.getAttribute("data-theme-choice") === resolved));
+    });
   }
   apply();
   function systemChanged() { if (preference === "auto") apply(); }
@@ -22,17 +24,35 @@
     apply();
   });
   document.addEventListener("DOMContentLoaded", function () {
-    select = document.querySelector("[data-theme-select]");
-    if (!select) return;
-    select.value = preference;
-    select.addEventListener("change", function () {
-      preference = normalize(select.value);
-      try {
-        if (preference === "auto") window.localStorage.removeItem(key);
-        else window.localStorage.setItem(key, preference);
-      } catch (_) {} // Private/embedded browsers may disallow storage.
-      apply();
+    var menu = document.querySelector("[data-theme-menu]");
+    if (!menu) return;
+    var trigger = menu.querySelector("summary");
+    choices = Array.prototype.slice.call(menu.querySelectorAll("[data-theme-choice]"));
+    apply();
+    choices.forEach(function (button) {
+      button.addEventListener("click", function () {
+        preference = normalize(button.getAttribute("data-theme-choice"));
+        try { window.localStorage.setItem(key, preference); } catch (_) {}
+        apply();
+        menu.open = false;
+        trigger.focus();
+      });
     });
+    document.addEventListener("click", function (event) {
+      if (!menu.contains(event.target)) menu.open = false;
+    });
+    document.addEventListener("keydown", function (event) {
+      if (event.key !== "Escape" || !menu.open) return;
+      event.preventDefault();
+      event.stopImmediatePropagation();
+      menu.open = false;
+      trigger.focus();
+    });
+    var outline = document.querySelector(".slide-outline");
+    if (outline) {
+      menu.addEventListener("toggle", function () { if (menu.open) outline.open = false; });
+      outline.addEventListener("toggle", function () { if (outline.open) menu.open = false; });
+    }
   });
 })();
 
@@ -63,12 +83,11 @@ document.addEventListener("DOMContentLoaded", function () {
   var manualCopy = null;
   var t = function (english, zh) { return chinese ? zh : english; };
 
-  var themeSelect = document.getElementById("slides-theme");
-  if (themeSelect) {
-    document.getElementById("slides-theme-label").textContent = t("Theme", "主题");
-    themeSelect.options[0].textContent = t("Auto", "自动");
-    themeSelect.options[1].textContent = t("Light", "浅色");
-    themeSelect.options[2].textContent = t("Dark", "深色");
+  var themeMenu = document.querySelector("[data-theme-menu]");
+  if (themeMenu) {
+    document.getElementById("slides-theme").textContent = t("Theme", "主题");
+    document.getElementById("slides-theme-light").textContent = t("Light", "浅色");
+    document.getElementById("slides-theme-dark").textContent = t("Dark", "深色");
   }
 
   function hashIndex() {
@@ -161,6 +180,7 @@ document.addEventListener("DOMContentLoaded", function () {
     if (reading || event.defaultPrevented || event.ctrlKey || event.metaKey || event.altKey) return false;
     var target = event.target;
     if (outline && outline.open) return false;
+    if (themeMenu && themeMenu.open) return false;
     if (target && target.closest && target.closest("button, a, input, textarea, select, summary, details, [contenteditable], .slide-toolbar, .slides-copy-fallback")) return false;
     var selection = window.getSelection();
     return !selection || !selection.toString().trim();

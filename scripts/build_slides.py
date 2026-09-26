@@ -23,7 +23,7 @@ from mkdocs.structure.files import File, InclusionLevel
 
 
 GENERATOR = "scripts/build_slides.py"
-ASSET_VERSION = "5"
+ASSET_VERSION = "6"
 SLUG = re.compile(r"[a-z0-9]+(?:-[a-z0-9]+)*\Z")
 LANG = re.compile(r"[a-zA-Z]{2,3}(?:-[a-zA-Z0-9]{2,8})*\Z")
 CLASSES = re.compile(r"[a-z][a-z0-9-]*(?: +[a-z][a-z0-9-]*)*\Z")
@@ -322,11 +322,13 @@ def render_deck(deck: Deck, topics: dict[str, TextbookTopic] | None = None,
     <button type="button" id="slides-overview" title="Overview (O)">Overview</button>
     <button type="button" id="slides-fullscreen" title="Fullscreen (F)">Fullscreen</button>
     <button type="button" id="slides-reading" aria-pressed="false">Reading view</button>
-    <label class="slides-theme-control" for="slides-theme"><span id="slides-theme-label">Theme</span>
-      <select id="slides-theme" data-theme-select>
-        <option value="auto">Auto</option><option value="light">Light</option><option value="dark">Dark</option>
-      </select>
-    </label>
+    <details class="slide-theme" data-theme-menu>
+      <summary id="slides-theme">Theme</summary>
+      <div class="slide-theme-options" role="group" aria-labelledby="slides-theme">
+        <button type="button" data-theme-choice="light" aria-pressed="false"><span id="slides-theme-light">Light</span><span class="theme-check" aria-hidden="true">✓</span></button>
+        <button type="button" data-theme-choice="dark" aria-pressed="false"><span id="slides-theme-dark">Dark</span><span class="theme-check" aria-hidden="true">✓</span></button>
+      </div>
+    </details>
   </nav>
   <div class="reveal"><div class="slides">
 {body}

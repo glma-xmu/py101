@@ -5,14 +5,16 @@
   "use strict";
   var key = "py101-display-theme";
   var media = window.matchMedia("(prefers-color-scheme: dark)");
-  var select = null;
+  var choices = [];
   function normalize(value) { return value === "light" || value === "dark" ? value : "auto"; }
   var preference = "auto";
   try { preference = normalize(window.localStorage.getItem(key)); } catch (_) {}
   function apply() {
     var resolved = preference === "auto" ? (media.matches ? "dark" : "light") : preference;
     document.documentElement.setAttribute("data-theme", resolved);
-    if (select) select.value = preference;
+    choices.forEach(function (button) {
+      button.setAttribute("aria-pressed", String(button.getAttribute("data-theme-choice") === resolved));
+    });
   }
   apply();
   function systemChanged() { if (preference === "auto") apply(); }
@@ -24,17 +26,35 @@
     apply();
   });
   document.addEventListener("DOMContentLoaded", function () {
-    select = document.querySelector("[data-theme-select]");
-    if (!select) return;
-    select.value = preference;
-    select.addEventListener("change", function () {
-      preference = normalize(select.value);
-      try {
-        if (preference === "auto") window.localStorage.removeItem(key);
-        else window.localStorage.setItem(key, preference);
-      } catch (_) {} // Private/embedded browsers may disallow storage.
-      apply();
+    var menu = document.querySelector("[data-theme-menu]");
+    if (!menu) return;
+    var trigger = menu.querySelector("summary");
+    choices = Array.prototype.slice.call(menu.querySelectorAll("[data-theme-choice]"));
+    apply();
+    choices.forEach(function (button) {
+      button.addEventListener("click", function () {
+        preference = normalize(button.getAttribute("data-theme-choice"));
+        try { window.localStorage.setItem(key, preference); } catch (_) {}
+        apply();
+        menu.open = false;
+        trigger.focus();
+      });
     });
+    document.addEventListener("click", function (event) {
+      if (!menu.contains(event.target)) menu.open = false;
+    });
+    document.addEventListener("keydown", function (event) {
+      if (event.key !== "Escape" || !menu.open) return;
+      event.preventDefault();
+      event.stopImmediatePropagation();
+      menu.open = false;
+      trigger.focus();
+    });
+    var outline = document.querySelector(".slide-outline");
+    if (outline) {
+      menu.addEventListener("toggle", function () { if (menu.open) outline.open = false; });
+      outline.addEventListener("toggle", function () { if (outline.open) menu.open = false; });
+    }
   });
 })();
 

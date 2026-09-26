@@ -362,9 +362,10 @@ def check_built(root: Path, site: Path) -> tuple[int, int]:
         for control in ("slides-overview", "slides-fullscreen", "slides-reading", "slides-theme"):
             require(sum(n.attrs.get("id") == control for n in nodes) == 1, f"Missing or duplicate control: {control}")
         theme = next(n for n in nodes if n.attrs.get("id") == "slides-theme")
-        require(theme.tag == "select" and "data-theme-select" in theme.attrs, "Theme selector is not connected")
-        require([n.attrs.get("value") for n in theme.walk() if n.tag == "option"] == ["auto", "light", "dark"],
-                "Theme choices must include Auto, Light and Dark")
+        require(theme.tag == "summary" and theme.parent.has_class("slide-theme"), "Theme must match the Contents control")
+        require([n.attrs.get("data-theme-choice") for n in theme.parent.walk() if n.tag == "button"] == ["light", "dark"],
+                "Light and Dark must be nested directly under Theme")
+        require(not any(n.tag == "select" for n in theme.parent.walk()), "Do not add a separate theme dropdown")
 
     for language in ("", "zh/"):
         library_page = language + "slides/index.html"
