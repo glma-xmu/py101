@@ -1,0 +1,13 @@
+{
+  "title": "Quiz 03 (Oct. 7)",
+  "description": "Functions",
+  "questions": [
+    {
+      "prompt": "In class, we wrote the Newton root finder with a for loop. Convert it to a while loop.",
+      "code": "def newton_while():\n    ..."
+    },
+    {
+      "prompt": "This one does not require coding. How does Python store a function in memory? How does function definition and function call differ?"
+    }
+  ]
+}
