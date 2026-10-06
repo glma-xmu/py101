@@ -7,7 +7,7 @@
       "code": "def newton_while():\n    ..."
     },
     {
-      "prompt": "This one does not require coding. How does Python store a function in memory? How does function definition and function call differ?"
+      "prompt": "This one does not require coding. Briefly explain in a markdown cell: How does Python store a function in memory? How do function definition and function call differ?"
     }
   ]
 }
