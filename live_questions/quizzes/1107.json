@@ -3,11 +3,10 @@
   "description": "Functions",
   "questions": [
     {
-      "prompt": "In class, we wrote the Newton root finder with a for loop. Convert it to a while loop.",
-      "code": "def newton_while():\n    ..."
+      "prompt": "Build a numpy 2d array with 3 rows and 30 columns of normal random numbers. Let the mean be 3 and the standard deviation be 1."
     },
     {
-      "prompt": "This one does not require coding. Briefly explain in a markdown cell: How does Python store a function in memory? How do function definition and function call differ?"
+      "prompt": "Subtract the mean from each number. Square each number and report the row means."
     }
   ]
 }

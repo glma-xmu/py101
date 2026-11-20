@@ -1,0 +1,13 @@
+{
+  "title": "Quiz 03 (Oct. 7)",
+  "description": "Functions",
+  "questions": [
+    {
+      "prompt": "Load the iris data to Python. Create a new DataFrame with only the columns 'sepal_length' and 'species'. Then, save this new DataFrame to a csv file called 'iris_sepal_species.csv'."
+    },
+    {
+      "prompt": "The following code helps you create a Series of random numbers (with column name `return`). Compute the rolling sum of two numbers and save it as a new column. The first row of the new column should be NaN.",
+      "code": "import pandas as pd\nimport numpy as np\n\nnp.random.seed(0)\nrandom_numbers = np.random.randint(1, 10, size=10)\nseries = pd.Series(random_numbers, name='return')\nprint(series)"
+    }
+  ]
+}
