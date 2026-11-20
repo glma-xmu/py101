@@ -1,6 +1,6 @@
 {
   "title": "Quiz 04 (Nov. 7)",
-  "description": "Functions",
+  "description": "Numpy ndarray",
   "questions": [
     {
       "prompt": "Build a numpy 2d array with 3 rows and 30 columns of normal random numbers. Let the mean be 3 and the standard deviation be 1."

@@ -1,6 +1,6 @@
 {
   "title": "Quiz 05 (Nov. 20)",
-  "description": "Functions",
+  "description": "The iris dataset and rolling sums",
   "questions": [
     {
       "prompt": "Load the iris data to Python. Create a new DataFrame with only the columns 'sepal_length' and 'species'. Then, save this new DataFrame to a csv file called 'iris_sepal_species.csv'."

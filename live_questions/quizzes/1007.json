@@ -1,6 +1,6 @@
 {
   "title": "Quiz 03 (Oct. 7)",
-  "description": "Functions",
+  "description": "Recursion and memory management",
   "questions": [
     {
       "prompt": "In class, we wrote the Newton root finder with a for loop. Convert it to a while loop.",
